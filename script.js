@@ -357,6 +357,11 @@ function handlePreview() {
 function generatePreviewHTML(data) {
     let html = `
         <div class="preview-header">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img src="https://raw.githubusercontent.com/bndrjj/report1447-2/refs/heads/main/logo2.png" 
+                     alt="شعار وزارة التعليم" 
+                     style="max-height: 100px; width: auto; object-fit: contain;">
+            </div>
             <h1>استمارة خدمات دعم التميز المدرسي</h1>
             <p>وزارة التعليم - إدارة التعليم بالمنطقة الشرقية</p>
             <p>العام الدراسي ١٤٤٧هـ - ٢٠٢٦م</p>
@@ -476,6 +481,14 @@ function generatePreviewHTML(data) {
         </div>
     `;
     
+    // Footer Section
+    html += `
+        <div class="preview-footer" style="margin-top: 40px; padding: 20px; text-align: center; background: #f8f9fa; border-radius: 10px; border-top: 3px solid #006341;">
+            <p style="margin: 5px 0; color: #2c3e50; font-weight: 600;">تصميم المشرف بندر بن عبداللطيف الجمعان</p>
+            <p style="margin: 5px 0; color: #6c757d;">وإشراف الفريق التنفيذي ٢٠٢٦</p>
+        </div>
+    `;
+    
     return html;
 }
 
@@ -570,6 +583,12 @@ function handlePrint() {
                     margin-bottom: 30px;
                     padding-bottom: 20px;
                     border-bottom: 3px solid #006341;
+                }
+                .preview-header img {
+                    max-height: 80px;
+                    width: auto;
+                    margin-bottom: 15px;
+                    object-fit: contain;
                 }
                 .preview-section {
                     margin-bottom: 25px;
