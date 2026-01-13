@@ -8,6 +8,41 @@ const STORE_NAME = 'records';
 // ===== IndexedDB Setup =====
 let db;
 
+// ===== Week Date Ranges Mapping =====
+const weekDateRanges = {
+    'الأسبوع الأول - ٢٠٢٦/٠١/١٨ إلى ٢٠٢٦/٠١/٢٢': { start: '2026-01-18', end: '2026-01-22' },
+    'الأسبوع الثاني - ٢٠٢٦/٠١/٢٥ إلى ٢٠٢٦/٠١/٢٩': { start: '2026-01-25', end: '2026-01-29' },
+    'الأسبوع الثالث - ٢٠٢٦/٠٢/٠٢ إلى ٢٠٢٦/٠٢/٠٦': { start: '2026-02-02', end: '2026-02-06' },
+    'الأسبوع الرابع - ٢٠٢٦/٠٢/٠٩ إلى ٢٠٢٦/٠٢/١٢': { start: '2026-02-09', end: '2026-02-12' },
+    'الأسبوع الخامس - ٢٠٢٦/٠٢/١٥ إلى ٢٠٢٦/٠٢/١٩': { start: '2026-02-15', end: '2026-02-19' },
+    'الأسبوع السادس - ٢٠٢٦/٠٢/٢٢ إلى ٢٠٢٦/٠٢/٢٦': { start: '2026-02-22', end: '2026-02-26' },
+    'الأسبوع السابع - ٢٠٢٦/٠٣/٠١ إلى ٢٠٢٦/٠٣/٠٥': { start: '2026-03-01', end: '2026-03-05' },
+    'الأسبوع الثامن - ٢٠٢٦/٠٣/٢٩ إلى ٢٠٢٦/٠٤/٠٢': { start: '2026-03-29', end: '2026-04-02' },
+    'الأسبوع التاسع - ٢٠٢٦/٠٤/٠٥ إلى ٢٠٢٦/٠٤/٠٩': { start: '2026-04-05', end: '2026-04-09' },
+    'الأسبوع العاشر - ٢٠٢٦/٠٤/١٢ إلى ٢٠٢٦/٠٤/١٦': { start: '2026-04-12', end: '2026-04-16' },
+    'الأسبوع الحادي عشر - ٢٠٢٦/٠٤/١٩ إلى ٢٠٢٦/٠٤/٢٣': { start: '2026-04-19', end: '2026-04-23' },
+    'الأسبوع الثاني عشر - ٢٠٢٦/٠٤/٢٦ إلى ٢٠٢٦/٠٤/٣٠': { start: '2026-04-26', end: '2026-04-30' },
+    'الأسبوع الثالث عشر - ٢٠٢٦/٠٥/٠٣ إلى ٢٠٢٦/٠٥/٠٧': { start: '2026-05-03', end: '2026-05-07' },
+    'الأسبوع الرابع عشر - ٢٠٢٦/٠٥/١٠ إلى ٢٠٢٦/٠٥/١٤': { start: '2026-05-10', end: '2026-05-14' },
+    'الأسبوع الخامس عشر - ٢٠٢٦/٠٥/١٧ إلى ٢٠٢٦/٠٥/٢١': { start: '2026-05-17', end: '2026-05-21' },
+    'الأسبوع السادس عشر - ٢٠٢٦/٠٥/٣١ إلى ٢٠٢٦/٠٦/٠٤': { start: '2026-05-31', end: '2026-06-04' },
+    'الأسبوع السابع عشر - ٢٠٢٦/٠٦/٠٧ إلى ٢٠٢٦/٠٦/١١': { start: '2026-06-07', end: '2026-06-11' },
+    'الأسبوع الثامن عشر - ٢٠٢٦/٠٦/١٤ إلى ٢٠٢٦/٠٦/١٨': { start: '2026-06-14', end: '2026-06-18' },
+    'الأسبوع التاسع عشر - ٢٠٢٦/٠٦/٢١ إلى ٢٠٢٦/٠٦/٢٥': { start: '2026-06-21', end: '2026-06-25' },
+    'الأسبوع العشرون - ٢٠٢٦/٠٦/٢٨ إلى ٢٠٢٦/٠٧/٠٢': { start: '2026-06-28', end: '2026-07-02' }
+};
+
+// ===== Arabic Days Mapping =====
+const arabicDays = {
+    0: 'الأحد',
+    1: 'الاثنين',
+    2: 'الثلاثاء',
+    3: 'الأربعاء',
+    4: 'الخميس',
+    5: 'الجمعة',
+    6: 'السبت'
+};
+
 function initDB() {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -124,6 +159,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         await initDB();
         setupEventListeners();
         setupConditionalFields();
+        
+        // Disable date input initially
+        const dateInput = document.getElementById('date');
+        dateInput.disabled = true;
+        
     } catch (error) {
         console.error('خطأ في تهيئة التطبيق:', error);
         showMessage('حدث خطأ في تحميل التطبيق! ❌', 'error');
@@ -158,6 +198,14 @@ function setupEventListeners() {
         }
     });
     
+    // Week selection - update date range
+    const weekSelect = document.getElementById('week');
+    weekSelect.addEventListener('change', handleWeekChange);
+    
+    // Date selection - update day automatically
+    const dateInput = document.getElementById('date');
+    dateInput.addEventListener('change', handleDateChange);
+    
     // Support areas checkboxes
     const supportAreasCheckboxes = document.querySelectorAll('input[name="supportAreas"]');
     supportAreasCheckboxes.forEach(checkbox => {
@@ -171,6 +219,83 @@ function setupEventListeners() {
     setupOtherCheckboxes('guidanceActions', 'guidanceActionsOther', 'guidanceActionsOtherText');
     setupOtherCheckboxes('activityActions', 'activityActionsOther', 'activityActionsOtherText');
     setupOtherCheckboxes('empowerment', 'empowermentOther', 'empowermentOtherText');
+}
+
+// ===== Handle Week Change =====
+function handleWeekChange() {
+    const weekSelect = document.getElementById('week');
+    const dateInput = document.getElementById('date');
+    const dateNote = document.getElementById('dateNote');
+    const dayInput = document.getElementById('day');
+    
+    const selectedWeek = weekSelect.value;
+    
+    if (selectedWeek && weekDateRanges[selectedWeek]) {
+        const range = weekDateRanges[selectedWeek];
+        
+        // Set min and max for date input
+        dateInput.min = range.start;
+        dateInput.max = range.end;
+        dateInput.disabled = false;
+        
+        // Update note
+        const startDate = formatDateArabic(range.start);
+        const endDate = formatDateArabic(range.end);
+        dateNote.textContent = `يمكنك اختيار تاريخ من ${startDate} إلى ${endDate}`;
+        dateNote.style.color = '#17a2b8';
+        
+        // Reset date and day if current date is outside range
+        if (dateInput.value) {
+            const currentDate = dateInput.value;
+            if (currentDate < range.start || currentDate > range.end) {
+                dateInput.value = '';
+                dayInput.value = '';
+            }
+        }
+    } else {
+        // Reset if no week selected
+        dateInput.min = '';
+        dateInput.max = '';
+        dateInput.disabled = true;
+        dateInput.value = '';
+        dayInput.value = '';
+        dateNote.textContent = 'اختر الأسبوع الدراسي أولاً';
+        dateNote.style.color = '#6c757d';
+    }
+}
+
+// ===== Handle Date Change =====
+function handleDateChange() {
+    const dateInput = document.getElementById('date');
+    const dayInput = document.getElementById('day');
+    const weekSelect = document.getElementById('week');
+    
+    if (dateInput.value) {
+        const selectedDate = new Date(dateInput.value + 'T00:00:00');
+        const dayIndex = selectedDate.getDay();
+        const arabicDay = arabicDays[dayIndex];
+        
+        dayInput.value = arabicDay;
+        
+        // Validate date is within week range
+        const selectedWeek = weekSelect.value;
+        if (selectedWeek && weekDateRanges[selectedWeek]) {
+            const range = weekDateRanges[selectedWeek];
+            if (dateInput.value < range.start || dateInput.value > range.end) {
+                showMessage('التاريخ المختار خارج نطاق الأسبوع المحدد! ⚠️', 'warning');
+                dateInput.value = '';
+                dayInput.value = '';
+            }
+        }
+    } else {
+        dayInput.value = '';
+    }
+}
+
+// ===== Format Date in Arabic =====
+function formatDateArabic(dateString) {
+    const parts = dateString.split('-');
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
 }
 
 // ===== Setup Conditional Fields =====
@@ -749,6 +874,19 @@ function handleExportExcel() {
 function handleReset() {
     if (confirm('هل أنت متأكد من مسح جميع البيانات المدخلة؟')) {
         form.reset();
+        
+        // Reset date input
+        const dateInput = document.getElementById('date');
+        const dayInput = document.getElementById('day');
+        const dateNote = document.getElementById('dateNote');
+        
+        dateInput.min = '';
+        dateInput.max = '';
+        dateInput.disabled = true;
+        dateInput.value = '';
+        dayInput.value = '';
+        dateNote.textContent = 'اختر الأسبوع الدراسي أولاً';
+        dateNote.style.color = '#6c757d';
         
         // Hide conditional sections
         document.getElementById('teachingSection').style.display = 'none';
