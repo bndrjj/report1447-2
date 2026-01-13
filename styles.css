@@ -1,3 +1,104 @@
+/* ===== Arabic Fonts ===== */
+/* arabic */
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/cairo/v31/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscQyyS8p4_RHH1.woff2) format('woff2');
+    unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC4, U+10EFC-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;
+}
+
+/* latin-ext */
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/cairo/v31/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscSCyS8p4_RHH1.woff2) format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/cairo/v31/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscRiyS8p4_RA.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* arabic */
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/cairo/v31/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscQyyS8p4_RHH1.woff2) format('woff2');
+    unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC4, U+10EFC-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;
+}
+
+/* latin-ext */
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/cairo/v31/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscSCyS8p4_RHH1.woff2) format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/cairo/v31/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscRiyS8p4_RA.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* arabic */
+@font-face {
+    font-family: 'Tajawal';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/tajawal/v12/Iura6YBj_oCad4k1nzSBC5xLhLFw4Q.woff2) format('woff2');
+    unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC4, U+10EFC-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;
+}
+
+/* latin */
+@font-face {
+    font-family: 'Tajawal';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/tajawal/v12/Iura6YBj_oCad4k1nzGBC5xLhLE.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* arabic */
+@font-face {
+    font-family: 'Tajawal';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/tajawal/v12/Iurf6YBj_oCad4k1l4qkHrRpiZtK6GwN9w.woff2) format('woff2');
+    unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC4, U+10EFC-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;
+}
+
+/* latin */
+@font-face {
+    font-family: 'Tajawal';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/tajawal/v12/Iurf6YBj_oCad4k1l4qkHrFpiZtK6Gw.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 /* ===== CSS Variables ===== */
 :root {
     --primary-color: #006341;
@@ -16,6 +117,10 @@
     --border-color: #dee2e6;
     --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
+    
+    /* Typography Variables */
+    --font-heading: 'Cairo', sans-serif;
+    --font-body: 'Tajawal', sans-serif;
 }
 
 /* ===== Global Styles ===== */
@@ -26,13 +131,62 @@
 }
 
 body {
-    font-family: 'Tajawal', 'Cairo', sans-serif;
+    font-family: var(--font-body);
+    font-weight: 400;
     background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
     color: var(--text-dark);
     line-height: 1.8;
     min-height: 100vh;
     padding: 20px;
     direction: rtl;
+    font-size: 16px;
+}
+
+/* ===== Typography Hierarchy ===== */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0.3px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+h6 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+p, span, div, label, input, select, textarea, button, li, td, th {
+    font-family: var(--font-body);
+    font-weight: 400;
+}
+
+strong, b {
+    font-weight: 700;
 }
 
 /* ===== Header Styles ===== */
@@ -90,21 +244,24 @@ body {
 }
 
 .form-header h1 {
+    font-family: var(--font-heading);
     font-size: 2.5rem;
-    font-weight: 900;
+    font-weight: 700;
     margin-bottom: 10px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
 .header-subtitle {
+    font-family: var(--font-body);
     font-size: 1.2rem;
-    font-weight: 500;
+    font-weight: 400;
     margin-bottom: 5px;
     opacity: 0.95;
 }
 
 .academic-year {
+    font-family: var(--font-body);
     font-size: 1rem;
     font-weight: 400;
     opacity: 0.9;
@@ -147,21 +304,25 @@ body {
 }
 
 .section-header h2 {
+    font-family: var(--font-heading);
     font-size: 1.8rem;
     color: var(--primary-color);
     font-weight: 700;
     display: flex;
     align-items: center;
     gap: 10px;
+    letter-spacing: 0.3px;
 }
 
 .section-note {
+    font-family: var(--font-body);
     margin-top: 15px;
     padding: 15px;
     background: linear-gradient(135deg, #fff3cd 0%, #fffaeb 100%);
     border-right: 5px solid var(--warning-color);
     border-radius: 8px;
     font-size: 0.95rem;
+    font-weight: 400;
     line-height: 1.8;
     color: #856404;
     box-shadow: 0 2px 8px rgba(255, 193, 7, 0.2);
@@ -182,7 +343,8 @@ body {
 }
 
 .form-group label {
-    font-weight: 600;
+    font-family: var(--font-body);
+    font-weight: 700;
     font-size: 1rem;
     color: var(--text-dark);
     display: flex;
@@ -196,7 +358,9 @@ body {
 }
 
 .field-note {
+    font-family: var(--font-body);
     font-size: 0.85rem;
+    font-weight: 400;
     color: var(--text-light);
     font-style: italic;
     margin-top: 5px;
@@ -215,7 +379,8 @@ textarea {
     width: 100%;
     padding: 12px 16px;
     font-size: 1rem;
-    font-family: 'Tajawal', sans-serif;
+    font-family: var(--font-body);
+    font-weight: 400;
     border: 2px solid var(--border-color);
     border-radius: 10px;
     background: var(--white);
@@ -249,9 +414,11 @@ select {
 
 /* ===== Checkbox Styles ===== */
 .checkbox-label {
-    font-weight: 600;
+    font-family: var(--font-body);
+    font-weight: 700;
     margin-bottom: 15px;
     color: var(--text-dark);
+    font-size: 1rem;
 }
 
 .checkbox-group {
@@ -295,23 +462,27 @@ select {
     flex: 1;
     line-height: 1.6;
     font-size: 0.95rem;
+    font-family: var(--font-body);
+    font-weight: 400;
 }
 
 .other-input {
     margin-top: 10px;
     border: 2px dashed var(--primary-color);
+    font-family: var(--font-body);
+    font-weight: 400;
 }
 
 /* ===== Button Styles ===== */
 .btn {
     padding: 14px 28px;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
+    font-family: var(--font-body);
     border: none;
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-family: 'Tajawal', sans-serif;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -488,7 +659,7 @@ select {
 
 /* ===== Preview Content ===== */
 #previewContent {
-    font-family: 'Tajawal', sans-serif;
+    font-family: var(--font-body);
     line-height: 1.8;
 }
 
@@ -501,6 +672,19 @@ select {
     text-align: center;
 }
 
+#previewContent .preview-header h1 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+#previewContent .preview-header p {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 1.1rem;
+}
+
 #previewContent .preview-section {
     margin-bottom: 30px;
     padding: 25px;
@@ -510,22 +694,27 @@ select {
 }
 
 #previewContent .preview-section h3 {
+    font-family: var(--font-heading);
     color: var(--primary-color);
     margin-bottom: 15px;
     font-size: 1.5rem;
+    font-weight: 700;
     border-bottom: 2px solid var(--primary-light);
     padding-bottom: 10px;
 }
 
 #previewContent .preview-field {
+    font-family: var(--font-body);
     margin-bottom: 15px;
     padding: 12px;
     background: var(--white);
     border-radius: 8px;
     border: 1px solid var(--border-color);
+    font-weight: 400;
 }
 
 #previewContent .preview-field strong {
+    font-family: var(--font-body);
     color: var(--primary-dark);
     font-weight: 700;
     display: inline-block;
@@ -539,6 +728,8 @@ select {
 }
 
 #previewContent ul li {
+    font-family: var(--font-body);
+    font-weight: 400;
     padding: 8px;
     margin-bottom: 5px;
     background: #e8f5e9;
@@ -548,6 +739,7 @@ select {
 
 /* ===== Footer ===== */
 .form-footer {
+    font-family: var(--font-body);
     text-align: center;
     padding: 30px;
     margin-top: 40px;
@@ -560,12 +752,14 @@ select {
 .form-footer p {
     margin: 5px 0;
     opacity: 0.9;
+    font-weight: 400;
 }
 
 /* ===== Responsive Design ===== */
 @media (max-width: 768px) {
     body {
         padding: 10px;
+        font-size: 15px;
     }
 
     .form-header h1 {
@@ -600,6 +794,7 @@ select {
     .btn {
         width: 100%;
         justify-content: center;
+        font-size: 0.95rem;
     }
 
     .modal-content {
@@ -619,6 +814,10 @@ select {
 }
 
 @media (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+
     .form-header {
         padding: 25px 15px;
     }
@@ -649,6 +848,14 @@ select {
         padding: 12px 20px;
         font-size: 0.9rem;
     }
+
+    .checkbox-item span {
+        font-size: 0.85rem;
+    }
+
+    .field-note {
+        font-size: 0.8rem;
+    }
 }
 
 /* ===== Print Styles ===== */
@@ -656,6 +863,7 @@ select {
     body {
         background: white;
         padding: 0;
+        font-size: 12pt;
     }
 
     .form-header,
@@ -680,6 +888,14 @@ select {
     .btn {
         display: none;
     }
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading);
+    }
+    
+    p, span, div, label {
+        font-family: var(--font-body);
+    }
 }
 
 /* ===== Loading Animation ===== */
@@ -699,12 +915,14 @@ select {
 
 /* ===== Success/Error Messages ===== */
 .message {
+    font-family: var(--font-body);
+    font-weight: 700;
     padding: 15px 20px;
     border-radius: 10px;
     margin: 20px 0;
-    font-weight: 600;
     text-align: center;
     animation: slideDown 0.4s ease;
+    font-size: 1rem;
 }
 
 .message-success {
