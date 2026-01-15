@@ -4,8 +4,8 @@ let savedRecords = [];
 const DB_NAME = 'SchoolSupportDB';
 const DB_VERSION = 1;
 const STORE_NAME = 'records';
-const OWNER_ACCESS_KEY = 'ownerAccess';
-const OWNER_ACCESS_CODE = 'CHANGE_ME';
+const OWNER_CONFIG_KEY = 'ownerConfig';
+const OWNER_SESSION_KEY = 'ownerSession';
 
 // ===== IndexedDB Setup =====
 let db;
@@ -45,36 +45,6 @@ const arabicDays = {
     6: 'السبت'
 };
 
-function isOwner() {
-    return localStorage.getItem(OWNER_ACCESS_KEY) === 'true';
-}
-
-function applyOwnerState() {
-    const owner = isOwner();
-    document.body.classList.toggle('is-owner', owner);
-    document.body.classList.toggle('owner-reveal', !owner && window.location.hash === '#owner');
-}
-
-function requireOwnerAccess(message = 'هذه الميزة متاحة للمالك فقط.') {
-    if (!isOwner()) {
-        showMessage(message, 'warning');
-        return false;
-    }
-    return true;
-}
-
-function getAllSupervisors() {
-    const list = [];
-    Object.entries(supervisorsBySectorGender).forEach(([sector, genders]) => {
-        Object.entries(genders).forEach(([gender, names]) => {
-            names.forEach(name => {
-                list.push({ name, sector, gender });
-            });
-        });
-    });
-    return list;
-}
-
 const supervisorsBySectorGender = {
     'الجبيل': {
         'بنين': [
@@ -94,28 +64,6 @@ const supervisorsBySectorGender = {
         ]
     },
     'الخبر': {
-        'بنات': [
-            'ابتسام بنت عبدالله العبدالقادر',
-            'ابتهال بنت ناصر الكبش',
-            'أمل بنت سليمان العمري',
-            'آمنه بنت علي تويتي',
-            'بدريه بنت عبدالعزيز الجلعود',
-            'تركية بنت محمد المالكي',
-            'جملاء بنت رشيد السليمي',
-            'خولة بنت سعد المدرع',
-            'سهام بنت عيسى البريك',
-            'شروق بنت محمود العثمان',
-            'شريفة بنت عبدالله العمر',
-            'عزه بنت صالح الزهراني',
-            'غادة بنت منصور العسكر',
-            'فريال بنت صالح الدوسري',
-            'لمياء بنت محمد الدرويش',
-            'مريم بنت حمدي الروقي',
-            'مشاعل بنت سليمان العيدي',
-            'زينة بنت عائض القحطاني',
-            'ناهد بنت محمد الفزيع',
-            'نسرين بنت عبدالله حلواني'
-        ],
         'بنين': [
             'تركي بن عبداللطيف السبيعي',
             'سعد بن عبد الله الدوسري',
@@ -160,6 +108,28 @@ const supervisorsBySectorGender = {
             'محمد بن أحمد العبود',
             'صالح بن محمد القرني',
             'عيظه بن محمد الزهراني'
+        ],
+        'بنات': [
+            'ابتسام بنت عبدالله العبدالقادر',
+            'ابتهال بنت ناصر الكبش',
+            'أمل بنت سليمان العمري',
+            'آمنه بنت علي تويتي',
+            'بدريه بنت عبدالعزيز الجلعود',
+            'تركية بنت محمد المالكي',
+            'جملاء بنت رشيد السليمي',
+            'خولة بنت سعد المدرع',
+            'سهام بنت عيسى البريك',
+            'شروق بنت محمود العثمان',
+            'شريفة بنت عبدالله العمر',
+            'عزه بنت صالح الزهراني',
+            'غادة بنت منصور العسكر',
+            'فريال بنت صالح الدوسري',
+            'لمياء بنت محمد الدرويش',
+            'مريم بنت حمدي الروقي',
+            'مشاعل بنت سليمان العيدي',
+            'زينة بنت عائض القحطاني',
+            'ناهد بنت محمد الفزيع',
+            'نسرين بنت عبدالله حلواني'
         ]
     },
     'الخفجي': {
@@ -197,45 +167,6 @@ const supervisorsBySectorGender = {
         ]
     },
     'الدمام': {
-        'بنات': [
-            'سميرة بنت حمد بن راشد بالحارث',
-            'فاطمة بنت عبده ميقاق',
-            'نجلاء بنت احمد البسام',
-            'عبير بنت خالد الصياح',
-            'صبحه بنت حامد الغامدي',
-            'عايشه بنت مصلح الشمراني',
-            'عائشة بنت ابراهيم دراج',
-            'عائشة بنت صالح الشهري',
-            'أمل بنت محمد هوساوي',
-            'فتحيه بنت سالم النفيعي',
-            'مؤمنة بنت محمد القرني',
-            'النيرة بنت حسن الحلفي',
-            'أسماء بنت سعيد الشهراني',
-            'ليلى بنت مزهر الزهراني',
-            'نوره بنت إبراهيم العبدالهادي',
-            'ابتسام بنت محمد مباركي',
-            'نوال بنت عبدالرحمن اللهيبي',
-            'عبير بنت سعيد الغامدي',
-            'فاطمة بنت عيسى المطيري',
-            'فدوى بنت منصور الدوسري',
-            'نورة بنت راشد المهاشير',
-            'حصة بنت ماجد السبيعي',
-            'باسمة بنت محمد الراشد',
-            'ولاء بنت حسن سندي',
-            'مي بنت محمد السليم',
-            'عالية بنت سعيد الشمراني',
-            'إيمان بنت يوسف الحماد',
-            'ليلى بنت أحمد الغامدي',
-            'بدرية بنت عبدالله الشهري',
-            'خلود بنت بكر بامسعود',
-            'منيره بنت متروك الفريدي',
-            'شاهه بنت خالد الخالدي',
-            'زهره بنت علي مباركي',
-            'البندري بنت محمد العتيبي',
-            'عائشة بنت احمد الشهري',
-            'مريم بنت حسن باخشوين',
-            'مها بنت محمد العيسى'
-        ],
         'بنين': [
             'د.أحمد بن محمد حكمي',
             'بندر بن سعيد القحطاني',
@@ -304,6 +235,45 @@ const supervisorsBySectorGender = {
             'خلف بن محمد الغامدي',
             'علي بن ماطر العنزي',
             'جمعان بن سعيد الغامدي'
+        ],
+        'بنات': [
+            'سميرة بنت حمد بن راشد بالحارث',
+            'فاطمة بنت عبده ميقاق',
+            'نجلاء بنت احمد البسام',
+            'عبير بنت خالد الصياح',
+            'صبحه بنت حامد الغامدي',
+            'عايشه بنت مصلح الشمراني',
+            'عائشة بنت ابراهيم دراج',
+            'عائشة بنت صالح الشهري',
+            'أمل بنت محمد هوساوي',
+            'فتحيه بنت سالم النفيعي',
+            'مؤمنة بنت محمد القرني',
+            'النيرة بنت حسن الحلفي',
+            'أسماء بنت سعيد الشهراني',
+            'ليلى بنت مزهر الزهراني',
+            'نوره بنت إبراهيم العبدالهادي',
+            'ابتسام بنت محمد مباركي',
+            'نوال بنت عبدالرحمن اللهيبي',
+            'عبير بنت سعيد الغامدي',
+            'فاطمة بنت عيسى المطيري',
+            'فدوى بنت منصور الدوسري',
+            'نورة بنت راشد المهاشير',
+            'حصة بنت ماجد السبيعي',
+            'باسمة بنت محمد الراشد',
+            'ولاء بنت حسن سندي',
+            'مي بنت محمد السليم',
+            'عالية بنت سعيد الشمراني',
+            'إيمان بنت يوسف الحماد',
+            'ليلى بنت أحمد الغامدي',
+            'بدرية بنت عبدالله الشهري',
+            'خلود بنت بكر بامسعود',
+            'منيره بنت متروك الفريدي',
+            'شاهه بنت خالد الخالدي',
+            'زهره بنت علي مباركي',
+            'البندري بنت محمد العتيبي',
+            'عائشة بنت احمد الشهري',
+            'مريم بنت حسن باخشوين',
+            'مها بنت محمد العيسى'
         ]
     },
     'القطيف': {
@@ -380,11 +350,11 @@ const supervisorsBySectorGender = {
         ]
     },
     'النعيرية': {
+        'بنين': [],
         'بنات': [
             'صافيه بنت هادي المري',
             'نوف بنت سعد القحطاني'
-        ],
-        'بنين': []
+        ]
     },
     'بقيق': {
         'بنين': [
@@ -405,17 +375,17 @@ const supervisorsBySectorGender = {
         ]
     },
     'رأس تنورة': {
-        'بنات': [
-            'عزيزة بنت سويد الغامدي',
-            'صافيه بنت سالم المري',
-            'عائشة بنت احمد آل نورالدين',
-            'عبير بنت سالم آل حمامه'
-        ],
         'بنين': [
             'حمود بن سعد الاكلبي',
             'عماد بن علي اللباد',
             'نعيم بن إبراهيم المرهون',
             'فيصل بن صالح آل لعجم'
+        ],
+        'بنات': [
+            'عزيزة بنت سويد الغامدي',
+            'صافيه بنت سالم المري',
+            'عائشة بنت احمد آل نورالدين',
+            'عبير بنت سالم آل حمامه'
         ]
     },
     'القرية العليا': {
@@ -427,6 +397,7 @@ const supervisorsBySectorGender = {
         ]
     },
     'حفر الباطن': {
+        'بنين': [],
         'بنات': [
             'نشمية بنت رجاء العنزي',
             'عزيزه بنت علي القرني',
@@ -496,92 +467,6 @@ const supervisorsBySectorGender = {
             'غزيه بنت زعال الشمري',
             'العنود بنت عشق المطيري',
             'ساره بنت ناهض السهلي'
-        ],
-        'بنين': [
-            'سعد بن مفرح حجي الحربي',
-            'عويض بن مطر وني الهزيمي',
-            'فهد بن عيد راشد العنزي',
-            'عواد بن صغير عوض العنزي',
-            'محمد بن عويض المطيري',
-            'حماد بن عوض الحربي',
-            'إبراهيم بن عبدالله الخلف',
-            'عماش بن صعب السهلي',
-            'بندر بن شاهر الشمري',
-            'صالح بن مزلوه العنزي',
-            'حمود بن العاصي الهذال',
-            'إبراهيم بن صالح السليمان',
-            'نادر بن محمد الشمري',
-            'علي بن خليف العنزي',
-            'عادل بن عوض السرور',
-            'محمد بن سعد المطيري',
-            'عبدالسلام بن عوض القحطاني',
-            'سعد بن نافع العنزي',
-            'عبدالعزيز بن عامر العامر',
-            'مبارك بن محسن الحربي',
-            'ناصر بن سعد الرشيدي',
-            'عبدالرحمن بن مقحم المطيري',
-            'سعود بن مشيل الظفيري',
-            'فهد بن خلف الجميلي',
-            'شامان بن فيحان البرازي',
-            'سليمان بن خلف الشمري',
-            'مبارك بن ظاهر الظفيري',
-            'عيد بن رمضان العنزي',
-            'منديل بن سعود الحربي',
-            'سند بن مشيل الظفيري',
-            'عايش بن محارب العنزي',
-            'بدر بن غلاب الحربي',
-            'خالد بن عايد الشمري',
-            'محمد بن سهل العنزي',
-            'محمد بن فريح العنزي',
-            'محمد بن صالح الطيار',
-            'مبارك بن متعب الظفيري',
-            'صالح بن عبدالله الاحمدي',
-            'عبيد بن شافي العنزي',
-            'عبدالله بن مفلح الشمري',
-            'نواف بن حمد الشمري',
-            'سلمان بن بطاح الظفيري',
-            'مسعود بن حماد البذالي',
-            'محمد بن خلف الشمري',
-            'فرحان بن عايش العنزي',
-            'عايد بن عوده الدهمشي',
-            'خلف بن مطلق الجميلي',
-            '‏أحمد بن عبدالله الخلف',
-            'عبدالله بن حمدان السعيدي',
-            'فايز بن صالح الدهمشي',
-            'شافي بن عايد الظفيري',
-            'حسين بن نداء العنزي',
-            'حجي بن مفرح الحربي',
-            'عبدالله بن صفوق المطيري',
-            'جدلان بن هزاع بن المريخي',
-            'وليد بن عوض السرور',
-            'حبيب بن غازي الشمري',
-            'د. عمر بن رمضان العنزي',
-            'سعيد بن عبدالرحمن المطيري',
-            'لافي بن عشبان السعيدي',
-            'حمدان بن نايف الشمري',
-            'حمدان بن مقبل الحربي',
-            'محمد بن سيد الظفيري',
-            'خالد بن هليل العنزي',
-            'سليمان بن شليويح الزبني',
-            'مطر بن رحيل الشمري',
-            'سعود بن محمد العوفي',
-            'خالد بن حمد العنزي',
-            'محمد بن طرقي العنزي',
-            'عبدالله بن محمد الحربي',
-            'مطلق بن محمد السبيعي',
-            'محمد بن عبدالله الشمري',
-            'مشعل بن حميد الهزيمي',
-            'عودة بن مذري العنزي',
-            'زبن بن مفرح الشمري',
-            'مذكر بن هديان البصيص',
-            'عزيز بن دخيل الظفيري',
-            'علي بن عالي بن المطيري',
-            'فارس بن مهل الحربي',
-            'خالد بن مزعل الشمري',
-            'ساير بن مناور الشمري',
-            'خلف بن صالح السرور',
-            'عبدالله بن عبدالرحمن المطيري',
-            'عبدالله بن سليمان العلوي'
         ]
     }
 };
@@ -723,10 +608,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         initOwnerVisibility();
         initOwnerStatsFilters();
         setupConditionalFields();
-        applyOwnerState();
-        if (isOwner()) {
-            updateSupervisorStats();
-        }
+        updateSupervisorOptions();
+        loadOwnerConfig();
+        applyOwnerAccessRules();
         
         // Disable date input initially
         const dateInput = document.getElementById('date');
@@ -750,16 +634,17 @@ function setupEventListeners() {
     }
     
     // Button event listeners
-    saveBtn.addEventListener('click', handleSave);
-    previewBtn.addEventListener('click', handlePreview);
-    exportPdfBtn.addEventListener('click', handleExportPDF);
-    printBtn.addEventListener('click', handlePrint);
-    if (exportExcelBtn) {
-        exportExcelBtn.addEventListener('click', handleExportExcel);
+    if (saveBtn) saveBtn.addEventListener('click', handleSave);
+    if (previewBtn) previewBtn.addEventListener('click', handlePreview);
+    if (exportPdfBtn) exportPdfBtn.addEventListener('click', handleExportPDF);
+    if (printBtn) printBtn.addEventListener('click', handlePrint);
+    if (resetBtn) resetBtn.addEventListener('click', handleReset);
+    if (viewRecordsBtn) {
+        viewRecordsBtn.addEventListener('click', handleViewRecords);
     }
-    resetBtn.addEventListener('click', handleReset);
-    viewRecordsBtn.addEventListener('click', handleViewRecords);
-    exportAllExcelBtn.addEventListener('click', handleExportAllExcel);
+    if (exportAllExcelBtn) {
+        exportAllExcelBtn.addEventListener('click', handleExportAllExcel);
+    }
     
     // Modal close
     closeModal.addEventListener('click', () => {
@@ -817,29 +702,9 @@ function setupEventListeners() {
     
     // Date selection - update day automatically
     const dateInput = document.getElementById('date');
-    dateInput.addEventListener('change', handleDateChange);
-
-    // Sector/gender selection - update supervisor list
-    const sectorSelect = document.getElementById('sector');
-    const genderSelect = document.getElementById('gender');
-    sectorSelect.addEventListener('change', updateSupervisorOptions);
-    genderSelect.addEventListener('change', updateSupervisorOptions);
-
-    const ownerLoginBtn = document.getElementById('ownerLoginBtn');
-    const ownerLogoutBtn = document.getElementById('ownerLogoutBtn');
-    const refreshStatsBtn = document.getElementById('refreshStatsBtn');
-
-    if (ownerLoginBtn) {
-        ownerLoginBtn.addEventListener('click', handleOwnerLogin);
+    if (dateInput) {
+        dateInput.addEventListener('change', handleDateChange);
     }
-    if (ownerLogoutBtn) {
-        ownerLogoutBtn.addEventListener('click', handleOwnerLogout);
-    }
-    if (refreshStatsBtn) {
-        refreshStatsBtn.addEventListener('click', handleRefreshStats);
-    }
-
-    window.addEventListener('hashchange', applyOwnerState);
     
     // Support areas checkboxes
     const supportAreasCheckboxes = document.querySelectorAll('input[name="supportAreas"]');
@@ -1335,8 +1200,6 @@ function handleWeekChange() {
             if (currentDate < range.start || currentDate > range.end) {
                 dateInput.value = '';
                 dayInput.value = '';
-            } else {
-                updateDayFromDate(currentDate, dayInput);
             }
         }
     } else {
@@ -1351,12 +1214,6 @@ function handleWeekChange() {
     }
 }
 
-function updateDayFromDate(dateValue, dayInput) {
-    const selectedDate = new Date(`${dateValue}T00:00:00`);
-    const dayIndex = selectedDate.getDay();
-    dayInput.value = arabicDays[dayIndex];
-}
-
 // ===== Handle Date Change =====
 function handleDateChange() {
     const dateInput = document.getElementById('date');
@@ -1364,7 +1221,11 @@ function handleDateChange() {
     const weekSelect = document.getElementById('week');
     
     if (dateInput.value) {
-        updateDayFromDate(dateInput.value, dayInput);
+        const selectedDate = new Date(dateInput.value + 'T00:00:00');
+        const dayIndex = selectedDate.getDay();
+        const arabicDay = arabicDays[dayIndex];
+        
+        dayInput.value = arabicDay;
         
         // Validate date is within week range
         const selectedWeek = weekSelect.value;
@@ -1379,129 +1240,6 @@ function handleDateChange() {
     } else {
         dayInput.value = '';
     }
-}
-
-function updateSupervisorOptions() {
-    const sectorSelect = document.getElementById('sector');
-    const genderSelect = document.getElementById('gender');
-    const supervisorSelect = document.getElementById('supervisor');
-
-    const selectedSector = sectorSelect.value;
-    const selectedGender = genderSelect.value;
-
-    supervisorSelect.innerHTML = '';
-
-    if (!selectedSector || !selectedGender) {
-        supervisorSelect.disabled = true;
-        const option = document.createElement('option');
-        option.value = '';
-        option.textContent = 'اختر القطاع والنوع أولاً';
-        supervisorSelect.appendChild(option);
-        return;
-    }
-
-    const sectorData = supervisorsBySectorGender[selectedSector] || {};
-    const supervisors = sectorData[selectedGender] || [];
-
-    supervisorSelect.disabled = false;
-    const placeholder = document.createElement('option');
-    placeholder.value = '';
-    placeholder.textContent = 'اختر اسم المشرف/ة';
-    supervisorSelect.appendChild(placeholder);
-
-    if (supervisors.length === 0) {
-        const emptyOption = document.createElement('option');
-        emptyOption.value = 'لا يوجد';
-        emptyOption.textContent = 'لا يوجد مشرفون/مشرفات لهذا الاختيار';
-        supervisorSelect.appendChild(emptyOption);
-        supervisorSelect.value = 'لا يوجد';
-        return;
-    }
-
-    supervisors.forEach(name => {
-        const option = document.createElement('option');
-        option.value = name;
-        option.textContent = name;
-        supervisorSelect.appendChild(option);
-    });
-}
-
-function handleOwnerLogin() {
-    const ownerCodeInput = document.getElementById('ownerCode');
-    if (!ownerCodeInput) {
-        return;
-    }
-
-    if (OWNER_ACCESS_CODE === 'CHANGE_ME') {
-        showMessage('يرجى تحديث رمز المالك في إعدادات النظام أولاً.', 'warning');
-        return;
-    }
-
-    if (ownerCodeInput.value.trim() === OWNER_ACCESS_CODE) {
-        localStorage.setItem(OWNER_ACCESS_KEY, 'true');
-        ownerCodeInput.value = '';
-        applyOwnerState();
-        showMessage('تم تسجيل الدخول كمالك بنجاح. ✅', 'success');
-        handleRefreshStats();
-    } else {
-        showMessage('رمز المالك غير صحيح.', 'error');
-    }
-}
-
-function handleOwnerLogout() {
-    localStorage.removeItem(OWNER_ACCESS_KEY);
-    applyOwnerState();
-    showMessage('تم تسجيل الخروج من وضع المالك.', 'success');
-}
-
-function handleRefreshStats() {
-    if (!requireOwnerAccess('هذه الإحصائية متاحة للمالك فقط.')) {
-        return;
-    }
-    updateSupervisorStats();
-}
-
-function updateSupervisorStats() {
-    const statsBody = document.getElementById('statsBody');
-    if (!statsBody) {
-        return;
-    }
-
-    getAllRecords().then(records => {
-        const filterWeek = document.getElementById('filterWeek')?.value || '';
-        const filterDay = document.getElementById('filterDay')?.value || '';
-        const filterSector = document.getElementById('filterSector')?.value || '';
-        const filterDate = document.getElementById('filterDate')?.value || '';
-
-        const filtered = records.filter(record => {
-            if (filterWeek && record.week !== filterWeek) return false;
-            if (filterDay && record.day !== filterDay) return false;
-            if (filterSector && record.sector !== filterSector) return false;
-            if (filterDate && record.date !== filterDate) return false;
-            return true;
-        });
-
-        const counts = new Map();
-        filtered.forEach(record => {
-            const key = `${record.supervisor || 'غير محدد'}|${record.sector || ''}|${record.gender || ''}`;
-            counts.set(key, (counts.get(key) || 0) + 1);
-        });
-
-        const supervisors = getAllSupervisors();
-        statsBody.innerHTML = '';
-
-        supervisors.forEach(({ name, sector, gender }) => {
-            const key = `${name}|${sector}|${gender}`;
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${name}</td>
-                <td>${sector}</td>
-                <td>${gender}</td>
-                <td>${counts.get(key) || 0}</td>
-            `;
-            statsBody.appendChild(row);
-        });
-    });
 }
 
 // ===== Format Date in Arabic =====
@@ -1740,7 +1478,7 @@ function generatePreviewHTML(data) {
             <div style="text-align: center; margin-bottom: 20px;">
                 <img src="logo2.png" 
                      alt="شعار وزارة التعليم" 
-                     style="max-height: 120px; width: auto; object-fit: contain;">
+                     style="max-height: 110px; width: auto; object-fit: contain;">
             </div>
             <h1>استمارة خدمات دعم التميز المدرسي</h1>
             <p>وزارة التعليم - إدارة التعليم بالمنطقة الشرقية</p>
@@ -1758,7 +1496,7 @@ function generatePreviewHTML(data) {
             <div class="preview-field"><strong>المهمة:</strong> ${data.taskType}</div>
             <div class="preview-field"><strong>القطاع:</strong> ${data.sector}</div>
             <div class="preview-field"><strong>النوع:</strong> ${data.gender}</div>
-            <div class="preview-field"><strong>المشرف/ة:</strong> ${data.supervisor}</div>
+            <div class="preview-field"><strong>المشرف/ة:</strong> ${data.supervisor || ''}</div>
             <div class="preview-field"><strong>المرحلة:</strong> ${data.stage}</div>
             <div class="preview-field"><strong>نوع المدرسة:</strong> ${data.schoolType}</div>
             <div class="preview-field"><strong>اسم المدرسة:</strong> ${data.mainSchool}</div>
@@ -1964,11 +1702,9 @@ function handlePrint() {
                     margin-bottom: 30px;
                     padding-bottom: 20px;
                     border-bottom: 3px solid #006341;
-                    background: #ffffff;
-                    color: #2c3e50;
                 }
                 .preview-header img {
-                    max-height: 110px;
+                    max-height: 100px;
                     width: auto;
                     margin-bottom: 15px;
                     object-fit: contain;
@@ -2024,9 +1760,6 @@ function handlePrint() {
 
 // ===== Handle Export Excel =====
 function handleExportExcel() {
-    if (!requireOwnerAccess('تصدير Excel متاح للمالك فقط.')) {
-        return;
-    }
     if (!validateForm()) {
         return;
     }
@@ -2141,7 +1874,6 @@ function handleReset() {
         const dateInput = document.getElementById('date');
         const dayInput = document.getElementById('day');
         const dateNote = document.getElementById('dateNote');
-        const supervisorSelect = document.getElementById('supervisor');
         
         dateInput.min = '';
         dateInput.max = '';
@@ -2150,9 +1882,6 @@ function handleReset() {
         dayInput.value = '';
         dateNote.textContent = 'اختر الأسبوع الدراسي أولاً';
         dateNote.style.color = '#6c757d';
-
-        supervisorSelect.innerHTML = '<option value="">اختر القطاع والنوع أولاً</option>';
-        supervisorSelect.disabled = true;
         
         // Hide conditional sections
         document.getElementById('teachingSection').style.display = 'none';
@@ -2176,9 +1905,11 @@ function handleReset() {
 
 // ===== Handle View Records =====
 async function handleViewRecords() {
-    if (!requireOwnerAccess('عرض السجلات محفوظ للمالك فقط.')) {
+    const hasAccess = await requireOwnerAccess();
+    if (!hasAccess) {
         return;
     }
+
     try {
         const records = await getAllRecords();
         
@@ -2218,9 +1949,6 @@ async function handleViewRecords() {
 
 // ===== View Single Record =====
 window.viewRecord = async function(id) {
-    if (!requireOwnerAccess('عرض السجلات محفوظ للمالك فقط.')) {
-        return;
-    }
     try {
         const transaction = db.transaction([STORE_NAME], 'readonly');
         const objectStore = transaction.objectStore(STORE_NAME);
@@ -2242,9 +1970,6 @@ window.viewRecord = async function(id) {
 
 // ===== Export Single Record as PDF =====
 window.exportRecordPDF = async function(id) {
-    if (!requireOwnerAccess('تصدير السجلات محفوظ للمالك فقط.')) {
-        return;
-    }
     try {
         const transaction = db.transaction([STORE_NAME], 'readonly');
         const objectStore = transaction.objectStore(STORE_NAME);
@@ -2265,9 +1990,6 @@ window.exportRecordPDF = async function(id) {
 
 // ===== Export Single Record as Excel =====
 window.exportRecordExcel = async function(id) {
-    if (!requireOwnerAccess('تصدير السجلات محفوظ للمالك فقط.')) {
-        return;
-    }
     try {
         const transaction = db.transaction([STORE_NAME], 'readonly');
         const objectStore = transaction.objectStore(STORE_NAME);
@@ -2288,9 +2010,6 @@ window.exportRecordExcel = async function(id) {
 
 // ===== Delete Record by ID =====
 window.deleteRecordById = async function(id) {
-    if (!requireOwnerAccess('حذف السجلات محفوظ للمالك فقط.')) {
-        return;
-    }
     if (confirm('هل أنت متأكد من حذف هذا السجل؟')) {
         try {
             await deleteRecord(id);
@@ -2303,9 +2022,11 @@ window.deleteRecordById = async function(id) {
 
 // ===== Handle Export All Excel =====
 async function handleExportAllExcel() {
-    if (!requireOwnerAccess('تصدير جميع السجلات محفوظ للمالك فقط.')) {
+    const hasAccess = await requireOwnerAccess();
+    if (!hasAccess) {
         return;
     }
+
     try {
         const records = await getAllRecords();
         
@@ -2349,63 +2070,61 @@ async function handleExportAllExcel() {
             'التوصيات',
             'المقترحات'
         
-        const headers = [
-            'التاريخ',
-            'اليوم',
-            'الأسبوع',
-            'القطاع',
-            'النوع',
-            'المشرف/ة',
-            'المهمة',
-            'المرحلة',
-            'نوع المدرسة',
-            'اسم المدرسة',
-            'المدرسة الإضافية',
-            'نوع الخدمة',
-            'مجالات الدعم الرئيسة',
-            'إجراءات التدريس',
-            'عدد إجراءات التدريس',
-            'إجراءات نواتج التعلم',
-            'عدد إجراءات نواتج التعلم',
-            'إجراءات التوجيه الطلابي',
-            'عدد إجراءات التوجيه الطلابي',
-            'إجراءات النشاط الطلابي',
-            'عدد إجراءات النشاط الطلابي',
-            'تمكين المدرسة',
-            'تفعيل منصة مدرستي',
-            'سبب عدم التفعيل',
-            'مدى مشاركة المدرسة',
-            'الخبرات الإشرافية',
-            'المبادرات',
-            'التحديات',
-            'المعالجات',
-            'التوصيات',
-            'المقترحات',
-            'تاريخ الحفظ'
+        // Summary sheet
+        const summaryData = [
+            ['ملخص جميع السجلات'],
+            ['وزارة التعليم - إدارة التعليم بالمنطقة الشرقية'],
+            [],
+            ['التاريخ', 'الأسبوع', 'المدرسة', 'القطاع', 'المرحلة', 'النوع', 'المشرف/ة', 'نوع الخدمة']
         ];
         
-        const rows = records.map(record => [
+        records.forEach(record => {
+            summaryData.push([
+                record.date,
+                record.week,
+                record.mainSchool,
+                record.sector,
+                record.stage,
+                record.gender,
+                record.supervisor,
+                record.serviceType
+            ]);
+        });
+        
+        const summarySheet = XLSX.utils.aoa_to_sheet(summaryData);
+        summarySheet['!cols'] = [
+            { wch: 15 },
+            { wch: 40 },
+            { wch: 30 },
+            { wch: 15 },
+            { wch: 15 },
+            { wch: 10 },
+            { wch: 25 },
+            { wch: 15 }
+        ];
+
+        const rows = records.map(record => ([
+            record.week || '',
             record.date || '',
             record.day || '',
-            record.week || '',
+            record.taskType || '',
             record.sector || '',
             record.gender || '',
             record.supervisor || '',
-            record.taskType || '',
             record.stage || '',
             record.schoolType || '',
             record.mainSchool || '',
             record.additionalSchool || '',
             record.serviceType || '',
             (record.supportAreas || []).join('، '),
+            record.teachingCount || '',
             (record.teachingActions || []).join('، '),
-            record.teachingCount || 0,
+            record.outcomesCount || '',
             (record.outcomesActions || []).join('، '),
-            record.outcomesCount || 0,
+            record.guidanceCount || '',
             (record.guidanceActions || []).join('، '),
-            record.guidanceCount || 0,
+            record.activityCount || '',
             (record.activityActions || []).join('، '),
-            record.activityCount || 0,
             (record.empowerment || []).join('، '),
             record.elearning || '',
             record.elearningReason || '',
@@ -2415,16 +2134,15 @@ async function handleExportAllExcel() {
             record.challenges || '',
             record.treatments || '',
             record.recommendations || '',
-            record.suggestions || '',
-            record.timestamp || ''
-        ]);
-        
+            record.suggestions || ''
+        ]));
+
         const sheetData = [headers, ...rows];
-        const summarySheet = XLSX.utils.aoa_to_sheet(sheetData);
-        summarySheet['!cols'] = headers.map(() => ({ wch: 20 }));
-        
-        XLSX.utils.book_append_sheet(workbook, summarySheet, 'جميع السجلات');
-        
+        const recordsSheet = XLSX.utils.aoa_to_sheet(sheetData);
+        recordsSheet['!cols'] = headers.map((header) => ({ wch: Math.max(15, header.length + 4) }));
+
+        XLSX.utils.book_append_sheet(workbook, recordsSheet, 'السجلات المحفوظة');
+
         const fileName = `جميع_سجلات_دعم_التميز_${new Date().toISOString().split('T')[0]}.xlsx`;
         XLSX.writeFile(workbook, fileName);
         
@@ -2480,11 +2198,6 @@ function loadDraft() {
                     element.value = data[key];
                 }
             });
-            updateSupervisorOptions();
-            if (data.supervisor) {
-                const supervisorSelect = document.getElementById('supervisor');
-                supervisorSelect.value = data.supervisor;
-            }
         } catch (error) {
             console.error('خطأ في تحميل المسودة:', error);
         }
