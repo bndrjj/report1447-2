@@ -1,736 +1,600 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>استمارة دعم التميز المدرسي - ١٤٤٧هـ</title>
-    <link rel="stylesheet" href="styles.css">
+<html dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>استمارة دعم التميز المدرسي - ١٤٤٧هـ</title>
+<link href="style.css" rel="stylesheet"/>
+<!-- External Libraries from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-    <!-- Header Section -->
-    <header class="form-header">
-        <div class="header-logo">
-            <img src="logo2.png" alt="شعار وزارة التعليم">
-        </div>
-        <div class="header-content">
-            <h1>استمارة خدمات دعم التميز المدرسي</h1>
-            <p class="header-subtitle">وزارة التعليم - إدارة التعليم بالمنطقة الشرقية</p>
-            <p class="academic-year">العام الدراسي ١٤٤٧هـ - ٢٠٢٦م</p>
-        </div>
-    </header>
-
-    <!-- Main Form Container -->
-    <main class="form-container">
-        <section class="form-section owner-panel" id="ownerPanel">
-            <div class="section-header">
-                <h2>🛡️ لوحة المالك</h2>
-            </div>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="ownerPassword">كلمة مرور المالك <span class="required">*</span></label>
-                    <input type="password" id="ownerPassword" name="ownerPassword" placeholder="أدخل كلمة المرور للمالك">
-                    <p class="field-note">هذه الكلمة مطلوبة للوصول إلى السجلات والتصدير الكامل.</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="ownerPasswordConfirm">تأكيد كلمة مرور المالك <span class="required">*</span></label>
-                    <input type="password" id="ownerPasswordConfirm" name="ownerPasswordConfirm" placeholder="أعد إدخال كلمة المرور">
-                </div>
-
-                <div class="form-group">
-                    <label for="ownerPasswordSave">حفظ كلمة المرور</label>
-                    <button type="button" class="btn btn-primary" id="ownerPasswordSave">💾 حفظ كلمة المرور</button>
-                </div>
-            </div>
-
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="scheduleEnabled">تفعيل جدول الإتاحة الأسبوعي <span class="required">*</span></label>
-                    <select id="scheduleEnabled" name="scheduleEnabled">
-                        <option value="yes">نعم</option>
-                        <option value="no">لا</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="scheduleDay">اليوم المتاح أسبوعيًا <span class="required">*</span></label>
-                    <select id="scheduleDay" name="scheduleDay">
-                        <option value="0">الأحد</option>
-                        <option value="1">الاثنين</option>
-                        <option value="2">الثلاثاء</option>
-                        <option value="3">الأربعاء</option>
-                        <option value="4">الخميس</option>
-                        <option value="5">الجمعة</option>
-                        <option value="6">السبت</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="scheduleTime">وقت بدء الإتاحة <span class="required">*</span></label>
-                    <input type="time" id="scheduleTime" name="scheduleTime" value="08:00">
-                </div>
-
-                <div class="form-group">
-                    <label for="scheduleDuration">مدة الإتاحة (بالساعات) <span class="required">*</span></label>
-                    <input type="number" id="scheduleDuration" name="scheduleDuration" min="1" max="24" value="24">
-                </div>
-
-                <div class="form-group">
-                    <label for="scheduleSave">تحديث الجدول</label>
-                    <button type="button" class="btn btn-primary" id="scheduleSave">🗓️ حفظ الجدول</button>
-                    <p class="field-note" id="scheduleStatus">سيتم تفعيل الإتاحة حسب الجدول المحفوظ.</p>
-                </div>
-            </div>
-        </section>
-        <form id="mainForm">
-            <!-- Section 1: Basic Information -->
-            <section class="form-section">
-                <div class="section-header">
-                    <h2>📋 المعلومات الأساسية</h2>
-                </div>
-                
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="sector">القطاع <span class="required">*</span></label>
-                        <select id="sector" name="sector" required>
-                            <option value="">اختر القطاع</option>
-                            <option value="القطيف">القطيف</option>
-                            <option value="الدمام">الدمام</option>
-                            <option value="الجبيل">الجبيل</option>
-                            <option value="الخبر">الخبر</option>
-                            <option value="الخفجي">الخفجي</option>
-                            <option value="رأس تنورة">رأس تنورة</option>
-                            <option value="حفر الباطن">حفر الباطن</option>
-                            <option value="القرية العليا">القرية العليا</option>
-                            <option value="النعيرية">النعيرية</option>
-                            <option value="بقيق">بقيق</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="gender">النوع <span class="required">*</span></label>
-                        <select id="gender" name="gender" required>
-                            <option value="">اختر النوع</option>
-                            <option value="بنين">بنين</option>
-                            <option value="بنات">بنات</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="supervisor">المشرفين والمشرفات <span class="required">*</span></label>
-                        <select id="supervisor" name="supervisor" required>
-                            <option value="">اختر القطاع والنوع أولاً</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="week">الأسبوع الدراسي <span class="required">*</span></label>
-                        <select id="week" name="week" required>
-                            <option value="">اختر الأسبوع</option>
-                            <option value="الأسبوع الأول - ٢٠٢٦/٠١/١٨ إلى ٢٠٢٦/٠١/٢٢">الأسبوع الأول - ٢٠٢٦/٠١/١٨ إلى ٢٠٢٦/٠١/٢٢</option>
-                            <option value="الأسبوع الثاني - ٢٠٢٦/٠١/٢٥ إلى ٢٠٢٦/٠١/٢٩">الأسبوع الثاني - ٢٠٢٦/٠١/٢٥ إلى ٢٠٢٦/٠١/٢٩</option>
-                            <option value="الأسبوع الثالث - ٢٠٢٦/٠٢/٠٢ إلى ٢٠٢٦/٠٢/٠٦">الأسبوع الثالث - ٢٠٢٦/٠٢/٠٢ إلى ٢٠٢٦/٠٢/٠٦</option>
-                            <option value="الأسبوع الرابع - ٢٠٢٦/٠٢/٠٩ إلى ٢٠٢٦/٠٢/١٢">الأسبوع الرابع - ٢٠٢٦/٠٢/٠٩ إلى ٢٠٢٦/٠٢/١٢</option>
-                            <option value="الأسبوع الخامس - ٢٠٢٦/٠٢/١٥ إلى ٢٠٢٦/٠٢/١٩">الأسبوع الخامس - ٢٠٢٦/٠٢/١٥ إلى ٢٠٢٦/٠٢/١٩</option>
-                            <option value="الأسبوع السادس - ٢٠٢٦/٠٢/٢٢ إلى ٢٠٢٦/٠٢/٢٦">الأسبوع السادس - ٢٠٢٦/٠٢/٢٢ إلى ٢٠٢٦/٠٢/٢٦</option>
-                            <option value="الأسبوع السابع - ٢٠٢٦/٠٣/٠١ إلى ٢٠٢٦/٠٣/٠٥">الأسبوع السابع - ٢٠٢٦/٠٣/٠١ إلى ٢٠٢٦/٠٣/٠٥</option>
-                            <option value="الأسبوع الثامن - ٢٠٢٦/٠٣/٢٩ إلى ٢٠٢٦/٠٤/٠٢">الأسبوع الثامن - ٢٠٢٦/٠٣/٢٩ إلى ٢٠٢٦/٠٤/٠٢</option>
-                            <option value="الأسبوع التاسع - ٢٠٢٦/٠٤/٠٥ إلى ٢٠٢٦/٠٤/٠٩">الأسبوع التاسع - ٢٠٢٦/٠٤/٠٥ إلى ٢٠٢٦/٠٤/٠٩</option>
-                            <option value="الأسبوع العاشر - ٢٠٢٦/٠٤/١٢ إلى ٢٠٢٦/٠٤/١٦">الأسبوع العاشر - ٢٠٢٦/٠٤/١٢ إلى ٢٠٢٦/٠٤/١٦</option>
-                            <option value="الأسبوع الحادي عشر - ٢٠٢٦/٠٤/١٩ إلى ٢٠٢٦/٠٤/٢٣">الأسبوع الحادي عشر - ٢٠٢٦/٠٤/١٩ إلى ٢٠٢٦/٠٤/٢٣</option>
-                            <option value="الأسبوع الثاني عشر - ٢٠٢٦/٠٤/٢٦ إلى ٢٠٢٦/٠٤/٣٠">الأسبوع الثاني عشر - ٢٠٢٦/٠٤/٢٦ إلى ٢٠٢٦/٠٤/٣٠</option>
-                            <option value="الأسبوع الثالث عشر - ٢٠٢٦/٠٥/٠٣ إلى ٢٠٢٦/٠٥/٠٧">الأسبوع الثالث عشر - ٢٠٢٦/٠٥/٠٣ إلى ٢٠٢٦/٠٥/٠٧</option>
-                            <option value="الأسبوع الرابع عشر - ٢٠٢٦/٠٥/١٠ إلى ٢٠٢٦/٠٥/١٤">الأسبوع الرابع عشر - ٢٠٢٦/٠٥/١٠ إلى ٢٠٢٦/٠٥/١٤</option>
-                            <option value="الأسبوع الخامس عشر - ٢٠٢٦/٠٥/١٧ إلى ٢٠٢٦/٠٥/٢١">الأسبوع الخامس عشر - ٢٠٢٦/٠٥/١٧ إلى ٢٠٢٦/٠٥/٢١</option>
-                            <option value="الأسبوع السادس عشر - ٢٠٢٦/٠٥/٣١ إلى ٢٠٢٦/٠٦/٠٤">الأسبوع السادس عشر - ٢٠٢٦/٠٥/٣١ إلى ٢٠٢٦/٠٦/٠٤</option>
-                            <option value="الأسبوع السابع عشر - ٢٠٢٦/٠٦/٠٧ إلى ٢٠٢٦/٠٦/١١">الأسبوع السابع عشر - ٢٠٢٦/٠٦/٠٧ إلى ٢٠٢٦/٠٦/١١</option>
-                            <option value="الأسبوع الثامن عشر - ٢٠٢٦/٠٦/١٤ إلى ٢٠٢٦/٠٦/١٨">الأسبوع الثامن عشر - ٢٠٢٦/٠٦/١٤ إلى ٢٠٢٦/٠٦/١٨</option>
-                            <option value="الأسبوع التاسع عشر - ٢٠٢٦/٠٦/٢١ إلى ٢٠٢٦/٠٦/٢٥">الأسبوع التاسع عشر - ٢٠٢٦/٠٦/٢١ إلى ٢٠٢٦/٠٦/٢٥</option>
-                            <option value="الأسبوع العشرون - ٢٠٢٦/٠٦/٢٨ إلى ٢٠٢٦/٠٧/٠٢">الأسبوع العشرون - ٢٠٢٦/٠٦/٢٨ إلى ٢٠٢٦/٠٧/٠٢</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="date">التاريخ <span class="required">*</span></label>
-                        <input type="date" id="date" name="date" required>
-                        <p class="field-note" id="dateNote">اختر الأسبوع الدراسي أولاً</p>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="day">اليوم <span class="required">*</span></label>
-                        <input type="text" id="day" name="day" readonly required style="background-color: #f8f9fa; cursor: not-allowed;">
-                        <p class="field-note">سيتم تحديد اليوم تلقائياً بناءً على التاريخ المختار</p>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="taskType">المهمة حسب خطة المشرف التربوي <span class="required">*</span></label>
-                        <select id="taskType" name="taskType" required>
-                            <option value="">اختر نوع المهمة</option>
-                            <option value="تقديم خدمات دعم تميز مدرسي">تقديم خدمات دعم تميز مدرسي</option>
-                            <option value="مهمة رسمية وتم تسجيلها في نظام حضوري">مهمة رسمية وتم تسجيلها في نظام حضوري</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="stage">المرحلة الدراسية <span class="required">*</span></label>
-                        <select id="stage" name="stage" required>
-                            <option value="">اختر المرحلة</option>
-                            <option value="رياض أطفال">رياض أطفال</option>
-                            <option value="ابتدائي">ابتدائي</option>
-                            <option value="متوسط">متوسط</option>
-                            <option value="ثانوي">ثانوي</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="schoolType">المدرسة التي سيقدم لها الخدمة <span class="required">*</span></label>
-                        <select id="schoolType" name="schoolType" required>
-                            <option value="">اختر نوع المدرسة</option>
-                            <option value="المدرسة الأساسية المكلف بها">المدرسة الأساسية المكلف بها</option>
-                            <option value="المدرسة الإضافية لتقديم الدعم">المدرسة الإضافية لتقديم الدعم</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group" id="mainSchoolGroup">
-                        <label for="mainSchool">اسم المدرسة المكلف بتقديم الخدمة لها <span class="required">*</span></label>
-                        <input type="text" id="mainSchool" name="mainSchool" placeholder="أدخل اسم المدرسة">
-                    </div>
-
-                    <div class="form-group" id="additionalSchoolGroup" style="display: none;">
-                        <label for="additionalSchool">اسم المدرسة الإضافية</label>
-                        <input type="text" id="additionalSchool" name="additionalSchool" placeholder="أدخل اسم المدرسة الإضافية">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="serviceType">نوع الخدمة <span class="required">*</span></label>
-                        <select id="serviceType" name="serviceType" required>
-                            <option value="">اختر نوع الخدمة</option>
-                            <option value="حضوري">حضوري</option>
-                            <option value="عن بُعد">عن بُعد</option>
-                        </select>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Section 2: Support Areas -->
-            <section class="form-section">
-                <div class="section-header">
-                    <h2>📊 مجالات الدعم الرئيسة</h2>
-                </div>
-
-                <div class="form-group">
-                    <label class="checkbox-label">حدد مجالات الدعم الرئيسة التي ساهم المشرف بها خلال اليوم الدراسي <span class="required">*</span></label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="supportAreas" value="التدريس">
-                            <span>التدريس</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="supportAreas" value="نواتج التعلم">
-                            <span>نواتج التعلم</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="supportAreas" value="التوجيه الطلابي">
-                            <span>التوجيه الطلابي</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="supportAreas" value="النشاط الطلابي">
-                            <span>النشاط الطلابي</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="supportAreas" value="other" id="supportAreasOther">
-                            <span>غير ذلك</span>
-                        </label>
-                    </div>
-                    <input type="text" id="supportAreasOtherText" name="supportAreasOtherText" class="other-input" placeholder="حدد غير ذلك..." style="display: none;">
-                </div>
-            </section>
-
-            <!-- Section 3: Teaching Field -->
-            <section class="form-section" id="teachingSection" style="display: none;">
-                <div class="section-header">
-                    <h2>📚 مجال التدريس</h2>
-                    <p class="section-note">ملاحظة: يقدم المشرف التربوي دورًا تمكينيًا في دعم المدرسة على تنفيذ عملياتها الإشرافية بفاعلية. يركز على بناء قدرات المدرسة، وتيسير اتخاذ القرار المبني على البيانات، وتحفيز المبادرات الذاتية، مع التقليل التدريجي للاعتماد على التوجيه المباشر.</p>
-                </div>
-
-                <div class="form-group">
-                    <label class="checkbox-label">الإجراءات المنفذة من قبل المشرف التربوي في مجال التدريس</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="teachingActions" value="زيارة صفية بالتنسيق مع إدارة المدرسة واللجان المعنية بقصد التطوير أو قياس الأثر">
-                            <span>زيارة صفية بالتنسيق مع إدارة المدرسة واللجان المعنية بقصد التطوير أو قياس الأثر</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="teachingActions" value="تقديم تغذية راجعة لمعلم أو أكثر">
-                            <span>تقديم تغذية راجعة لمعلم أو أكثر</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="teachingActions" value="مراجعة خطة الدرس أو الخطة الفصلية">
-                            <span>مراجعة خطة الدرس أو الخطة الفصلية</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="teachingActions" value="دعم توظيف أدوات التقويم (أدائية – تحريرية – شفهية)">
-                            <span>دعم توظيف أدوات التقويم (أدائية – تحريرية – شفهية)</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="teachingActions" value="دعم وتحفيز تفعيل مجتمعات التعلم المهنية بين المعلمين">
-                            <span>دعم وتحفيز تفعيل مجتمعات التعلم المهنية بين المعلمين</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="teachingActions" value="إعداد أو مراجعة أدوات تقييم أداء الطلاب">
-                            <span>إعداد أو مراجعة أدوات تقييم أداء الطلاب</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="teachingActions" value="تقديم استشارات لدعم التعليم الالكتروني">
-                            <span>تقديم استشارات لدعم التعليم الالكتروني</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="teachingActions" value="تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال التدريس">
-                            <span>تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال التدريس</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="teachingActions" value="غير مستهدف هذا الاسبوع">
-                            <span>غير مستهدف هذا الاسبوع</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="teachingActions" value="other" id="teachingActionsOther">
-                            <span>غير ذلك</span>
-                        </label>
-                    </div>
-                    <input type="text" id="teachingActionsOtherText" name="teachingActionsOtherText" class="other-input" placeholder="حدد غير ذلك..." style="display: none;">
-                </div>
-
-                <div class="form-group">
-                    <label for="teachingCount">ما عدد الإجراءات المنفذه خلال الأسبوع في مجال التدريس</label>
-                    <input type="number" id="teachingCount" name="teachingCount" min="0" value="0" placeholder="0">
-                    <p class="field-note">يذكر مقدم خدمة التميز عدد الإجراءات المقدمة في المجال المحدد رقماً وفي حال كان المجال غير مستهدف يتم وضع (0) صفر</p>
-                </div>
-            </section>
-
-            <!-- Section 4: Learning Outcomes Field -->
-            <section class="form-section" id="outcomesSection" style="display: none;">
-                <div class="section-header">
-                    <h2>🎯 مجال نواتج التعلم</h2>
-                    <p class="section-note">ملاحظة: يقدم المشرف التربوي دورًا تمكينيًا في دعم المدرسة على تنفيذ عملياتها الإشرافية بفاعلية. يركز على بناء قدرات المدرسة، وتيسير اتخاذ القرار المبني على البيانات، وتحفيز المبادرات الذاتية، مع التقليل التدريجي للاعتماد على التوجيه المباشر.</p>
-                </div>
-
-                <div class="form-group">
-                    <label class="checkbox-label">الإجراءات المنفذة من قبل المشرف التربوي في مجال نواتج التعلم</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="outcomesActions" value="تحليل نتائج اختبارات المدرسة أو الاختبارات الوطنية المختلفة أو دعم اللجنة المختصة بالمدرسة في ذلك">
-                            <span>تحليل نتائج اختبارات المدرسة أو الاختبارات الوطنية المختلفة أو دعم اللجنة المختصة بالمدرسة في ذلك</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="outcomesActions" value="دعم ومشاركة اللجان المختصة بالمدرسة في معالجة مواطن الضعف واستثمار مواطن القوة">
-                            <span>دعم ومشاركة اللجان المختصة بالمدرسة في معالجة مواطن الضعف واستثمار مواطن القوة</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="outcomesActions" value="دعم اللجنة المختصة بالمدرسة في إعداد خطة علاجية أو إثرائية">
-                            <span>دعم اللجنة المختصة بالمدرسة في إعداد خطة علاجية أو إثرائية</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="outcomesActions" value="دعم تكييف التعليم وفق الفروق الفردية">
-                            <span>دعم تكييف التعليم وفق الفروق الفردية</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="outcomesActions" value="متابعة مؤشرات التحصيل عبر المنصات وغيرها">
-                            <span>متابعة مؤشرات التحصيل عبر المنصات وغيرها</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="outcomesActions" value="تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال نواتج التعلم">
-                            <span>تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال نواتج التعلم</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="outcomesActions" value="غير مستهدف هذا الاسبوع">
-                            <span>غير مستهدف هذا الاسبوع</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="outcomesActions" value="other" id="outcomesActionsOther">
-                            <span>غير ذلك</span>
-                        </label>
-                    </div>
-                    <input type="text" id="outcomesActionsOtherText" name="outcomesActionsOtherText" class="other-input" placeholder="حدد غير ذلك..." style="display: none;">
-                </div>
-
-                <div class="form-group">
-                    <label for="outcomesCount">ما عدد الإجراءات المنفذه خلال الأسبوع في مجال نواتج التعلم</label>
-                    <input type="number" id="outcomesCount" name="outcomesCount" min="0" value="0" placeholder="0">
-                    <p class="field-note">يذكر مقدم خدمة التميز عدد الإجراءات المقدمة في المجال المحدد رقماً وفي حال كان المجال غير مستهدف يتم وضع (0) صفر</p>
-                </div>
-            </section>
-
-            <!-- Section 5: Student Guidance Field -->
-            <section class="form-section" id="guidanceSection" style="display: none;">
-                <div class="section-header">
-                    <h2>🧭 مجال التوجيه الطلابي</h2>
-                    <p class="section-note">ملاحظة: يقدم المشرف التربوي دورًا تمكينيًا في دعم المدرسة على تنفيذ عملياتها الإشرافية بفاعلية. يركز على بناء قدرات المدرسة، وتيسير اتخاذ القرار المبني على البيانات، وتحفيز المبادرات الذاتية، مع التقليل التدريجي للاعتماد على التوجيه المباشر.</p>
-                </div>
-
-                <div class="form-group">
-                    <label class="checkbox-label">الإجراءات المنفذة من قبل المشرف التربوي في مجال التوجيه الطلابي</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="guidanceActions" value="لقاء مع الموجه الطلابي أو لجنة التوجيه">
-                            <span>لقاء مع الموجه الطلابي أو لجنة التوجيه</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="guidanceActions" value="دعم الموجه الطلابي أو اللجنة المختصة في معالجة حالات الطلاب">
-                            <span>دعم الموجه الطلابي أو اللجنة المختصة في معالجة حالات الطلاب</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="guidanceActions" value="دعم قيم الانضباط والسلوك">
-                            <span>دعم قيم الانضباط والسلوك</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="guidanceActions" value="دعم خطة التوجيه الطلابي السنوية">
-                            <span>دعم خطة التوجيه الطلابي السنوية</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="guidanceActions" value="التشجيع على تبني المبادرات في الشراكة المجتمعية">
-                            <span>التشجيع على تبني المبادرات في الشراكة المجتمعية</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="guidanceActions" value="دعم اللجنة المختصة في تعزيز التطور الصحي والنفسي والاجتماعي للطلبة">
-                            <span>دعم اللجنة المختصة في تعزيز التطور الصحي والنفسي والاجتماعي للطلبة</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="guidanceActions" value="تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال التوجيه الطلابي">
-                            <span>تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال التوجيه الطلابي</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="guidanceActions" value="غير مستهدف هذا الاسبوع">
-                            <span>غير مستهدف هذا الاسبوع</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="guidanceActions" value="other" id="guidanceActionsOther">
-                            <span>غير ذلك</span>
-                        </label>
-                    </div>
-                    <input type="text" id="guidanceActionsOtherText" name="guidanceActionsOtherText" class="other-input" placeholder="حدد غير ذلك..." style="display: none;">
-                </div>
-
-                <div class="form-group">
-                    <label for="guidanceCount">ما عدد الإجراءات المنفذه خلال الأسبوع في مجال التوجية الطلابي</label>
-                    <input type="number" id="guidanceCount" name="guidanceCount" min="0" value="0" placeholder="0">
-                    <p class="field-note">يذكر مقدم خدمة التميز عدد الإجراءات المقدمة في المجال المحدد رقماً وفي حال كان المجال غير مستهدف يتم وضع (0) صفر</p>
-                </div>
-            </section>
-
-            <!-- Section 6: Student Activities Field -->
-            <section class="form-section" id="activitySection" style="display: none;">
-                <div class="section-header">
-                    <h2>🎨 مجال النشاط الطلابي</h2>
-                    <p class="section-note">ملاحظة: يقدم المشرف التربوي دورًا تمكينيًا في دعم المدرسة على تنفيذ عملياتها الإشرافية بفاعلية. يركز على بناء قدرات المدرسة، وتيسير اتخاذ القرار المبني على البيانات، وتحفيز المبادرات الذاتية، مع التقليل التدريجي للاعتماد على التوجيه المباشر.</p>
-                </div>
-
-                <div class="form-group">
-                    <label class="checkbox-label">الإجراءات المنفذة من قبل المشرف التربوي في مجال النشاط الطلابي</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="activityActions" value="المشاركة في إعداد خطة النشاط">
-                            <span>المشاركة في إعداد خطة النشاط</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="activityActions" value="حضور أو دعم مناشط صفية أو غير صفية">
-                            <span>حضور أو دعم مناشط صفية أو غير صفية</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="activityActions" value="مواءمة الأنشطة مع القيم والمهارات المستهدفة">
-                            <span>مواءمة الأنشطة مع القيم والمهارات المستهدفة</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="activityActions" value="دعم اللجنة المختصة بالنشاط المدرسي">
-                            <span>دعم اللجنة المختصة بالنشاط المدرسي</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="activityActions" value="إبراز إنجاز طلابي متميز">
-                            <span>إبراز إنجاز طلابي متميز</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="activityActions" value="المشاركة في نشر ثقافة العمل التطوعي لمنسوبي المدرسة">
-                            <span>المشاركة في نشر ثقافة العمل التطوعي لمنسوبي المدرسة</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="activityActions" value="تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال النشاط الطلابي">
-                            <span>تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال النشاط الطلابي</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="activityActions" value="غير مستهدف هذا الاسبوع">
-                            <span>غير مستهدف هذا الاسبوع</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="activityActions" value="other" id="activityActionsOther">
-                            <span>غير ذلك</span>
-                        </label>
-                    </div>
-                    <input type="text" id="activityActionsOtherText" name="activityActionsOtherText" class="other-input" placeholder="حدد غير ذلك..." style="display: none;">
-                </div>
-
-                <div class="form-group">
-                    <label for="activityCount">ما عدد الإجراءات المنفذه خلال الأسبوع في مجال النشاط الطلابي</label>
-                    <input type="number" id="activityCount" name="activityCount" min="0" value="0" placeholder="0">
-                    <p class="field-note">يذكر مقدم خدمة التميز عدد الإجراءات المقدمة في المجال المحدد رقماً وفي حال كان المجال غير مستهدف يتم وضع (0) صفر</p>
-                </div>
-            </section>
-
-            <!-- Section 7: School Empowerment -->
-            <section class="form-section">
-                <div class="section-header">
-                    <h2>💡 تمكين المدرسة</h2>
-                </div>
-
-                <div class="form-group">
-                    <label class="checkbox-label">كيف ساهمت الإجراءات التي نفذتها في تعزيز تمكين المدرسة؟ <span class="required">*</span></label>
-                    <p class="field-note">حدد الإجراءات التي تمكنت منها إدارة المدرسة ولجانها</p>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="empowerment" value="اتخاذ القرار الذاتي">
-                            <span>اتخاذ القرار الذاتي</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="empowerment" value="تحليل البيانات">
-                            <span>تحليل البيانات</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="empowerment" value="المساءلة الذاتية">
-                            <span>المساءلة الذاتية</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="empowerment" value="المبادرة المدرسية">
-                            <span>المبادرة المدرسية</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="empowerment" value="تطوير الخطط المؤسسية">
-                            <span>تطوير الخطط المؤسسية</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="empowerment" value="تبادل الخبرات داخليًا">
-                            <span>تبادل الخبرات داخليًا</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="empowerment" value="لازالت إدارة المدرسة ولجانها في طور البناء">
-                            <span>لازالت إدارة المدرسة ولجانها في طور البناء</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="empowerment" value="other" id="empowermentOther">
-                            <span>غير ذلك</span>
-                        </label>
-                    </div>
-                    <input type="text" id="empowermentOtherText" name="empowermentOtherText" class="other-input" placeholder="حدد غير ذلك..." style="display: none;">
-                </div>
-
-                <div class="form-group">
-                    <label for="elearning">تفعّل المدرسة التعليم الالكتروني من خلال منصة مدرستي <span class="required">*</span></label>
-                    <select id="elearning" name="elearning" required>
-                        <option value="">اختر</option>
-                        <option value="نعم">نعم</option>
-                        <option value="لا">لا</option>
-                    </select>
-                </div>
-
-                <div class="form-group" id="elearningReasonGroup" style="display: none;">
-                    <label for="elearningReason">في حال عدم تفعيل منصة مدرستي في المدرسة، ما هو سبب ذلك؟</label>
-                    <textarea id="elearningReason" name="elearningReason" rows="3" placeholder="اذكر السبب..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="participation">من وجهة نظرك ما مدى مشاركة مدير المدرسة واللجان المعنية في قيادة عمليات الدعم <span class="required">*</span></label>
-                    <select id="participation" name="participation" required>
-                        <option value="">اختر مستوى المشاركة</option>
-                        <option value="عالية: المدرسة قادت التحليل والتنفيذ واستعانت بالمشرف عند الحاجة">عالية: المدرسة قادت التحليل والتنفيذ واستعانت بالمشرف عند الحاجة</option>
-                        <option value="متوسطة: تم العمل بمشاركة متوازنة بين المدرسة والمشرف">متوسطة: تم العمل بمشاركة متوازنة بين المدرسة والمشرف</option>
-                        <option value="منخفضة: اعتمدت المدرسة على توجيه مباشر من المشرف">منخفضة: اعتمدت المدرسة على توجيه مباشر من المشرف</option>
-                        <option value="لم تشارك المدرسة بفاعلية">لم تشارك المدرسة بفاعلية</option>
-                    </select>
-                </div>
-            </section>
-
-            <!-- Section 8: Additional Information -->
-            <section class="form-section">
-                <div class="section-header">
-                    <h2>📝 معلومات إضافية</h2>
-                </div>
-
-                <div class="form-group">
-                    <label for="experiences">الخبرات الإشرافية التي قدمها المشرف التربوي للمدرسة</label>
-                    <textarea id="experiences" name="experiences" rows="4" placeholder="اذكر الخبرات الإشرافية..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="initiatives">المبادرات التي نفذت داخل المدرسة بدعم من مشرف مقدم الخدمة</label>
-                    <textarea id="initiatives" name="initiatives" rows="4" placeholder="اذكر المبادرات..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="challenges">أبرز التحديات الإدارية والفنية في المدرسة</label>
-                    <textarea id="challenges" name="challenges" rows="4" placeholder="اذكر التحديات..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="treatments">أبرز المعالجات التي تمت في المجالات الأربعة</label>
-                    <textarea id="treatments" name="treatments" rows="4" placeholder="اذكر المعالجات..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="recommendations">التوصيات التي قدمها مشرف دعم التميز لمدير/ة المدرسة</label>
-                    <textarea id="recommendations" name="recommendations" rows="4" placeholder="اذكر التوصيات..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="suggestions">مقترحات (ملحوظات مرصودة) للفريق التنفيذي</label>
-                    <textarea id="suggestions" name="suggestions" rows="4" placeholder="اذكر المقترحات..."></textarea>
-                </div>
-            </section>
-
-            <!-- Form Actions -->
-            <div class="form-actions">
-                <button type="button" class="btn btn-secondary" id="saveBtn">💾 حفظ البيانات</button>
-                <button type="button" class="btn btn-primary" id="previewBtn">👁️ معاينة التقرير</button>
-                <button type="button" class="btn btn-success" id="exportPdfBtn">📄 تصدير PDF</button>
-                <button type="button" class="btn btn-info" id="printBtn">🖨️ طباعة</button>
-                <button type="button" class="btn btn-danger" id="resetBtn">🗑️ مسح النموذج</button>
-            </div>
-        </form>
-
-        <!-- Data Management Section -->
-        <section class="data-management">
-            <div class="section-header">
-                <h2>📊 إدارة البيانات المحفوظة</h2>
-            </div>
-            <div class="owner-access" id="ownerAccessPanel">
-                <div class="owner-access__content">
-                    <label for="ownerCode">رمز دخول المالك</label>
-                    <div class="owner-access__controls">
-                        <input type="password" id="ownerCode" name="ownerCode" placeholder="أدخل رمز المالك">
-                        <button type="button" class="btn btn-primary btn-sm" id="ownerLoginBtn">🔐 دخول</button>
-                    </div>
-                    <p class="field-note">لن تظهر هذه اللوحة إلا عند فتح الرابط مع ‎#owner‎.</p>
-                </div>
-            </div>
-            <div class="saved-records owner-only">
-                <button type="button" class="btn btn-warning owner-only-inline" id="exportExcelBtn">📊 تصدير Excel (السجل الحالي)</button>
-                <button type="button" class="btn btn-secondary owner-only-inline" id="viewRecordsBtn">📋 عرض السجلات المحفوظة</button>
-                <button type="button" class="btn btn-warning owner-only-inline" id="exportAllExcelBtn">📊 تصدير جميع السجلات إلى Excel</button>
-                <button type="button" class="btn btn-danger owner-only-inline" id="ownerLogoutBtn">🚪 تسجيل الخروج</button>
-            </div>
-            <div class="owner-stats owner-only" id="ownerStats">
-                <div class="section-header">
-                    <h3>📈 إحصائية تعبئة المشرفين</h3>
-                </div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="filterWeek">الأسبوع</label>
-                        <select id="filterWeek" name="filterWeek">
-                            <option value="">كل الأسابيع</option>
-                            <option value="الأسبوع الأول - ٢٠٢٦/٠١/١٨ إلى ٢٠٢٦/٠١/٢٢">الأسبوع الأول - ٢٠٢٦/٠١/١٨ إلى ٢٠٢٦/٠١/٢٢</option>
-                            <option value="الأسبوع الثاني - ٢٠٢٦/٠١/٢٥ إلى ٢٠٢٦/٠١/٢٩">الأسبوع الثاني - ٢٠٢٦/٠١/٢٥ إلى ٢٠٢٦/٠١/٢٩</option>
-                            <option value="الأسبوع الثالث - ٢٠٢٦/٠٢/٠٢ إلى ٢٠٢٦/٠٢/٠٦">الأسبوع الثالث - ٢٠٢٦/٠٢/٠٢ إلى ٢٠٢٦/٠٢/٠٦</option>
-                            <option value="الأسبوع الرابع - ٢٠٢٦/٠٢/٠٩ إلى ٢٠٢٦/٠٢/١٢">الأسبوع الرابع - ٢٠٢٦/٠٢/٠٩ إلى ٢٠٢٦/٠٢/١٢</option>
-                            <option value="الأسبوع الخامس - ٢٠٢٦/٠٢/١٥ إلى ٢٠٢٦/٠٢/١٩">الأسبوع الخامس - ٢٠٢٦/٠٢/١٥ إلى ٢٠٢٦/٠٢/١٩</option>
-                            <option value="الأسبوع السادس - ٢٠٢٦/٠٢/٢٢ إلى ٢٠٢٦/٠٢/٢٦">الأسبوع السادس - ٢٠٢٦/٠٢/٢٢ إلى ٢٠٢٦/٠٢/٢٦</option>
-                            <option value="الأسبوع السابع - ٢٠٢٦/٠٣/٠١ إلى ٢٠٢٦/٠٣/٠٥">الأسبوع السابع - ٢٠٢٦/٠٣/٠١ إلى ٢٠٢٦/٠٣/٠٥</option>
-                            <option value="الأسبوع الثامن - ٢٠٢٦/٠٣/٢٩ إلى ٢٠٢٦/٠٤/٠٢">الأسبوع الثامن - ٢٠٢٦/٠٣/٢٩ إلى ٢٠٢٦/٠٤/٠٢</option>
-                            <option value="الأسبوع التاسع - ٢٠٢٦/٠٤/٠٥ إلى ٢٠٢٦/٠٤/٠٩">الأسبوع التاسع - ٢٠٢٦/٠٤/٠٥ إلى ٢٠٢٦/٠٤/٠٩</option>
-                            <option value="الأسبوع العاشر - ٢٠٢٦/٠٤/١٢ إلى ٢٠٢٦/٠٤/١٦">الأسبوع العاشر - ٢٠٢٦/٠٤/١٢ إلى ٢٠٢٦/٠٤/١٦</option>
-                            <option value="الأسبوع الحادي عشر - ٢٠٢٦/٠٤/١٩ إلى ٢٠٢٦/٠٤/٢٣">الأسبوع الحادي عشر - ٢٠٢٦/٠٤/١٩ إلى ٢٠٢٦/٠٤/٢٣</option>
-                            <option value="الأسبوع الثاني عشر - ٢٠٢٦/٠٤/٢٦ إلى ٢٠٢٦/٠٤/٣٠">الأسبوع الثاني عشر - ٢٠٢٦/٠٤/٢٦ إلى ٢٠٢٦/٠٤/٣٠</option>
-                            <option value="الأسبوع الثالث عشر - ٢٠٢٦/٠٥/٠٣ إلى ٢٠٢٦/٠٥/٠٧">الأسبوع الثالث عشر - ٢٠٢٦/٠٥/٠٣ إلى ٢٠٢٦/٠٥/٠٧</option>
-                            <option value="الأسبوع الرابع عشر - ٢٠٢٦/٠٥/١٠ إلى ٢٠٢٦/٠٥/١٤">الأسبوع الرابع عشر - ٢٠٢٦/٠٥/١٠ إلى ٢٠٢٦/٠٥/١٤</option>
-                            <option value="الأسبوع الخامس عشر - ٢٠٢٦/٠٥/١٧ إلى ٢٠٢٦/٠٥/٢١">الأسبوع الخامس عشر - ٢٠٢٦/٠٥/١٧ إلى ٢٠٢٦/٠٥/٢١</option>
-                            <option value="الأسبوع السادس عشر - ٢٠٢٦/٠٥/٣١ إلى ٢٠٢٦/٠٦/٠٤">الأسبوع السادس عشر - ٢٠٢٦/٠٥/٣١ إلى ٢٠٢٦/٠٦/٠٤</option>
-                            <option value="الأسبوع السابع عشر - ٢٠٢٦/٠٦/٠٧ إلى ٢٠٢٦/٠٦/١١">الأسبوع السابع عشر - ٢٠٢٦/٠٦/٠٧ إلى ٢٠٢٦/٠٦/١١</option>
-                            <option value="الأسبوع الثامن عشر - ٢٠٢٦/٠٦/١٤ إلى ٢٠٢٦/٠٦/١٨">الأسبوع الثامن عشر - ٢٠٢٦/٠٦/١٤ إلى ٢٠٢٦/٠٦/١٨</option>
-                            <option value="الأسبوع التاسع عشر - ٢٠٢٦/٠٦/٢١ إلى ٢٠٢٦/٠٦/٢٥">الأسبوع التاسع عشر - ٢٠٢٦/٠٦/٢١ إلى ٢٠٢٦/٠٦/٢٥</option>
-                            <option value="الأسبوع العشرون - ٢٠٢٦/٠٦/٢٨ إلى ٢٠٢٦/٠٧/٠٢">الأسبوع العشرون - ٢٠٢٦/٠٦/٢٨ إلى ٢٠٢٦/٠٧/٠٢</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="filterDay">اليوم</label>
-                        <select id="filterDay" name="filterDay">
-                            <option value="">كل الأيام</option>
-                            <option value="الأحد">الأحد</option>
-                            <option value="الاثنين">الاثنين</option>
-                            <option value="الثلاثاء">الثلاثاء</option>
-                            <option value="الأربعاء">الأربعاء</option>
-                            <option value="الخميس">الخميس</option>
-                            <option value="الجمعة">الجمعة</option>
-                            <option value="السبت">السبت</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="filterSector">القطاع</label>
-                        <select id="filterSector" name="filterSector">
-                            <option value="">كل القطاعات</option>
-                            <option value="القطيف">القطيف</option>
-                            <option value="الدمام">الدمام</option>
-                            <option value="الجبيل">الجبيل</option>
-                            <option value="الخبر">الخبر</option>
-                            <option value="الخفجي">الخفجي</option>
-                            <option value="رأس تنورة">رأس تنورة</option>
-                            <option value="حفر الباطن">حفر الباطن</option>
-                            <option value="القرية العليا">القرية العليا</option>
-                            <option value="النعيرية">النعيرية</option>
-                            <option value="بقيق">بقيق</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="filterDate">التاريخ</label>
-                        <input type="date" id="filterDate" name="filterDate">
-                    </div>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-info" id="refreshStatsBtn">🔄 تحديث الإحصائية</button>
-                </div>
-                <div class="records-table-wrapper">
-                    <table class="records-table" id="statsTable">
-                        <thead>
-                            <tr>
-                                <th>المشرف/ة</th>
-                                <th>القطاع</th>
-                                <th>النوع</th>
-                                <th>عدد مرات التعبئة</th>
-                            </tr>
-                        </thead>
-                        <tbody id="statsBody"></tbody>
-                    </table>
-                </div>
-            </div>
-            <div id="recordsList" class="owner-only" style="display: none; margin-top: 20px;">
-                <table id="recordsTable" class="records-table">
-                    <thead>
-                        <tr>
-                            <th>التاريخ</th>
-                            <th>الأسبوع</th>
-                            <th>المدرسة</th>
-                            <th>القطاع</th>
-                            <th>الإجراءات</th>
-                        </tr>
-                    </thead>
-                    <tbody id="recordsBody"></tbody>
-                </table>
-            </div>
-        </section>
-    </main>
-
-    <!-- Preview Modal -->
-    <div id="previewModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="previewContent"></div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="form-footer">
-        <p>نظام إدارة استمارات دعم التميز المدرسي - إدارة التعليم بالمنطقة الشرقية</p>
-        <p>تصميم المشرف بندر بن عبداللطيف الجمعان</p>
-        <p>وإشراف الفريق التنفيذي ٢٠٢٦</p>
-    </footer>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="script.js"></script>
-</body>
-</html>
+<!-- Header Section -->
+<header class="form-header">
+<div class="header-logo">
+<img alt="شعار وزارة التعليم" src="logo2.png"/>
+</div>
+<div class="header-content">
+<h1>استمارة خدمات دعم التميز المدرسي</h1>
+<p class="header-subtitle">وزارة التعليم - إدارة التعليم بالمنطقة الشرقية</p>
+<p class="academic-year">العام الدراسي ١٤٤٧هـ - ٢٠٢٦م</p>
+</div>
+</header>
+<!-- Main Form Container -->
+<main class="form-container">
+<section class="form-section owner-panel" id="ownerPanel">
+<div class="section-header">
+<h2>🛡️ لوحة المالك</h2>
+</div>
+<div class="form-grid">
+<div class="form-group">
+<label for="ownerPassword">كلمة مرور المالك <span class="required">*</span></label>
+<input id="ownerPassword" name="ownerPassword" placeholder="أدخل كلمة المرور للمالك" type="password"/>
+<p class="field-note">هذه الكلمة مطلوبة للوصول إلى السجلات والتصدير الكامل.</p>
+</div>
+<div class="form-group">
+<label for="ownerPasswordConfirm">تأكيد كلمة مرور المالك <span class="required">*</span></label>
+<input id="ownerPasswordConfirm" name="ownerPasswordConfirm" placeholder="أعد إدخال كلمة المرور" type="password"/>
+</div>
+<div class="form-group">
+<label for="ownerPasswordSave">حفظ كلمة المرور</label>
+<button class="btn btn-primary" id="ownerPasswordSave" type="button">💾 حفظ كلمة المرور</button>
+</div>
+</div>
+<div class="form-grid">
+<div class="form-group">
+<label for="scheduleEnabled">تفعيل جدول الإتاحة الأسبوعي <span class="required">*</span></label>
+<select id="scheduleEnabled" name="scheduleEnabled">
+<option value="yes">نعم</option>
+<option value="no">لا</option>
+</select>
+</div>
+<div class="form-group">
+<label for="scheduleDay">اليوم المتاح أسبوعيًا <span class="required">*</span></label>
+<select id="scheduleDay" name="scheduleDay">
+<option value="0">الأحد</option>
+<option value="1">الاثنين</option>
+<option value="2">الثلاثاء</option>
+<option value="3">الأربعاء</option>
+<option value="4">الخميس</option>
+<option value="5">الجمعة</option>
+<option value="6">السبت</option>
+</select>
+</div>
+<div class="form-group">
+<label for="scheduleTime">وقت بدء الإتاحة <span class="required">*</span></label>
+<input id="scheduleTime" name="scheduleTime" type="time" value="08:00"/>
+</div>
+<div class="form-group">
+<label for="scheduleDuration">مدة الإتاحة (بالساعات) <span class="required">*</span></label>
+<input id="scheduleDuration" max="24" min="1" name="scheduleDuration" type="number" value="24"/>
+</div>
+<div class="form-group">
+<label for="scheduleSave">تحديث الجدول</label>
+<button class="btn btn-primary" id="scheduleSave" type="button">🗓️ حفظ الجدول</button>
+<p class="field-note" id="scheduleStatus">الاستمارة متاحة حاليًا حسب الجدول.</p>
+</div>
+</div>
+</section>
+<form id="mainForm">
+<!-- Section 1: Basic Information -->
+<section class="form-section">
+<div class="section-header">
+<h2>📋 المعلومات الأساسية</h2>
+</div>
+<div class="form-grid">
+<div class="form-group">
+<label for="sector">القطاع <span class="required">*</span></label>
+<select id="sector" name="sector" required="">
+<option value="">اختر القطاع</option>
+<option value="القطيف">القطيف</option>
+<option value="الدمام">الدمام</option>
+<option value="الجبيل">الجبيل</option>
+<option value="الخبر">الخبر</option>
+<option value="الخفجي">الخفجي</option>
+<option value="رأس تنورة">رأس تنورة</option>
+<option value="حفر الباطن">حفر الباطن</option>
+<option value="القرية العليا">القرية العليا</option>
+<option value="النعيرية">النعيرية</option>
+<option value="بقيق">بقيق</option>
+</select>
+</div>
+<div class="form-group">
+<label for="gender">النوع <span class="required">*</span></label>
+<select id="gender" name="gender" required="">
+<option value="">اختر النوع</option>
+<option value="بنين">بنين</option>
+<option value="بنات">بنات</option>
+</select>
+</div>
+<div class="form-group">
+<label for="supervisor">المشرفين والمشرفات <span class="required">*</span></label>
+<select id="supervisor" name="supervisor" required=""><option value="">اختر المشرف/ة</option><option value="د.أحمد بن محمد حكمي">د.أحمد بن محمد حكمي</option><option value="بندر بن سعيد القحطاني">بندر بن سعيد القحطاني</option><option value="فهد بن محمد الشهري">فهد بن محمد الشهري</option><option value="فائز بن علي الغامدي">فائز بن علي الغامدي</option><option value="جهاد بن محمد آل طلحة">جهاد بن محمد آل طلحة</option><option value="مبارك بن فهد المرير">مبارك بن فهد المرير</option><option value="ماهر بن عبدالعزيز العفيصان">ماهر بن عبدالعزيز العفيصان</option><option value="سعيد بن جروان القرني">سعيد بن جروان القرني</option><option value="عبد المحسن بن محيميد العتيبي">عبد المحسن بن محيميد العتيبي</option><option value="ثابت بن عايض القحطاني">ثابت بن عايض القحطاني</option><option value="سعد بن مسفر الغامدي">سعد بن مسفر الغامدي</option><option value="‏عبد العزيز بن يوسف الناس">‏عبد العزيز بن يوسف الناس</option><option value="عبدالله بن مزيد العتيبي">عبدالله بن مزيد العتيبي</option><option value="عوض بن علي القحطاني">عوض بن علي القحطاني</option><option value="محمد بن مصنهت الدعجاني">محمد بن مصنهت الدعجاني</option><option value="أحمد بن محمد الشامي">أحمد بن محمد الشامي</option><option value="عبدالعزيز بن راشد الطويرش">عبدالعزيز بن راشد الطويرش</option><option value="عبد الرحمن بن عبدالله العوجان">عبد الرحمن بن عبدالله العوجان</option><option value="قاسم بن حمود مكتلي">قاسم بن حمود مكتلي</option><option value="حسين بن محمد الغامدي">حسين بن محمد الغامدي</option><option value="علي بن محمد الغامدي">علي بن محمد الغامدي</option><option value="جمعان بن محمد الغامدي">جمعان بن محمد الغامدي</option><option value="حمود بن علي الميموني">حمود بن علي الميموني</option><option value="خالد بن جمعه الشامسي">خالد بن جمعه الشامسي</option><option value="ياسر بن عبدالله العضل">ياسر بن عبدالله العضل</option><option value="منصور بن صالح الزهراني">منصور بن صالح الزهراني</option><option value="عادل بن عودة العوهلي">عادل بن عودة العوهلي</option><option value="علي بن محمد الفارس">علي بن محمد الفارس</option><option value="أحمد بن خليفة الجميعه">أحمد بن خليفة الجميعه</option><option value="عبدالله بن عيسى العنزي">عبدالله بن عيسى العنزي</option><option value="محمد بن سعيد الشهري">محمد بن سعيد الشهري</option><option value="أحمد بن محمد الغامدي">أحمد بن محمد الغامدي</option><option value="ظافر بن مشبب الأحمري">ظافر بن مشبب الأحمري</option><option value="علي بن عيسى الرشيد">علي بن عيسى الرشيد</option><option value="سعود بن عبدالعزيز العبيد">سعود بن عبدالعزيز العبيد</option><option value="محمد بن سحمي السبيعي">محمد بن سحمي السبيعي</option><option value="إبراهيم بن حامد الغامدي">إبراهيم بن حامد الغامدي</option><option value="محمد بن عثمان الغامدي">محمد بن عثمان الغامدي</option><option value="محمد بن حمزة الشهري">محمد بن حمزة الشهري</option><option value="بدر بن محمد القحطاني">بدر بن محمد القحطاني</option><option value="حاتم بن عبدالرحيم الغامدي">حاتم بن عبدالرحيم الغامدي</option><option value="علي بن حسن الذياب">علي بن حسن الذياب</option><option value="محمد بن مهنا المعيبد">محمد بن مهنا المعيبد</option><option value="عبداللطيف بن إبراهيم المحيش">عبداللطيف بن إبراهيم المحيش</option><option value="عبدالرحيم بن عبدالله بوبشيت">عبدالرحيم بن عبدالله بوبشيت</option><option value="عبدالرحمن بن علي الغامدي">عبدالرحمن بن علي الغامدي</option><option value="عبدالعزيز بن سالم الجهني">عبدالعزيز بن سالم الجهني</option><option value="عبدالرزاق بن يوسف العبد الرزاق">عبدالرزاق بن يوسف العبد الرزاق</option><option value="رشيد بن عبدالله الزهراني">رشيد بن عبدالله الزهراني</option><option value="مراد بن حسين الفلاح">مراد بن حسين الفلاح</option><option value="سعود بن عيسى الدوسري">سعود بن عيسى الدوسري</option><option value="عبدالله بن سالم الحربي">عبدالله بن سالم الحربي</option><option value="عادل بن خميس السلمة">عادل بن خميس السلمة</option><option value="فهد بن ظافر الشهري">فهد بن ظافر الشهري</option><option value="ماهر بن عبدالرحمن السعيد">ماهر بن عبدالرحمن السعيد</option><option value="خالد بن غرم الله الغامدي">خالد بن غرم الله الغامدي</option><option value="يعن الله بن عطية الزهراني">يعن الله بن عطية الزهراني</option><option value="فواز بن عبدالرحمن النعيم">فواز بن عبدالرحمن النعيم</option><option value="عادل بن عبدالله السليم">عادل بن عبدالله السليم</option><option value="حسن بن خالد الزياني">حسن بن خالد الزياني</option><option value="هيثم بن خضير الخضير">هيثم بن خضير الخضير</option><option value="أحمد بن عبدالرحمن العبدالعظيم">أحمد بن عبدالرحمن العبدالعظيم</option><option value="عبدالحميد بن مسفر الغامدي">عبدالحميد بن مسفر الغامدي</option><option value="عبدالعزيز بن محمد الصائغ">عبدالعزيز بن محمد الصائغ</option><option value="خلف بن محمد الغامدي">خلف بن محمد الغامدي</option><option value="علي بن ماطر العنزي">علي بن ماطر العنزي</option><option value="جمعان بن سعيد الغامدي">جمعان بن سعيد الغامدي</option></select>
+</div>
+<div class="form-group">
+<label for="week">الأسبوع الدراسي <span class="required">*</span></label>
+<select id="week" name="week" required="">
+<option value="">اختر الأسبوع</option>
+<option value="الأسبوع الأول - ٢٠٢٦/٠١/١٨ إلى ٢٠٢٦/٠١/٢٢">الأسبوع الأول - ٢٠٢٦/٠١/١٨ إلى ٢٠٢٦/٠١/٢٢</option>
+<option value="الأسبوع الثاني - ٢٠٢٦/٠١/٢٥ إلى ٢٠٢٦/٠١/٢٩">الأسبوع الثاني - ٢٠٢٦/٠١/٢٥ إلى ٢٠٢٦/٠١/٢٩</option>
+<option value="الأسبوع الثالث - ٢٠٢٦/٠٢/٠٢ إلى ٢٠٢٦/٠٢/٠٦">الأسبوع الثالث - ٢٠٢٦/٠٢/٠٢ إلى ٢٠٢٦/٠٢/٠٦</option>
+<option value="الأسبوع الرابع - ٢٠٢٦/٠٢/٠٩ إلى ٢٠٢٦/٠٢/١٢">الأسبوع الرابع - ٢٠٢٦/٠٢/٠٩ إلى ٢٠٢٦/٠٢/١٢</option>
+<option value="الأسبوع الخامس - ٢٠٢٦/٠٢/١٥ إلى ٢٠٢٦/٠٢/١٩">الأسبوع الخامس - ٢٠٢٦/٠٢/١٥ إلى ٢٠٢٦/٠٢/١٩</option>
+<option value="الأسبوع السادس - ٢٠٢٦/٠٢/٢٢ إلى ٢٠٢٦/٠٢/٢٦">الأسبوع السادس - ٢٠٢٦/٠٢/٢٢ إلى ٢٠٢٦/٠٢/٢٦</option>
+<option value="الأسبوع السابع - ٢٠٢٦/٠٣/٠١ إلى ٢٠٢٦/٠٣/٠٥">الأسبوع السابع - ٢٠٢٦/٠٣/٠١ إلى ٢٠٢٦/٠٣/٠٥</option>
+<option value="الأسبوع الثامن - ٢٠٢٦/٠٣/٢٩ إلى ٢٠٢٦/٠٤/٠٢">الأسبوع الثامن - ٢٠٢٦/٠٣/٢٩ إلى ٢٠٢٦/٠٤/٠٢</option>
+<option value="الأسبوع التاسع - ٢٠٢٦/٠٤/٠٥ إلى ٢٠٢٦/٠٤/٠٩">الأسبوع التاسع - ٢٠٢٦/٠٤/٠٥ إلى ٢٠٢٦/٠٤/٠٩</option>
+<option value="الأسبوع العاشر - ٢٠٢٦/٠٤/١٢ إلى ٢٠٢٦/٠٤/١٦">الأسبوع العاشر - ٢٠٢٦/٠٤/١٢ إلى ٢٠٢٦/٠٤/١٦</option>
+<option value="الأسبوع الحادي عشر - ٢٠٢٦/٠٤/١٩ إلى ٢٠٢٦/٠٤/٢٣">الأسبوع الحادي عشر - ٢٠٢٦/٠٤/١٩ إلى ٢٠٢٦/٠٤/٢٣</option>
+<option value="الأسبوع الثاني عشر - ٢٠٢٦/٠٤/٢٦ إلى ٢٠٢٦/٠٤/٣٠">الأسبوع الثاني عشر - ٢٠٢٦/٠٤/٢٦ إلى ٢٠٢٦/٠٤/٣٠</option>
+<option value="الأسبوع الثالث عشر - ٢٠٢٦/٠٥/٠٣ إلى ٢٠٢٦/٠٥/٠٧">الأسبوع الثالث عشر - ٢٠٢٦/٠٥/٠٣ إلى ٢٠٢٦/٠٥/٠٧</option>
+<option value="الأسبوع الرابع عشر - ٢٠٢٦/٠٥/١٠ إلى ٢٠٢٦/٠٥/١٤">الأسبوع الرابع عشر - ٢٠٢٦/٠٥/١٠ إلى ٢٠٢٦/٠٥/١٤</option>
+<option value="الأسبوع الخامس عشر - ٢٠٢٦/٠٥/١٧ إلى ٢٠٢٦/٠٥/٢١">الأسبوع الخامس عشر - ٢٠٢٦/٠٥/١٧ إلى ٢٠٢٦/٠٥/٢١</option>
+<option value="الأسبوع السادس عشر - ٢٠٢٦/٠٥/٣١ إلى ٢٠٢٦/٠٦/٠٤">الأسبوع السادس عشر - ٢٠٢٦/٠٥/٣١ إلى ٢٠٢٦/٠٦/٠٤</option>
+<option value="الأسبوع السابع عشر - ٢٠٢٦/٠٦/٠٧ إلى ٢٠٢٦/٠٦/١١">الأسبوع السابع عشر - ٢٠٢٦/٠٦/٠٧ إلى ٢٠٢٦/٠٦/١١</option>
+<option value="الأسبوع الثامن عشر - ٢٠٢٦/٠٦/١٤ إلى ٢٠٢٦/٠٦/١٨">الأسبوع الثامن عشر - ٢٠٢٦/٠٦/١٤ إلى ٢٠٢٦/٠٦/١٨</option>
+<option value="الأسبوع التاسع عشر - ٢٠٢٦/٠٦/٢١ إلى ٢٠٢٦/٠٦/٢٥">الأسبوع التاسع عشر - ٢٠٢٦/٠٦/٢١ إلى ٢٠٢٦/٠٦/٢٥</option>
+<option value="الأسبوع العشرون - ٢٠٢٦/٠٦/٢٨ إلى ٢٠٢٦/٠٧/٠٢">الأسبوع العشرون - ٢٠٢٦/٠٦/٢٨ إلى ٢٠٢٦/٠٧/٠٢</option>
+</select>
+</div>
+<div class="form-group">
+<label for="date">التاريخ <span class="required">*</span></label>
+<input disabled="" id="date" name="date" required="" type="date"/>
+<p class="field-note" id="dateNote">اختر الأسبوع الدراسي أولاً</p>
+</div>
+<div class="form-group">
+<label for="day">اليوم <span class="required">*</span></label>
+<input id="day" name="day" readonly="" required="" style="background-color: #f8f9fa; cursor: not-allowed;" type="text"/>
+<p class="field-note">سيتم تحديد اليوم تلقائياً بناءً على التاريخ المختار</p>
+</div>
+<div class="form-group">
+<label for="taskType">المهمة حسب خطة المشرف التربوي <span class="required">*</span></label>
+<select id="taskType" name="taskType" required="">
+<option value="">اختر نوع المهمة</option>
+<option value="تقديم خدمات دعم تميز مدرسي">تقديم خدمات دعم تميز مدرسي</option>
+<option value="مهمة رسمية وتم تسجيلها في نظام حضوري">مهمة رسمية وتم تسجيلها في نظام حضوري</option>
+</select>
+</div>
+<div class="form-group">
+<label for="stage">المرحلة الدراسية <span class="required">*</span></label>
+<select id="stage" name="stage" required="">
+<option value="">اختر المرحلة</option>
+<option value="رياض أطفال">رياض أطفال</option>
+<option value="ابتدائي">ابتدائي</option>
+<option value="متوسط">متوسط</option>
+<option value="ثانوي">ثانوي</option>
+</select>
+</div>
+<div class="form-group">
+<label for="schoolType">المدرسة التي سيقدم لها الخدمة <span class="required">*</span></label>
+<select id="schoolType" name="schoolType" required="">
+<option value="">اختر نوع المدرسة</option>
+<option value="المدرسة الأساسية المكلف بها">المدرسة الأساسية المكلف بها</option>
+<option value="المدرسة الإضافية لتقديم الدعم">المدرسة الإضافية لتقديم الدعم</option>
+</select>
+</div>
+<div class="form-group" id="mainSchoolGroup">
+<label for="mainSchool">اسم المدرسة المكلف بتقديم الخدمة لها <span class="required">*</span></label>
+<input id="mainSchool" name="mainSchool" placeholder="أدخل اسم المدرسة" type="text"/>
+</div>
+<div class="form-group" id="additionalSchoolGroup" style="display: none;">
+<label for="additionalSchool">اسم المدرسة الإضافية</label>
+<input id="additionalSchool" name="additionalSchool" placeholder="أدخل اسم المدرسة الإضافية" type="text"/>
+</div>
+<div class="form-group">
+<label for="serviceType">نوع الخدمة <span class="required">*</span></label>
+<select id="serviceType" name="serviceType" required="">
+<option value="">اختر نوع الخدمة</option>
+<option value="حضوري">حضوري</option>
+<option value="عن بُعد">عن بُعد</option>
+</select>
+</div>
+</div>
+</section>
+<!-- Section 2: Support Areas -->
+<section class="form-section">
+<div class="section-header">
+<h2>📊 مجالات الدعم الرئيسة</h2>
+</div>
+<div class="form-group">
+<label class="checkbox-label">حدد مجالات الدعم الرئيسة التي ساهم المشرف بها خلال اليوم الدراسي <span class="required">*</span></label>
+<div class="checkbox-group">
+<label class="checkbox-item">
+<input name="supportAreas" type="checkbox" value="التدريس"/>
+<span>التدريس</span>
+</label>
+<label class="checkbox-item">
+<input name="supportAreas" type="checkbox" value="نواتج التعلم"/>
+<span>نواتج التعلم</span>
+</label>
+<label class="checkbox-item">
+<input name="supportAreas" type="checkbox" value="التوجيه الطلابي"/>
+<span>التوجيه الطلابي</span>
+</label>
+<label class="checkbox-item">
+<input name="supportAreas" type="checkbox" value="النشاط الطلابي"/>
+<span>النشاط الطلابي</span>
+</label>
+<label class="checkbox-item">
+<input id="supportAreasOther" name="supportAreas" type="checkbox" value="other"/>
+<span>غير ذلك</span>
+</label>
+</div>
+<input class="other-input" id="supportAreasOtherText" name="supportAreasOtherText" placeholder="حدد غير ذلك..." style="display: none;" type="text"/>
+</div>
+</section>
+<!-- Section 3: Teaching Field -->
+<section class="form-section" id="teachingSection" style="display: none;">
+<div class="section-header">
+<h2>📚 مجال التدريس</h2>
+<p class="section-note">ملاحظة: يقدم المشرف التربوي دورًا تمكينيًا في دعم المدرسة على تنفيذ عملياتها الإشرافية بفاعلية. يركز على بناء قدرات المدرسة، وتيسير اتخاذ القرار المبني على البيانات، وتحفيز المبادرات الذاتية، مع التقليل التدريجي للاعتماد على التوجيه المباشر.</p>
+</div>
+<div class="form-group">
+<label class="checkbox-label">الإجراءات المنفذة من قبل المشرف التربوي في مجال التدريس</label>
+<div class="checkbox-group">
+<label class="checkbox-item">
+<input name="teachingActions" type="checkbox" value="زيارة صفية بالتنسيق مع إدارة المدرسة واللجان المعنية بقصد التطوير أو قياس الأثر"/>
+<span>زيارة صفية بالتنسيق مع إدارة المدرسة واللجان المعنية بقصد التطوير أو قياس الأثر</span>
+</label>
+<label class="checkbox-item">
+<input name="teachingActions" type="checkbox" value="تقديم تغذية راجعة لمعلم أو أكثر"/>
+<span>تقديم تغذية راجعة لمعلم أو أكثر</span>
+</label>
+<label class="checkbox-item">
+<input name="teachingActions" type="checkbox" value="مراجعة خطة الدرس أو الخطة الفصلية"/>
+<span>مراجعة خطة الدرس أو الخطة الفصلية</span>
+</label>
+<label class="checkbox-item">
+<input name="teachingActions" type="checkbox" value="دعم توظيف أدوات التقويم (أدائية – تحريرية – شفهية)"/>
+<span>دعم توظيف أدوات التقويم (أدائية – تحريرية – شفهية)</span>
+</label>
+<label class="checkbox-item">
+<input name="teachingActions" type="checkbox" value="دعم وتحفيز تفعيل مجتمعات التعلم المهنية بين المعلمين"/>
+<span>دعم وتحفيز تفعيل مجتمعات التعلم المهنية بين المعلمين</span>
+</label>
+<label class="checkbox-item">
+<input name="teachingActions" type="checkbox" value="إعداد أو مراجعة أدوات تقييم أداء الطلاب"/>
+<span>إعداد أو مراجعة أدوات تقييم أداء الطلاب</span>
+</label>
+<label class="checkbox-item">
+<input name="teachingActions" type="checkbox" value="تقديم استشارات لدعم التعليم الالكتروني"/>
+<span>تقديم استشارات لدعم التعليم الالكتروني</span>
+</label>
+<label class="checkbox-item">
+<input name="teachingActions" type="checkbox" value="تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال التدريس"/>
+<span>تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال التدريس</span>
+</label>
+<label class="checkbox-item">
+<input name="teachingActions" type="checkbox" value="غير مستهدف هذا الاسبوع"/>
+<span>غير مستهدف هذا الاسبوع</span>
+</label>
+<label class="checkbox-item">
+<input id="teachingActionsOther" name="teachingActions" type="checkbox" value="other"/>
+<span>غير ذلك</span>
+</label>
+</div>
+<input class="other-input" id="teachingActionsOtherText" name="teachingActionsOtherText" placeholder="حدد غير ذلك..." style="display: none;" type="text"/>
+</div>
+<div class="form-group">
+<label for="teachingCount">ما عدد الإجراءات المنفذه خلال الأسبوع في مجال التدريس</label>
+<input id="teachingCount" min="0" name="teachingCount" placeholder="0" type="number" value="0"/>
+<p class="field-note">يذكر مقدم خدمة التميز عدد الإجراءات المقدمة في المجال المحدد رقماً وفي حال كان المجال غير مستهدف يتم وضع (0) صفر</p>
+</div>
+</section>
+<!-- Section 4: Learning Outcomes Field -->
+<section class="form-section" id="outcomesSection" style="display: none;">
+<div class="section-header">
+<h2>🎯 مجال نواتج التعلم</h2>
+<p class="section-note">ملاحظة: يقدم المشرف التربوي دورًا تمكينيًا في دعم المدرسة على تنفيذ عملياتها الإشرافية بفاعلية. يركز على بناء قدرات المدرسة، وتيسير اتخاذ القرار المبني على البيانات، وتحفيز المبادرات الذاتية، مع التقليل التدريجي للاعتماد على التوجيه المباشر.</p>
+</div>
+<div class="form-group">
+<label class="checkbox-label">الإجراءات المنفذة من قبل المشرف التربوي في مجال نواتج التعلم</label>
+<div class="checkbox-group">
+<label class="checkbox-item">
+<input name="outcomesActions" type="checkbox" value="تحليل نتائج اختبارات المدرسة أو الاختبارات الوطنية المختلفة أو دعم اللجنة المختصة بالمدرسة في ذلك"/>
+<span>تحليل نتائج اختبارات المدرسة أو الاختبارات الوطنية المختلفة أو دعم اللجنة المختصة بالمدرسة في ذلك</span>
+</label>
+<label class="checkbox-item">
+<input name="outcomesActions" type="checkbox" value="دعم ومشاركة اللجان المختصة بالمدرسة في معالجة مواطن الضعف واستثمار مواطن القوة"/>
+<span>دعم ومشاركة اللجان المختصة بالمدرسة في معالجة مواطن الضعف واستثمار مواطن القوة</span>
+</label>
+<label class="checkbox-item">
+<input name="outcomesActions" type="checkbox" value="دعم اللجنة المختصة بالمدرسة في إعداد خطة علاجية أو إثرائية"/>
+<span>دعم اللجنة المختصة بالمدرسة في إعداد خطة علاجية أو إثرائية</span>
+</label>
+<label class="checkbox-item">
+<input name="outcomesActions" type="checkbox" value="دعم تكييف التعليم وفق الفروق الفردية"/>
+<span>دعم تكييف التعليم وفق الفروق الفردية</span>
+</label>
+<label class="checkbox-item">
+<input name="outcomesActions" type="checkbox" value="متابعة مؤشرات التحصيل عبر المنصات وغيرها"/>
+<span>متابعة مؤشرات التحصيل عبر المنصات وغيرها</span>
+</label>
+<label class="checkbox-item">
+<input name="outcomesActions" type="checkbox" value="تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال نواتج التعلم"/>
+<span>تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال نواتج التعلم</span>
+</label>
+<label class="checkbox-item">
+<input name="outcomesActions" type="checkbox" value="غير مستهدف هذا الاسبوع"/>
+<span>غير مستهدف هذا الاسبوع</span>
+</label>
+<label class="checkbox-item">
+<input id="outcomesActionsOther" name="outcomesActions" type="checkbox" value="other"/>
+<span>غير ذلك</span>
+</label>
+</div>
+<input class="other-input" id="outcomesActionsOtherText" name="outcomesActionsOtherText" placeholder="حدد غير ذلك..." style="display: none;" type="text"/>
+</div>
+<div class="form-group">
+<label for="outcomesCount">ما عدد الإجراءات المنفذه خلال الأسبوع في مجال نواتج التعلم</label>
+<input id="outcomesCount" min="0" name="outcomesCount" placeholder="0" type="number" value="0"/>
+<p class="field-note">يذكر مقدم خدمة التميز عدد الإجراءات المقدمة في المجال المحدد رقماً وفي حال كان المجال غير مستهدف يتم وضع (0) صفر</p>
+</div>
+</section>
+<!-- Section 5: Student Guidance Field -->
+<section class="form-section" id="guidanceSection" style="display: none;">
+<div class="section-header">
+<h2>🧭 مجال التوجيه الطلابي</h2>
+<p class="section-note">ملاحظة: يقدم المشرف التربوي دورًا تمكينيًا في دعم المدرسة على تنفيذ عملياتها الإشرافية بفاعلية. يركز على بناء قدرات المدرسة، وتيسير اتخاذ القرار المبني على البيانات، وتحفيز المبادرات الذاتية، مع التقليل التدريجي للاعتماد على التوجيه المباشر.</p>
+</div>
+<div class="form-group">
+<label class="checkbox-label">الإجراءات المنفذة من قبل المشرف التربوي في مجال التوجيه الطلابي</label>
+<div class="checkbox-group">
+<label class="checkbox-item">
+<input name="guidanceActions" type="checkbox" value="لقاء مع الموجه الطلابي أو لجنة التوجيه"/>
+<span>لقاء مع الموجه الطلابي أو لجنة التوجيه</span>
+</label>
+<label class="checkbox-item">
+<input name="guidanceActions" type="checkbox" value="دعم الموجه الطلابي أو اللجنة المختصة في معالجة حالات الطلاب"/>
+<span>دعم الموجه الطلابي أو اللجنة المختصة في معالجة حالات الطلاب</span>
+</label>
+<label class="checkbox-item">
+<input name="guidanceActions" type="checkbox" value="دعم قيم الانضباط والسلوك"/>
+<span>دعم قيم الانضباط والسلوك</span>
+</label>
+<label class="checkbox-item">
+<input name="guidanceActions" type="checkbox" value="دعم خطة التوجيه الطلابي السنوية"/>
+<span>دعم خطة التوجيه الطلابي السنوية</span>
+</label>
+<label class="checkbox-item">
+<input name="guidanceActions" type="checkbox" value="التشجيع على تبني المبادرات في الشراكة المجتمعية"/>
+<span>التشجيع على تبني المبادرات في الشراكة المجتمعية</span>
+</label>
+<label class="checkbox-item">
+<input name="guidanceActions" type="checkbox" value="دعم اللجنة المختصة في تعزيز التطور الصحي والنفسي والاجتماعي للطلبة"/>
+<span>دعم اللجنة المختصة في تعزيز التطور الصحي والنفسي والاجتماعي للطلبة</span>
+</label>
+<label class="checkbox-item">
+<input name="guidanceActions" type="checkbox" value="تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال التوجيه الطلابي"/>
+<span>تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال التوجيه الطلابي</span>
+</label>
+<label class="checkbox-item">
+<input name="guidanceActions" type="checkbox" value="غير مستهدف هذا الاسبوع"/>
+<span>غير مستهدف هذا الاسبوع</span>
+</label>
+<label class="checkbox-item">
+<input id="guidanceActionsOther" name="guidanceActions" type="checkbox" value="other"/>
+<span>غير ذلك</span>
+</label>
+</div>
+<input class="other-input" id="guidanceActionsOtherText" name="guidanceActionsOtherText" placeholder="حدد غير ذلك..." style="display: none;" type="text"/>
+</div>
+<div class="form-group">
+<label for="guidanceCount">ما عدد الإجراءات المنفذه خلال الأسبوع في مجال التوجية الطلابي</label>
+<input id="guidanceCount" min="0" name="guidanceCount" placeholder="0" type="number" value="0"/>
+<p class="field-note">يذكر مقدم خدمة التميز عدد الإجراءات المقدمة في المجال المحدد رقماً وفي حال كان المجال غير مستهدف يتم وضع (0) صفر</p>
+</div>
+</section>
+<!-- Section 6: Student Activities Field -->
+<section class="form-section" id="activitySection" style="display: none;">
+<div class="section-header">
+<h2>🎨 مجال النشاط الطلابي</h2>
+<p class="section-note">ملاحظة: يقدم المشرف التربوي دورًا تمكينيًا في دعم المدرسة على تنفيذ عملياتها الإشرافية بفاعلية. يركز على بناء قدرات المدرسة، وتيسير اتخاذ القرار المبني على البيانات، وتحفيز المبادرات الذاتية، مع التقليل التدريجي للاعتماد على التوجيه المباشر.</p>
+</div>
+<div class="form-group">
+<label class="checkbox-label">الإجراءات المنفذة من قبل المشرف التربوي في مجال النشاط الطلابي</label>
+<div class="checkbox-group">
+<label class="checkbox-item">
+<input name="activityActions" type="checkbox" value="المشاركة في إعداد خطة النشاط"/>
+<span>المشاركة في إعداد خطة النشاط</span>
+</label>
+<label class="checkbox-item">
+<input name="activityActions" type="checkbox" value="حضور أو دعم مناشط صفية أو غير صفية"/>
+<span>حضور أو دعم مناشط صفية أو غير صفية</span>
+</label>
+<label class="checkbox-item">
+<input name="activityActions" type="checkbox" value="مواءمة الأنشطة مع القيم والمهارات المستهدفة"/>
+<span>مواءمة الأنشطة مع القيم والمهارات المستهدفة</span>
+</label>
+<label class="checkbox-item">
+<input name="activityActions" type="checkbox" value="دعم اللجنة المختصة بالنشاط المدرسي"/>
+<span>دعم اللجنة المختصة بالنشاط المدرسي</span>
+</label>
+<label class="checkbox-item">
+<input name="activityActions" type="checkbox" value="إبراز إنجاز طلابي متميز"/>
+<span>إبراز إنجاز طلابي متميز</span>
+</label>
+<label class="checkbox-item">
+<input name="activityActions" type="checkbox" value="المشاركة في نشر ثقافة العمل التطوعي لمنسوبي المدرسة"/>
+<span>المشاركة في نشر ثقافة العمل التطوعي لمنسوبي المدرسة</span>
+</label>
+<label class="checkbox-item">
+<input name="activityActions" type="checkbox" value="تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال النشاط الطلابي"/>
+<span>تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال النشاط الطلابي</span>
+</label>
+<label class="checkbox-item">
+<input name="activityActions" type="checkbox" value="غير مستهدف هذا الاسبوع"/>
+<span>غير مستهدف هذا الاسبوع</span>
+</label>
+<label class="checkbox-item">
+<input id="activityActionsOther" name="activityActions" type="checkbox" value="other"/>
+<span>غير ذلك</span>
+</label>
+</div>
+<input class="other-input" id="activityActionsOtherText" name="activityActionsOtherText" placeholder="حدد غير ذلك..." style="display: none;" type="text"/>
+</div>
+<div class="form-group">
+<label for="activityCount">ما عدد الإجراءات المنفذه خلال الأسبوع في مجال النشاط الطلابي</label>
+<input id="activityCount" min="0" name="activityCount" placeholder="0" type="number" value="0"/>
+<p class="field-note">يذكر مقدم خدمة التميز عدد الإجراءات المقدمة في المجال المحدد رقماً وفي حال كان المجال غير مستهدف يتم وضع (0) صفر</p>
+</div>
+</section>
+<!-- Section 7: School Empowerment -->
+<section class="form-section">
+<div class="section-header">
+<h2>💡 تمكين المدرسة</h2>
+</div>
+<div class="form-group">
+<label class="checkbox-label">كيف ساهمت الإجراءات التي نفذتها في تعزيز تمكين المدرسة؟ <span class="required">*</span></label>
+<p class="field-note">حدد الإجراءات التي تمكنت منها إدارة المدرسة ولجانها</p>
+<div class="checkbox-group">
+<label class="checkbox-item">
+<input name="empowerment" type="checkbox" value="اتخاذ القرار الذاتي"/>
+<span>اتخاذ القرار الذاتي</span>
+</label>
+<label class="checkbox-item">
+<input name="empowerment" type="checkbox" value="تحليل البيانات"/>
+<span>تحليل البيانات</span>
+</label>
+<label class="checkbox-item">
+<input name="empowerment" type="checkbox" value="المساءلة الذاتية"/>
+<span>المساءلة الذاتية</span>
+</label>
+<label class="checkbox-item">
+<input name="empowerment" type="checkbox" value="المبادرة المدرسية"/>
+<span>المبادرة المدرسية</span>
+</label>
+<label class="checkbox-item">
+<input name="empowerment" type="checkbox" value="تطوير الخطط المؤسسية"/>
+<span>تطوير الخطط المؤسسية</span>
+</label>
+<label class="checkbox-item">
+<input name="empowerment" type="checkbox" value="تبادل الخبرات داخليًا"/>
+<span>تبادل الخبرات داخليًا</span>
+</label>
+<label class="checkbox-item">
+<input name="empowerment" type="checkbox" value="لازالت إدارة المدرسة ولجانها في طور البناء"/>
+<span>لازالت إدارة المدرسة ولجانها في طور البناء</span>
+</label>
+<label class="checkbox-item">
+<input id="empowermentOther" name="empowerment" type="checkbox" value="other"/>
+<span>غير ذلك</span>
+</label>
+</div>
+<input class="other-input" id="empowermentOtherText" name="empowermentOtherText" placeholder="حدد غير ذلك..." style="display: none;" type="text"/>
+</div>
+<div class="form-group">
+<label for="elearning">تفعّل المدرسة التعليم الالكتروني من خلال منصة مدرستي <span class="required">*</span></label>
+<select id="elearning" name="elearning" required="">
+<option value="">اختر</option>
+<option value="نعم">نعم</option>
+<option value="لا">لا</option>
+</select>
+</div>
+<div class="form-group" id="elearningReasonGroup" style="display: none;">
+<label for="elearningReason">في حال عدم تفعيل منصة مدرستي في المدرسة، ما هو سبب ذلك؟</label>
+<textarea id="elearningReason" name="elearningReason" placeholder="اذكر السبب..." rows="3"></textarea>
+</div>
+<div class="form-group">
+<label for="participation">من وجهة نظرك ما مدى مشاركة مدير المدرسة واللجان المعنية في قيادة عمليات الدعم <span class="required">*</span></label>
+<select id="participation" name="participation" required="">
+<option value="">اختر مستوى المشاركة</option>
+<option value="عالية: المدرسة قادت التحليل والتنفيذ واستعانت بالمشرف عند الحاجة">عالية: المدرسة قادت التحليل والتنفيذ واستعانت بالمشرف عند الحاجة</option>
+<option value="متوسطة: تم العمل بمشاركة متوازنة بين المدرسة والمشرف">متوسطة: تم العمل بمشاركة متوازنة بين المدرسة والمشرف</option>
+<option value="منخفضة: اعتمدت المدرسة على توجيه مباشر من المشرف">منخفضة: اعتمدت المدرسة على توجيه مباشر من المشرف</option>
+<option value="لم تشارك المدرسة بفاعلية">لم تشارك المدرسة بفاعلية</option>
+</select>
+</div>
+</section>
+<!-- Section 8: Additional Information -->
+<section class="form-section">
+<div class="section-header">
+<h2>📝 معلومات إضافية</h2>
+</div>
+<div class="form-group">
+<label for="experiences">الخبرات الإشرافية التي قدمها المشرف التربوي للمدرسة</label>
+<textarea id="experiences" name="experiences" placeholder="اذكر الخبرات الإشرافية..." rows="4"></textarea>
+</div>
+<div class="form-group">
+<label for="initiatives">المبادرات التي نفذت داخل المدرسة بدعم من مشرف مقدم الخدمة</label>
+<textarea id="initiatives" name="initiatives" placeholder="اذكر المبادرات..." rows="4"></textarea>
+</div>
+<div class="form-group">
+<label for="challenges">أبرز التحديات الإدارية والفنية في المدرسة</label>
+<textarea id="challenges" name="challenges" placeholder="اذكر التحديات..." rows="4"></textarea>
+</div>
+<div class="form-group">
+<label for="treatments">أبرز المعالجات التي تمت في المجالات الأربعة</label>
+<textarea id="treatments" name="treatments" placeholder="اذكر المعالجات..." rows="4"></textarea>
+</div>
+<div class="form-group">
+<label for="recommendations">التوصيات التي قدمها مشرف دعم التميز لمدير/ة المدرسة</label>
+<textarea id="recommendations" name="recommendations" placeholder="اذكر التوصيات..." rows="4"></textarea>
+</div>
+<div class="form-group">
+<label for="suggestions">مقترحات (ملحوظات مرصودة) للفريق التنفيذي</label>
+<textarea id="suggestions" name="suggestions" placeholder="اذكر المقترحات..." rows="4"></textarea>
+</div>
+</section>
+<!-- Form Actions -->
+<div class="form-actions">
+<button class="btn btn-secondary" id="saveBtn" type="button">💾 حفظ البيانات</button>
+<button class="btn btn-primary" id="previewBtn" type="button">👁️ معاينة التقرير</button>
+<button class="btn btn-success" id="exportPdfBtn" type="button">📄 تصدير PDF</button>
+<button class="btn btn-info" id="printBtn" type="button">🖨️ طباعة</button>
+<button class="btn btn-warning" id="exportExcelBtn" type="button">📊 تصدير Excel</button>
+<button class="btn btn-danger" id="resetBtn" type="button">🗑️ مسح النموذج</button>
+</div>
+</form>
+<!-- Data Management Section -->
+<section class="data-management">
+<div class="section-header">
+<h2>📊 إدارة البيانات المحفوظة</h2>
+</div>
+<div class="saved-records">
+<button class="btn btn-secondary" id="viewRecordsBtn" type="button">📋 عرض السجلات المحفوظة</button>
+<button class="btn btn-warning" id="exportAllExcelBtn" type="button">📊 تصدير جميع السجلات إلى Excel</button>
+</div>
+<div id="recordsList" style="display: block; margin-top: 20px;">
+<table class="records-table" id="recordsTable">
+<thead>
+<tr>
+<th>التاريخ</th>
+<th>الأسبوع</th>
+<th>المدرسة</th>
+<th>القطاع</th>
+<th>الإجراءات</th>
+</tr>
+</thead>
+<tbody id="recordsBody"><tr>
+<td>2026-01-18</td>
+<td>الأسبوع الأول - ٢٠٢٦/٠١/١٨ إلى ٢٠٢٦/٠١/٢٢</td>
+<td>1</td>
+<td>القطيف</td>
+<td>
+<button class="btn btn-info btn-sm" onclick="viewRecord(1)">👁️ عرض</button>
+<button class="btn btn-success btn-sm" onclick="exportRecordPDF(1)">📄 PDF</button>
+<button class="btn btn-warning btn-sm" onclick="exportRecordExcel(1)">📊 Excel</button>
+<button class="btn btn-danger btn-sm" onclick="deleteRecordById(1)">🗑️ حذف</button>
+</td>
+</tr></tbody>
+</table>
+</div>
+</section>
+</main>
+<!-- Preview Modal -->
+<div class="modal" id="previewModal">
+<div class="modal-content">
+<span class="close">×</span>
+<div id="previewContent"></div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="form-footer">
+<p>نظام إدارة استمارات دعم التميز المدرسي - إدارة التعليم بالمنطقة الشرقية</p>
+<p>تصميم المشرف بندر بن عبداللطيف الجمعان</p>
+<p>وإشراف الفريق التنفيذي ٢٠٢٦</p>
+</footer>
+<script src="script.js"></script>
+</body></html>
