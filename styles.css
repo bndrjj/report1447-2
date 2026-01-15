@@ -279,7 +279,14 @@ strong, b {
 .header-logo {
     position: relative;
     z-index: 1;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
 }
 
 .header-logo img {
@@ -316,7 +323,7 @@ strong, b {
     font-size: 1.2rem;
     font-weight: 400;
     margin-bottom: 5px;
-    opacity: 0.95;
+    opacity: 0.9;
 }
 
 .academic-year {
@@ -385,6 +392,19 @@ strong, b {
     line-height: 1.8;
     color: #856404;
     box-shadow: 0 2px 8px rgba(255, 193, 7, 0.2);
+}
+
+.owner-panel {
+    border: 2px dashed rgba(0, 99, 65, 0.3);
+    background: #f9fbfa;
+}
+
+.owner-panel .section-header h2 {
+    color: #0b5d3a;
+}
+
+.owner-only {
+    display: none;
 }
 
 /* ===== Form Grid ===== */
@@ -627,6 +647,46 @@ select {
     background: linear-gradient(135deg, #fff8e1 0%, #fffef5 100%);
     border-radius: 15px;
     border: 2px solid var(--secondary-color);
+}
+
+.owner-stats {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 12px;
+    background: #f8f9fb;
+    border: 1px solid rgba(0, 99, 65, 0.15);
+}
+
+.stats-filters {
+    margin-top: 15px;
+}
+
+.stats-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.stats-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 99, 65, 0.1);
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #0b5d3a;
+}
+
+.stats-table td:last-child {
+    font-weight: 700;
+}
+
+.stats-hidden {
+    display: none;
 }
 
 .saved-records {

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة المالك - استمارة دعم التميز المدرسي</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="form-header">
+        <div class="header-logo">
+            <img src="logo2.png" alt="شعار وزارة التعليم">
+        </div>
+        <div class="header-content">
+            <h1>لوحة المالك</h1>
+            <p class="header-subtitle">إدارة البيانات والإحصاءات</p>
+            <p class="academic-year">العام الدراسي ١٤٤٧هـ - ٢٠٢٦م</p>
+        </div>
+    </header>
+
+    <main class="form-container">
+        <section class="form-section">
+            <div class="section-header">
+                <h2>🔐 تسجيل دخول المالك</h2>
+            </div>
+            <p class="field-note">هذه الصفحة مخصصة للمالك فقط لإدارة السجلات والتصدير والإحصاءات.</p>
+            <button type="button" class="btn btn-primary" id="ownerLogin">تسجيل الدخول للمالك</button>
+        </section>
+
+        <section class="form-section owner-panel owner-only" id="ownerPanel">
+            <div class="section-header">
+                <h2>🛡️ لوحة المالك</h2>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="ownerPassword">كلمة مرور المالك <span class="required">*</span></label>
+                    <input type="password" id="ownerPassword" name="ownerPassword" placeholder="أدخل كلمة المرور للمالك">
+                    <p class="field-note">هذه الكلمة مطلوبة للوصول إلى السجلات والتصدير الكامل.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="ownerPasswordConfirm">تأكيد كلمة مرور المالك <span class="required">*</span></label>
+                    <input type="password" id="ownerPasswordConfirm" name="ownerPasswordConfirm" placeholder="أعد إدخال كلمة المرور">
+                </div>
+
+                <div class="form-group">
+                    <label for="ownerPasswordSave">حفظ كلمة المرور</label>
+                    <button type="button" class="btn btn-primary" id="ownerPasswordSave">💾 حفظ كلمة المرور</button>
+                </div>
+                <div class="form-group">
+                    <label for="ownerLogout">تسجيل خروج المالك</label>
+                    <button type="button" class="btn btn-secondary" id="ownerLogout">🚪 تسجيل الخروج</button>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="scheduleEnabled">تفعيل جدول الإتاحة الأسبوعي <span class="required">*</span></label>
+                    <select id="scheduleEnabled" name="scheduleEnabled">
+                        <option value="yes">نعم</option>
+                        <option value="no">لا</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduleDay">اليوم المتاح أسبوعيًا <span class="required">*</span></label>
+                    <select id="scheduleDay" name="scheduleDay">
+                        <option value="0">الأحد</option>
+                        <option value="1">الاثنين</option>
+                        <option value="2">الثلاثاء</option>
+                        <option value="3">الأربعاء</option>
+                        <option value="4">الخميس</option>
+                        <option value="5">الجمعة</option>
+                        <option value="6">السبت</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduleTime">وقت بدء الإتاحة <span class="required">*</span></label>
+                    <input type="time" id="scheduleTime" name="scheduleTime" value="08:00">
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduleDuration">مدة الإتاحة (بالساعات) <span class="required">*</span></label>
+                    <input type="number" id="scheduleDuration" name="scheduleDuration" min="1" max="24" value="24">
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduleSave">تحديث الجدول</label>
+                    <button type="button" class="btn btn-primary" id="scheduleSave">🗓️ حفظ الجدول</button>
+                    <p class="field-note" id="scheduleStatus">سيتم تفعيل الإتاحة حسب الجدول المحفوظ.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="data-management owner-only" id="dataManagement">
+            <div class="section-header">
+                <h2>📊 إدارة البيانات المحفوظة</h2>
+            </div>
+            <div class="saved-records">
+                <button type="button" class="btn btn-secondary" id="viewRecordsBtn">📋 عرض السجلات المحفوظة</button>
+                <button type="button" class="btn btn-warning" id="exportAllExcelBtn">📊 تصدير جميع السجلات إلى Excel</button>
+                <button type="button" class="btn btn-primary" id="showStatsBtn">📈 عرض الإحصائية</button>
+            </div>
+            <div id="recordsList" style="display: none; margin-top: 20px;">
+                <table id="recordsTable" class="records-table">
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>الأسبوع</th>
+                            <th>المدرسة</th>
+                            <th>القطاع</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsBody"></tbody>
+                </table>
+            </div>
+
+            <div class="owner-stats stats-hidden" id="ownerStats">
+                <div class="section-header">
+                    <h2>📈 إحصائية مرات التعبئة</h2>
+                </div>
+                <div class="form-grid stats-filters">
+                    <div class="form-group">
+                        <label for="statsSectorFilter">القطاع</label>
+                        <select id="statsSectorFilter" name="statsSectorFilter">
+                            <option value="">الكل</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="statsWeekFilter">الأسبوع الدراسي</label>
+                        <select id="statsWeekFilter" name="statsWeekFilter">
+                            <option value="">الكل</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="statsDayFilter">اليوم</label>
+                        <select id="statsDayFilter" name="statsDayFilter">
+                            <option value="">الكل</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="statsDateFilter">التاريخ</label>
+                        <input type="date" id="statsDateFilter" name="statsDateFilter">
+                    </div>
+                    <div class="form-group">
+                        <label for="statsSortBy">الفرز حسب</label>
+                        <select id="statsSortBy" name="statsSortBy">
+                            <option value="name">الاسم</option>
+                            <option value="sector">القطاع</option>
+                            <option value="week">الأسبوع</option>
+                            <option value="day">اليوم</option>
+                            <option value="date">التاريخ</option>
+                            <option value="count">عدد مرات التعبئة</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="stats-actions">
+                    <button type="button" class="btn btn-primary" id="refreshStatsBtn">🔄 تحديث الإحصائية</button>
+                    <button type="button" class="btn btn-secondary" id="clearStatsFiltersBtn">🧹 مسح الفلاتر</button>
+                </div>
+                <div class="stats-summary" id="statsSummary"></div>
+                <table class="records-table stats-table">
+                    <thead>
+                        <tr>
+                            <th>المشرف/ة</th>
+                            <th>القطاع</th>
+                            <th>النوع</th>
+                            <th>عدد مرات التعبئة</th>
+                            <th>آخر تاريخ</th>
+                            <th>آخر أسبوع</th>
+                            <th>آخر يوم</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statsBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="form-footer">
+        <p>نظام إدارة استمارات دعم التميز المدرسي - إدارة التعليم بالمنطقة الشرقية</p>
+        <p>تصميم المشرف بندر بن عبداللطيف الجمعان</p>
+        <p>وإشراف الفريق التنفيذي ٢٠٢٦</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

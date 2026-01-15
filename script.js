@@ -687,7 +687,6 @@ const saveBtn = document.getElementById('saveBtn');
 const previewBtn = document.getElementById('previewBtn');
 const exportPdfBtn = document.getElementById('exportPdfBtn');
 const printBtn = document.getElementById('printBtn');
-const exportExcelBtn = document.getElementById('exportExcelBtn');
 const resetBtn = document.getElementById('resetBtn');
 const viewRecordsBtn = document.getElementById('viewRecordsBtn');
 const exportAllExcelBtn = document.getElementById('exportAllExcelBtn');
@@ -695,12 +694,34 @@ const previewModal = document.getElementById('previewModal');
 const closeModal = document.querySelector('.close');
 const recordsList = document.getElementById('recordsList');
 const recordsBody = document.getElementById('recordsBody');
+const ownerLogoutBtn = document.getElementById('ownerLogout');
+const ownerLoginBtn = document.getElementById('ownerLogin');
+const ownerOnlySections = document.querySelectorAll('.owner-only');
+const statsSectorFilter = document.getElementById('statsSectorFilter');
+const statsWeekFilter = document.getElementById('statsWeekFilter');
+const statsDayFilter = document.getElementById('statsDayFilter');
+const statsDateFilter = document.getElementById('statsDateFilter');
+const statsSortBy = document.getElementById('statsSortBy');
+const refreshStatsBtn = document.getElementById('refreshStatsBtn');
+const clearStatsFiltersBtn = document.getElementById('clearStatsFiltersBtn');
+const statsBody = document.getElementById('statsBody');
+const statsSummary = document.getElementById('statsSummary');
+const showStatsBtn = document.getElementById('showStatsBtn');
+const ownerStatsSection = document.getElementById('ownerStats');
 
 // ===== Initialize Application =====
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         await initDB();
         setupEventListeners();
+        if (form) {
+            setupConditionalFields();
+            updateSupervisorOptions();
+        }
+        loadOwnerConfig();
+        applyOwnerAccessRules();
+        initOwnerVisibility();
+        initOwnerStatsFilters();
         setupConditionalFields();
         applyOwnerState();
         if (isOwner()) {
@@ -709,7 +730,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Disable date input initially
         const dateInput = document.getElementById('date');
-        dateInput.disabled = true;
+        if (dateInput) {
+            dateInput.disabled = true;
+        }
         
     } catch (error) {
         console.error('خطأ في تهيئة التطبيق:', error);
@@ -720,9 +743,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ===== Setup Event Listeners =====
 function setupEventListeners() {
     // Form submission prevention
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-    });
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+        });
+    }
     
     // Button event listeners
     saveBtn.addEventListener('click', handleSave);
@@ -750,6 +775,45 @@ function setupEventListeners() {
     // Week selection - update date range
     const weekSelect = document.getElementById('week');
     weekSelect.addEventListener('change', handleWeekChange);
+
+    const sectorSelect = document.getElementById('sector');
+    const genderSelect = document.getElementById('gender');
+
+    if (sectorSelect && genderSelect) {
+        sectorSelect.addEventListener('change', updateSupervisorOptions);
+        genderSelect.addEventListener('change', updateSupervisorOptions);
+    }
+
+    const ownerPasswordSave = document.getElementById('ownerPasswordSave');
+    const scheduleSave = document.getElementById('scheduleSave');
+
+    if (ownerPasswordSave) {
+        ownerPasswordSave.addEventListener('click', handleOwnerPasswordSave);
+    }
+
+    if (scheduleSave) {
+        scheduleSave.addEventListener('click', handleScheduleSave);
+    }
+
+    if (ownerLogoutBtn) {
+        ownerLogoutBtn.addEventListener('click', handleOwnerLogout);
+    }
+
+    if (ownerLoginBtn) {
+        ownerLoginBtn.addEventListener('click', attemptOwnerLogin);
+    }
+
+    if (refreshStatsBtn) {
+        refreshStatsBtn.addEventListener('click', handleRefreshStats);
+    }
+
+    if (clearStatsFiltersBtn) {
+        clearStatsFiltersBtn.addEventListener('click', handleClearStatsFilters);
+    }
+
+    if (showStatsBtn) {
+        showStatsBtn.addEventListener('click', handleShowStats);
+    }
     
     // Date selection - update day automatically
     const dateInput = document.getElementById('date');
@@ -779,9 +843,11 @@ function setupEventListeners() {
     
     // Support areas checkboxes
     const supportAreasCheckboxes = document.querySelectorAll('input[name="supportAreas"]');
-    supportAreasCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', handleSupportAreasChange);
-    });
+    if (supportAreasCheckboxes.length > 0) {
+        supportAreasCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', handleSupportAreasChange);
+        });
+    }
     
     // Other checkboxes with "other" option
     setupOtherCheckboxes('supportAreas', 'supportAreasOther', 'supportAreasOtherText');
@@ -790,6 +856,454 @@ function setupEventListeners() {
     setupOtherCheckboxes('guidanceActions', 'guidanceActionsOther', 'guidanceActionsOtherText');
     setupOtherCheckboxes('activityActions', 'activityActionsOther', 'activityActionsOtherText');
     setupOtherCheckboxes('empowerment', 'empowermentOther', 'empowermentOtherText');
+}
+
+function initOwnerVisibility() {
+    const isOwner = isOwnerSessionActive();
+    setOwnerVisibility(isOwner);
+
+    if (window.location.hash === '#owner') {
+        attemptOwnerLogin();
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'o') {
+            attemptOwnerLogin();
+        }
+    });
+}
+
+function isOwnerSessionActive() {
+    const config = getOwnerConfig();
+    const session = sessionStorage.getItem(OWNER_SESSION_KEY);
+    return Boolean(config.passwordHash && session === config.passwordHash);
+}
+
+function setOwnerVisibility(isOwner) {
+    ownerOnlySections.forEach(section => {
+        section.style.display = isOwner ? '' : 'none';
+    });
+
+    if (!isOwner && ownerStatsSection) {
+        ownerStatsSection.classList.add('stats-hidden');
+    }
+}
+
+async function attemptOwnerLogin() {
+    const config = getOwnerConfig();
+    if (!config.passwordHash) {
+        setOwnerVisibility(true);
+        showMessage('يرجى تعيين كلمة مرور للمالك أولاً. ⚠️', 'warning');
+        return;
+    }
+
+    const hasAccess = await requireOwnerAccess();
+    if (hasAccess) {
+        handleRefreshStats();
+    }
+}
+
+function handleOwnerLogout() {
+    sessionStorage.removeItem(OWNER_SESSION_KEY);
+    setOwnerVisibility(false);
+    showMessage('تم تسجيل خروج المالك بنجاح. ✅', 'success');
+}
+
+function initOwnerStatsFilters() {
+    if (!statsSectorFilter || !statsWeekFilter || !statsDayFilter) {
+        return;
+    }
+
+    const sectorOptions = Object.keys(supervisorsBySectorGender).sort();
+    sectorOptions.forEach(sector => {
+        const option = document.createElement('option');
+        option.value = sector;
+        option.textContent = sector;
+        statsSectorFilter.appendChild(option);
+    });
+
+    Object.keys(weekDateRanges).forEach(week => {
+        const option = document.createElement('option');
+        option.value = week;
+        option.textContent = week;
+        statsWeekFilter.appendChild(option);
+    });
+
+    Object.values(arabicDays).forEach(day => {
+        const option = document.createElement('option');
+        option.value = day;
+        option.textContent = day;
+        statsDayFilter.appendChild(option);
+    });
+}
+
+async function handleRefreshStats() {
+    if (!statsBody) {
+        return;
+    }
+
+    const hasAccess = await requireOwnerAccess();
+    if (!hasAccess) {
+        return;
+    }
+
+    const records = await getAllRecords();
+    const filters = {
+        sector: statsSectorFilter?.value || '',
+        week: statsWeekFilter?.value || '',
+        day: statsDayFilter?.value || '',
+        date: statsDateFilter?.value || ''
+    };
+
+    const stats = buildSupervisorStats(records, filters);
+    const sortedStats = sortSupervisorStats(stats, statsSortBy?.value || 'name');
+    renderStatsTable(sortedStats);
+    renderStatsSummary(sortedStats);
+}
+
+async function handleShowStats() {
+    const hasAccess = await requireOwnerAccess();
+    if (!hasAccess) {
+        return;
+    }
+
+    if (ownerStatsSection) {
+        ownerStatsSection.classList.remove('stats-hidden');
+        ownerStatsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    handleRefreshStats();
+}
+
+function handleClearStatsFilters() {
+    if (statsSectorFilter) statsSectorFilter.value = '';
+    if (statsWeekFilter) statsWeekFilter.value = '';
+    if (statsDayFilter) statsDayFilter.value = '';
+    if (statsDateFilter) statsDateFilter.value = '';
+    if (statsSortBy) statsSortBy.value = 'name';
+    handleRefreshStats();
+}
+
+function buildSupervisorCatalog() {
+    const catalog = [];
+    Object.entries(supervisorsBySectorGender).forEach(([sector, genders]) => {
+        Object.entries(genders).forEach(([gender, names]) => {
+            names.forEach(name => {
+                catalog.push({ name, sector, gender });
+            });
+        });
+    });
+    return catalog;
+}
+
+function buildSupervisorStats(records, filters) {
+    const catalog = buildSupervisorCatalog();
+
+    return catalog.map(supervisor => {
+        const matchingRecords = records.filter(record => {
+            if (record.supervisor !== supervisor.name) {
+                return false;
+            }
+            if (filters.sector && record.sector !== filters.sector) {
+                return false;
+            }
+            if (filters.week && record.week !== filters.week) {
+                return false;
+            }
+            if (filters.day && record.day !== filters.day) {
+                return false;
+            }
+            if (filters.date && record.date !== filters.date) {
+                return false;
+            }
+            return true;
+        });
+
+        const lastRecord = matchingRecords.reduce((latest, current) => {
+            if (!latest) {
+                return current;
+            }
+            return (current.date || '') > (latest.date || '') ? current : latest;
+        }, null);
+
+        const count = matchingRecords.length;
+
+        return {
+            name: supervisor.name,
+            sector: supervisor.sector,
+            gender: supervisor.gender,
+            count,
+            lastDate: lastRecord?.date || '—',
+            lastWeek: lastRecord?.week || '—',
+            lastDay: lastRecord?.day || '—',
+            status: count > 0 ? 'تمت التعبئة' : 'لم تعبأ'
+        };
+    });
+}
+
+function sortSupervisorStats(stats, sortBy) {
+    const sorted = [...stats];
+    const compareText = (a, b, key) => String(a[key]).localeCompare(String(b[key]), 'ar');
+    const compareDate = (a, b) => {
+        const dateA = a.lastDate === '—' ? '' : a.lastDate;
+        const dateB = b.lastDate === '—' ? '' : b.lastDate;
+        return dateB.localeCompare(dateA);
+    };
+
+    switch (sortBy) {
+        case 'sector':
+            sorted.sort((a, b) => compareText(a, b, 'sector') || compareText(a, b, 'name'));
+            break;
+        case 'week':
+            sorted.sort((a, b) => compareText(a, b, 'lastWeek') || compareText(a, b, 'name'));
+            break;
+        case 'day':
+            sorted.sort((a, b) => compareText(a, b, 'lastDay') || compareText(a, b, 'name'));
+            break;
+        case 'date':
+            sorted.sort((a, b) => compareDate(a, b) || compareText(a, b, 'name'));
+            break;
+        case 'count':
+            sorted.sort((a, b) => b.count - a.count || compareText(a, b, 'name'));
+            break;
+        default:
+            sorted.sort((a, b) => compareText(a, b, 'name'));
+            break;
+    }
+
+    return sorted;
+}
+
+function renderStatsTable(stats) {
+    if (!statsBody) {
+        return;
+    }
+
+    statsBody.innerHTML = '';
+
+    stats.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.name}</td>
+            <td>${item.sector}</td>
+            <td>${item.gender}</td>
+            <td>${item.count}</td>
+            <td>${item.lastDate}</td>
+            <td>${item.lastWeek}</td>
+            <td>${item.lastDay}</td>
+            <td>${item.status}</td>
+        `;
+        statsBody.appendChild(row);
+    });
+}
+
+function renderStatsSummary(stats) {
+    if (!statsSummary) {
+        return;
+    }
+
+    const totalSupervisors = stats.length;
+    const completed = stats.filter(item => item.count > 0).length;
+    const remaining = totalSupervisors - completed;
+    const totalSubmissions = stats.reduce((sum, item) => sum + item.count, 0);
+
+    statsSummary.innerHTML = `
+        <div>إجمالي المشرفين/ات: <strong>${totalSupervisors}</strong></div>
+        <div>المعبئون/ات: <strong>${completed}</strong></div>
+        <div>غير المعبئين/ات: <strong>${remaining}</strong></div>
+        <div>إجمالي مرات التعبئة: <strong>${totalSubmissions}</strong></div>
+    `;
+}
+
+function loadOwnerConfig() {
+    const storedConfig = localStorage.getItem(OWNER_CONFIG_KEY);
+    if (storedConfig) {
+        try {
+            const config = JSON.parse(storedConfig);
+            const scheduleEnabled = document.getElementById('scheduleEnabled');
+            const scheduleDay = document.getElementById('scheduleDay');
+            const scheduleTime = document.getElementById('scheduleTime');
+            const scheduleDuration = document.getElementById('scheduleDuration');
+
+            if (scheduleEnabled) scheduleEnabled.value = config.scheduleEnabled || 'yes';
+            if (scheduleDay) scheduleDay.value = config.scheduleDay ?? '0';
+            if (scheduleTime) scheduleTime.value = config.scheduleTime || '08:00';
+            if (scheduleDuration) scheduleDuration.value = config.scheduleDuration || 24;
+        } catch (error) {
+            console.error('خطأ في تحميل إعدادات المالك:', error);
+        }
+    }
+}
+
+function handleOwnerPasswordSave() {
+    const passwordInput = document.getElementById('ownerPassword');
+    const confirmInput = document.getElementById('ownerPasswordConfirm');
+
+    if (!passwordInput || !confirmInput) {
+        return;
+    }
+
+    const password = passwordInput.value.trim();
+    const confirm = confirmInput.value.trim();
+
+    if (!password || !confirm) {
+        showMessage('يرجى إدخال كلمة المرور وتأكيدها. ⚠️', 'warning');
+        return;
+    }
+
+    if (password !== confirm) {
+        showMessage('كلمة المرور وتأكيدها غير متطابقين. ⚠️', 'warning');
+        return;
+    }
+
+    const config = getOwnerConfig();
+    config.passwordHash = btoa(password);
+    localStorage.setItem(OWNER_CONFIG_KEY, JSON.stringify(config));
+    passwordInput.value = '';
+    confirmInput.value = '';
+    showMessage('تم حفظ كلمة المرور بنجاح. ✅', 'success');
+}
+
+function handleScheduleSave() {
+    const scheduleEnabled = document.getElementById('scheduleEnabled');
+    const scheduleDay = document.getElementById('scheduleDay');
+    const scheduleTime = document.getElementById('scheduleTime');
+    const scheduleDuration = document.getElementById('scheduleDuration');
+
+    if (!scheduleEnabled || !scheduleDay || !scheduleTime || !scheduleDuration) {
+        return;
+    }
+
+    const config = getOwnerConfig();
+    config.scheduleEnabled = scheduleEnabled.value;
+    config.scheduleDay = scheduleDay.value;
+    config.scheduleTime = scheduleTime.value;
+    config.scheduleDuration = Number(scheduleDuration.value || 24);
+    localStorage.setItem(OWNER_CONFIG_KEY, JSON.stringify(config));
+
+    applyOwnerAccessRules();
+    showMessage('تم تحديث جدول الإتاحة. ✅', 'success');
+}
+
+function getOwnerConfig() {
+    const storedConfig = localStorage.getItem(OWNER_CONFIG_KEY);
+    if (storedConfig) {
+        try {
+            return JSON.parse(storedConfig);
+        } catch (error) {
+            console.error('خطأ في قراءة إعدادات المالك:', error);
+        }
+    }
+    return {
+        scheduleEnabled: 'yes',
+        scheduleDay: '0',
+        scheduleTime: '08:00',
+        scheduleDuration: 24,
+        passwordHash: ''
+    };
+}
+
+function applyOwnerAccessRules() {
+    const config = getOwnerConfig();
+    const scheduleStatus = document.getElementById('scheduleStatus');
+    const isAllowed = isFormOpen(config);
+
+    if (scheduleStatus) {
+        scheduleStatus.textContent = isAllowed
+            ? 'الاستمارة متاحة حاليًا حسب الجدول.'
+            : 'الاستمارة مغلقة حاليًا حسب الجدول.';
+    }
+
+    setFormAvailability(isAllowed);
+}
+
+function isFormOpen(config) {
+    if (!config || config.scheduleEnabled === 'no') {
+        return true;
+    }
+
+    const now = new Date();
+    const currentDay = String(now.getDay());
+    if (currentDay !== String(config.scheduleDay)) {
+        return false;
+    }
+
+    const [hour, minute] = (config.scheduleTime || '08:00').split(':').map(Number);
+    const start = new Date(now);
+    start.setHours(hour || 0, minute || 0, 0, 0);
+    const durationHours = Number(config.scheduleDuration || 24);
+    const end = new Date(start.getTime() + durationHours * 60 * 60 * 1000);
+
+    return now >= start && now <= end;
+}
+
+function setFormAvailability(isAllowed) {
+    const form = document.getElementById('mainForm');
+    const formActions = document.querySelector('.form-actions');
+    const message = document.getElementById('availabilityMessage');
+
+    if (!form) {
+        return;
+    }
+
+    if (!isAllowed) {
+        form.querySelectorAll('input, select, textarea, button').forEach(element => {
+            if (!element.closest('#ownerPanel')) {
+                element.disabled = true;
+            }
+        });
+        if (formActions) {
+            formActions.style.display = 'none';
+        }
+        if (!message) {
+            const notice = document.createElement('div');
+            notice.id = 'availabilityMessage';
+            notice.className = 'message message-warning';
+            notice.textContent = 'الاستمارة غير متاحة حاليًا. يرجى المحاولة لاحقًا.';
+            form.parentElement.insertBefore(notice, form);
+        }
+    } else {
+        form.querySelectorAll('input, select, textarea, button').forEach(element => {
+            if (!element.closest('#ownerPanel')) {
+                element.disabled = false;
+            }
+        });
+        if (formActions) {
+            formActions.style.display = '';
+        }
+        if (message) {
+            message.remove();
+        }
+    }
+}
+
+async function requireOwnerAccess() {
+    const config = getOwnerConfig();
+    if (!config.passwordHash) {
+        showMessage('يرجى تعيين كلمة مرور للمالك أولاً. ⚠️', 'warning');
+        return false;
+    }
+
+    const session = sessionStorage.getItem(OWNER_SESSION_KEY);
+    if (session === config.passwordHash) {
+        setOwnerVisibility(true);
+        return true;
+    }
+
+    const password = prompt('أدخل كلمة مرور المالك للوصول إلى السجلات:');
+    if (!password) {
+        return false;
+    }
+
+    if (btoa(password) !== config.passwordHash) {
+        showMessage('كلمة المرور غير صحيحة. ❌', 'error');
+        return false;
+    }
+
+    sessionStorage.setItem(OWNER_SESSION_KEY, config.passwordHash);
+    setOwnerVisibility(true);
+    return true;
 }
 
 // ===== Handle Week Change =====
@@ -1026,6 +1540,49 @@ function setupConditionalFields() {
     });
 }
 
+function updateSupervisorOptions() {
+    const sectorSelect = document.getElementById('sector');
+    const genderSelect = document.getElementById('gender');
+    const supervisorSelect = document.getElementById('supervisor');
+
+    if (!sectorSelect || !genderSelect || !supervisorSelect) {
+        return;
+    }
+
+    const sector = sectorSelect.value;
+    const gender = genderSelect.value;
+
+    supervisorSelect.innerHTML = '';
+
+    const placeholderOption = document.createElement('option');
+    placeholderOption.value = '';
+    placeholderOption.textContent = sector && gender ? 'اختر المشرف/ة' : 'اختر القطاع والنوع أولاً';
+    supervisorSelect.appendChild(placeholderOption);
+
+    if (!sector || !gender) {
+        supervisorSelect.disabled = true;
+        return;
+    }
+
+    const supervisors = supervisorsBySectorGender[sector]?.[gender] || [];
+    supervisorSelect.disabled = false;
+
+    if (supervisors.length === 0) {
+        const noneOption = document.createElement('option');
+        noneOption.value = 'لا يوجد';
+        noneOption.textContent = 'لا يوجد';
+        supervisorSelect.appendChild(noneOption);
+        return;
+    }
+
+    supervisors.forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        supervisorSelect.appendChild(option);
+    });
+}
+
 // ===== Setup Other Checkboxes =====
 function setupOtherCheckboxes(groupName, otherId, otherTextId) {
     const otherCheckbox = document.getElementById(otherId);
@@ -1181,7 +1738,7 @@ function generatePreviewHTML(data) {
     let html = `
         <div class="preview-header">
             <div style="text-align: center; margin-bottom: 20px;">
-                <img src="https://raw.githubusercontent.com/bndrjj/report1447-2/refs/heads/main/logo2.png" 
+                <img src="logo2.png" 
                      alt="شعار وزارة التعليم" 
                      style="max-height: 120px; width: auto; object-fit: contain;">
             </div>
@@ -1610,6 +2167,8 @@ function handleReset() {
             input.style.display = 'none';
             input.value = '';
         });
+
+        updateSupervisorOptions();
         
         showMessage('تم مسح النموذج بنجاح! ✅', 'success');
     }
@@ -1756,6 +2315,39 @@ async function handleExportAllExcel() {
         }
         
         const workbook = XLSX.utils.book_new();
+
+        const headers = [
+            'الأسبوع الدراسي',
+            'التاريخ',
+            'اليوم',
+            'المهمة',
+            'القطاع',
+            'النوع',
+            'المشرف/ة',
+            'المرحلة',
+            'نوع المدرسة',
+            'اسم المدرسة',
+            'المدرسة الإضافية',
+            'نوع الخدمة',
+            'مجالات الدعم الرئيسة',
+            'عدد إجراءات التدريس',
+            'إجراءات التدريس',
+            'عدد إجراءات نواتج التعلم',
+            'إجراءات نواتج التعلم',
+            'عدد إجراءات التوجيه الطلابي',
+            'إجراءات التوجيه الطلابي',
+            'عدد إجراءات النشاط الطلابي',
+            'إجراءات النشاط الطلابي',
+            'تمكين المدرسة',
+            'تفعيل منصة مدرستي',
+            'سبب عدم التفعيل',
+            'مدى مشاركة المدرسة',
+            'الخبرات الإشرافية',
+            'المبادرات',
+            'التحديات',
+            'المعالجات',
+            'التوصيات',
+            'المقترحات'
         
         const headers = [
             'التاريخ',
@@ -1905,6 +2497,8 @@ function clearDraft() {
 }
 
 // Add auto-save on form changes
-form.addEventListener('input', () => {
-    saveDraft();
-});
+if (form) {
+    form.addEventListener('input', () => {
+        saveDraft();
+    });
+}
