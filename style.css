@@ -121,6 +121,14 @@
     /* Typography Variables */
     --font-heading: 'Cairo', sans-serif;
     --font-body: 'Tajawal', sans-serif;
+    --font-size-base: 16px;
+    --font-size-sm: 0.95rem;
+    --font-size-md: 1rem;
+    --font-size-lg: 1.1rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 2rem;
+    --font-size-4xl: 2.5rem;
 }
 
 /* ===== Global Styles ===== */
@@ -139,7 +147,7 @@ body {
     min-height: 100vh;
     padding: 20px;
     direction: rtl;
-    font-size: 16px;
+    font-size: var(--font-size-base);
 }
 
 /* ===== Typography Hierarchy ===== */
@@ -147,42 +155,43 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     font-weight: 700;
     line-height: 1.4;
-    letter-spacing: 0.3px;
+    letter-spacing: 0;
 }
 
 h1 {
-    font-size: 2.5rem;
+    font-size: var(--font-size-4xl);
     font-weight: 700;
 }
 
 h2 {
-    font-size: 2rem;
+    font-size: var(--font-size-3xl);
     font-weight: 700;
 }
 
 h3 {
-    font-size: 1.5rem;
+    font-size: var(--font-size-2xl);
     font-weight: 600;
 }
 
 h4 {
-    font-size: 1.25rem;
+    font-size: var(--font-size-xl);
     font-weight: 600;
 }
 
 h5 {
-    font-size: 1.1rem;
+    font-size: var(--font-size-lg);
     font-weight: 600;
 }
 
 h6 {
-    font-size: 1rem;
+    font-size: var(--font-size-md);
     font-weight: 600;
 }
 
-p, span, div, label, input, select, textarea, button, li, td, th {
+p, span, div, label, input, select, textarea, button, li, td, th, small {
     font-family: var(--font-body);
     font-weight: 400;
+    font-size: var(--font-size-md);
 }
 
 strong, b {
