@@ -339,6 +339,10 @@ strong, b {
     color: #0b5d3a;
 }
 
+.owner-only {
+    display: none;
+}
+
 /* ===== Form Grid ===== */
 .form-grid {
     display: grid;
@@ -579,6 +583,46 @@ select {
     background: linear-gradient(135deg, #fff8e1 0%, #fffef5 100%);
     border-radius: 15px;
     border: 2px solid var(--secondary-color);
+}
+
+.owner-stats {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 12px;
+    background: #f8f9fb;
+    border: 1px solid rgba(0, 99, 65, 0.15);
+}
+
+.stats-filters {
+    margin-top: 15px;
+}
+
+.stats-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.stats-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 99, 65, 0.1);
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #0b5d3a;
+}
+
+.stats-table td:last-child {
+    font-weight: 700;
+}
+
+.stats-hidden {
+    display: none;
 }
 
 .saved-records {
