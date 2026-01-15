@@ -818,7 +818,6 @@ function setupEventListeners() {
     // Date selection - update day automatically
     const dateInput = document.getElementById('date');
     dateInput.addEventListener('change', handleDateChange);
-    dateInput.addEventListener('input', handleDateChange);
 
     // Sector/gender selection - update supervisor list
     const sectorSelect = document.getElementById('sector');
@@ -1323,7 +1322,6 @@ function handleWeekChange() {
         dateInput.min = range.start;
         dateInput.max = range.end;
         dateInput.disabled = false;
-        dateInput.setCustomValidity('');
         
         // Update note
         const startDate = formatDateArabic(range.start);
@@ -1337,7 +1335,6 @@ function handleWeekChange() {
             if (currentDate < range.start || currentDate > range.end) {
                 dateInput.value = '';
                 dayInput.value = '';
-                dateInput.setCustomValidity('يرجى اختيار تاريخ ضمن نطاق الأسبوع المحدد.');
             } else {
                 updateDayFromDate(currentDate, dayInput);
             }
@@ -1348,7 +1345,6 @@ function handleWeekChange() {
         dateInput.max = '';
         dateInput.disabled = true;
         dateInput.value = '';
-        dateInput.setCustomValidity('');
         dayInput.value = '';
         dateNote.textContent = 'اختر الأسبوع الدراسي أولاً';
         dateNote.style.color = '#6c757d';
@@ -1368,6 +1364,8 @@ function handleDateChange() {
     const weekSelect = document.getElementById('week');
     
     if (dateInput.value) {
+        updateDayFromDate(dateInput.value, dayInput);
+        
         // Validate date is within week range
         const selectedWeek = weekSelect.value;
         if (selectedWeek && weekDateRanges[selectedWeek]) {
@@ -1376,16 +1374,10 @@ function handleDateChange() {
                 showMessage('التاريخ المختار خارج نطاق الأسبوع المحدد! ⚠️', 'warning');
                 dateInput.value = '';
                 dayInput.value = '';
-                dateInput.setCustomValidity('يرجى اختيار تاريخ ضمن نطاق الأسبوع المحدد.');
-                return;
             }
         }
-
-        dateInput.setCustomValidity('');
-        updateDayFromDate(dateInput.value, dayInput);
     } else {
         dayInput.value = '';
-        dateInput.setCustomValidity('');
     }
 }
 
