@@ -593,6 +593,124 @@
             </div>
         </form>
 
+        <!-- Data Management Section -->
+        <section class="data-management">
+            <div class="section-header">
+                <h2>📊 إدارة البيانات المحفوظة</h2>
+            </div>
+            <div class="owner-access" id="ownerAccessPanel">
+                <div class="owner-access__content">
+                    <label for="ownerCode">رمز دخول المالك</label>
+                    <div class="owner-access__controls">
+                        <input type="password" id="ownerCode" name="ownerCode" placeholder="أدخل رمز المالك">
+                        <button type="button" class="btn btn-primary btn-sm" id="ownerLoginBtn">🔐 دخول</button>
+                    </div>
+                    <p class="field-note">لن تظهر هذه اللوحة إلا عند فتح الرابط مع ‎#owner‎.</p>
+                </div>
+            </div>
+            <div class="saved-records owner-only">
+                <button type="button" class="btn btn-warning owner-only-inline" id="exportExcelBtn">📊 تصدير Excel (السجل الحالي)</button>
+                <button type="button" class="btn btn-secondary owner-only-inline" id="viewRecordsBtn">📋 عرض السجلات المحفوظة</button>
+                <button type="button" class="btn btn-warning owner-only-inline" id="exportAllExcelBtn">📊 تصدير جميع السجلات إلى Excel</button>
+                <button type="button" class="btn btn-danger owner-only-inline" id="ownerLogoutBtn">🚪 تسجيل الخروج</button>
+            </div>
+            <div class="owner-stats owner-only" id="ownerStats">
+                <div class="section-header">
+                    <h3>📈 إحصائية تعبئة المشرفين</h3>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="filterWeek">الأسبوع</label>
+                        <select id="filterWeek" name="filterWeek">
+                            <option value="">كل الأسابيع</option>
+                            <option value="الأسبوع الأول - ٢٠٢٦/٠١/١٨ إلى ٢٠٢٦/٠١/٢٢">الأسبوع الأول - ٢٠٢٦/٠١/١٨ إلى ٢٠٢٦/٠١/٢٢</option>
+                            <option value="الأسبوع الثاني - ٢٠٢٦/٠١/٢٥ إلى ٢٠٢٦/٠١/٢٩">الأسبوع الثاني - ٢٠٢٦/٠١/٢٥ إلى ٢٠٢٦/٠١/٢٩</option>
+                            <option value="الأسبوع الثالث - ٢٠٢٦/٠٢/٠٢ إلى ٢٠٢٦/٠٢/٠٦">الأسبوع الثالث - ٢٠٢٦/٠٢/٠٢ إلى ٢٠٢٦/٠٢/٠٦</option>
+                            <option value="الأسبوع الرابع - ٢٠٢٦/٠٢/٠٩ إلى ٢٠٢٦/٠٢/١٢">الأسبوع الرابع - ٢٠٢٦/٠٢/٠٩ إلى ٢٠٢٦/٠٢/١٢</option>
+                            <option value="الأسبوع الخامس - ٢٠٢٦/٠٢/١٥ إلى ٢٠٢٦/٠٢/١٩">الأسبوع الخامس - ٢٠٢٦/٠٢/١٥ إلى ٢٠٢٦/٠٢/١٩</option>
+                            <option value="الأسبوع السادس - ٢٠٢٦/٠٢/٢٢ إلى ٢٠٢٦/٠٢/٢٦">الأسبوع السادس - ٢٠٢٦/٠٢/٢٢ إلى ٢٠٢٦/٠٢/٢٦</option>
+                            <option value="الأسبوع السابع - ٢٠٢٦/٠٣/٠١ إلى ٢٠٢٦/٠٣/٠٥">الأسبوع السابع - ٢٠٢٦/٠٣/٠١ إلى ٢٠٢٦/٠٣/٠٥</option>
+                            <option value="الأسبوع الثامن - ٢٠٢٦/٠٣/٢٩ إلى ٢٠٢٦/٠٤/٠٢">الأسبوع الثامن - ٢٠٢٦/٠٣/٢٩ إلى ٢٠٢٦/٠٤/٠٢</option>
+                            <option value="الأسبوع التاسع - ٢٠٢٦/٠٤/٠٥ إلى ٢٠٢٦/٠٤/٠٩">الأسبوع التاسع - ٢٠٢٦/٠٤/٠٥ إلى ٢٠٢٦/٠٤/٠٩</option>
+                            <option value="الأسبوع العاشر - ٢٠٢٦/٠٤/١٢ إلى ٢٠٢٦/٠٤/١٦">الأسبوع العاشر - ٢٠٢٦/٠٤/١٢ إلى ٢٠٢٦/٠٤/١٦</option>
+                            <option value="الأسبوع الحادي عشر - ٢٠٢٦/٠٤/١٩ إلى ٢٠٢٦/٠٤/٢٣">الأسبوع الحادي عشر - ٢٠٢٦/٠٤/١٩ إلى ٢٠٢٦/٠٤/٢٣</option>
+                            <option value="الأسبوع الثاني عشر - ٢٠٢٦/٠٤/٢٦ إلى ٢٠٢٦/٠٤/٣٠">الأسبوع الثاني عشر - ٢٠٢٦/٠٤/٢٦ إلى ٢٠٢٦/٠٤/٣٠</option>
+                            <option value="الأسبوع الثالث عشر - ٢٠٢٦/٠٥/٠٣ إلى ٢٠٢٦/٠٥/٠٧">الأسبوع الثالث عشر - ٢٠٢٦/٠٥/٠٣ إلى ٢٠٢٦/٠٥/٠٧</option>
+                            <option value="الأسبوع الرابع عشر - ٢٠٢٦/٠٥/١٠ إلى ٢٠٢٦/٠٥/١٤">الأسبوع الرابع عشر - ٢٠٢٦/٠٥/١٠ إلى ٢٠٢٦/٠٥/١٤</option>
+                            <option value="الأسبوع الخامس عشر - ٢٠٢٦/٠٥/١٧ إلى ٢٠٢٦/٠٥/٢١">الأسبوع الخامس عشر - ٢٠٢٦/٠٥/١٧ إلى ٢٠٢٦/٠٥/٢١</option>
+                            <option value="الأسبوع السادس عشر - ٢٠٢٦/٠٥/٣١ إلى ٢٠٢٦/٠٦/٠٤">الأسبوع السادس عشر - ٢٠٢٦/٠٥/٣١ إلى ٢٠٢٦/٠٦/٠٤</option>
+                            <option value="الأسبوع السابع عشر - ٢٠٢٦/٠٦/٠٧ إلى ٢٠٢٦/٠٦/١١">الأسبوع السابع عشر - ٢٠٢٦/٠٦/٠٧ إلى ٢٠٢٦/٠٦/١١</option>
+                            <option value="الأسبوع الثامن عشر - ٢٠٢٦/٠٦/١٤ إلى ٢٠٢٦/٠٦/١٨">الأسبوع الثامن عشر - ٢٠٢٦/٠٦/١٤ إلى ٢٠٢٦/٠٦/١٨</option>
+                            <option value="الأسبوع التاسع عشر - ٢٠٢٦/٠٦/٢١ إلى ٢٠٢٦/٠٦/٢٥">الأسبوع التاسع عشر - ٢٠٢٦/٠٦/٢١ إلى ٢٠٢٦/٠٦/٢٥</option>
+                            <option value="الأسبوع العشرون - ٢٠٢٦/٠٦/٢٨ إلى ٢٠٢٦/٠٧/٠٢">الأسبوع العشرون - ٢٠٢٦/٠٦/٢٨ إلى ٢٠٢٦/٠٧/٠٢</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filterDay">اليوم</label>
+                        <select id="filterDay" name="filterDay">
+                            <option value="">كل الأيام</option>
+                            <option value="الأحد">الأحد</option>
+                            <option value="الاثنين">الاثنين</option>
+                            <option value="الثلاثاء">الثلاثاء</option>
+                            <option value="الأربعاء">الأربعاء</option>
+                            <option value="الخميس">الخميس</option>
+                            <option value="الجمعة">الجمعة</option>
+                            <option value="السبت">السبت</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filterSector">القطاع</label>
+                        <select id="filterSector" name="filterSector">
+                            <option value="">كل القطاعات</option>
+                            <option value="القطيف">القطيف</option>
+                            <option value="الدمام">الدمام</option>
+                            <option value="الجبيل">الجبيل</option>
+                            <option value="الخبر">الخبر</option>
+                            <option value="الخفجي">الخفجي</option>
+                            <option value="رأس تنورة">رأس تنورة</option>
+                            <option value="حفر الباطن">حفر الباطن</option>
+                            <option value="القرية العليا">القرية العليا</option>
+                            <option value="النعيرية">النعيرية</option>
+                            <option value="بقيق">بقيق</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filterDate">التاريخ</label>
+                        <input type="date" id="filterDate" name="filterDate">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-info" id="refreshStatsBtn">🔄 تحديث الإحصائية</button>
+                </div>
+                <div class="records-table-wrapper">
+                    <table class="records-table" id="statsTable">
+                        <thead>
+                            <tr>
+                                <th>المشرف/ة</th>
+                                <th>القطاع</th>
+                                <th>النوع</th>
+                                <th>عدد مرات التعبئة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="recordsList" class="owner-only" style="display: none; margin-top: 20px;">
+                <table id="recordsTable" class="records-table">
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>الأسبوع</th>
+                            <th>المدرسة</th>
+                            <th>القطاع</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsBody"></tbody>
+                </table>
+            </div>
+        </section>
     </main>
 
     <!-- Preview Modal -->
