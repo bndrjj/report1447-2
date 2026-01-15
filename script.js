@@ -607,6 +607,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         applyOwnerAccessRules();
         initOwnerVisibility();
         initOwnerStatsFilters();
+        setupConditionalFields();
+        updateSupervisorOptions();
+        loadOwnerConfig();
+        applyOwnerAccessRules();
         
         // Disable date input initially
         const dateInput = document.getElementById('date');
@@ -2065,6 +2069,38 @@ async function handleExportAllExcel() {
             'المعالجات',
             'التوصيات',
             'المقترحات'
+        
+        // Summary sheet
+        const summaryData = [
+            ['ملخص جميع السجلات'],
+            ['وزارة التعليم - إدارة التعليم بالمنطقة الشرقية'],
+            [],
+            ['التاريخ', 'الأسبوع', 'المدرسة', 'القطاع', 'المرحلة', 'النوع', 'المشرف/ة', 'نوع الخدمة']
+        ];
+        
+        records.forEach(record => {
+            summaryData.push([
+                record.date,
+                record.week,
+                record.mainSchool,
+                record.sector,
+                record.stage,
+                record.gender,
+                record.supervisor,
+                record.serviceType
+            ]);
+        });
+        
+        const summarySheet = XLSX.utils.aoa_to_sheet(summaryData);
+        summarySheet['!cols'] = [
+            { wch: 15 },
+            { wch: 40 },
+            { wch: 30 },
+            { wch: 15 },
+            { wch: 15 },
+            { wch: 10 },
+            { wch: 25 },
+            { wch: 15 }
         ];
 
         const rows = records.map(record => ([

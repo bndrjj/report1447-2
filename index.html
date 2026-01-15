@@ -21,6 +21,67 @@
 
     <!-- Main Form Container -->
     <main class="form-container">
+        <section class="form-section owner-panel" id="ownerPanel">
+            <div class="section-header">
+                <h2>🛡️ لوحة المالك</h2>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="ownerPassword">كلمة مرور المالك <span class="required">*</span></label>
+                    <input type="password" id="ownerPassword" name="ownerPassword" placeholder="أدخل كلمة المرور للمالك">
+                    <p class="field-note">هذه الكلمة مطلوبة للوصول إلى السجلات والتصدير الكامل.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="ownerPasswordConfirm">تأكيد كلمة مرور المالك <span class="required">*</span></label>
+                    <input type="password" id="ownerPasswordConfirm" name="ownerPasswordConfirm" placeholder="أعد إدخال كلمة المرور">
+                </div>
+
+                <div class="form-group">
+                    <label for="ownerPasswordSave">حفظ كلمة المرور</label>
+                    <button type="button" class="btn btn-primary" id="ownerPasswordSave">💾 حفظ كلمة المرور</button>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="scheduleEnabled">تفعيل جدول الإتاحة الأسبوعي <span class="required">*</span></label>
+                    <select id="scheduleEnabled" name="scheduleEnabled">
+                        <option value="yes">نعم</option>
+                        <option value="no">لا</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduleDay">اليوم المتاح أسبوعيًا <span class="required">*</span></label>
+                    <select id="scheduleDay" name="scheduleDay">
+                        <option value="0">الأحد</option>
+                        <option value="1">الاثنين</option>
+                        <option value="2">الثلاثاء</option>
+                        <option value="3">الأربعاء</option>
+                        <option value="4">الخميس</option>
+                        <option value="5">الجمعة</option>
+                        <option value="6">السبت</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduleTime">وقت بدء الإتاحة <span class="required">*</span></label>
+                    <input type="time" id="scheduleTime" name="scheduleTime" value="08:00">
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduleDuration">مدة الإتاحة (بالساعات) <span class="required">*</span></label>
+                    <input type="number" id="scheduleDuration" name="scheduleDuration" min="1" max="24" value="24">
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduleSave">تحديث الجدول</label>
+                    <button type="button" class="btn btn-primary" id="scheduleSave">🗓️ حفظ الجدول</button>
+                    <p class="field-note" id="scheduleStatus">سيتم تفعيل الإتاحة حسب الجدول المحفوظ.</p>
+                </div>
+            </div>
+        </section>
         <form id="mainForm">
             <!-- Section 1: Basic Information -->
             <section class="form-section">
@@ -228,6 +289,10 @@
                             <span>تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال التدريس</span>
                         </label>
                         <label class="checkbox-item">
+                            <input type="checkbox" name="teachingActions" value="غير مستهدف هذا الاسبوع">
+                            <span>غير مستهدف هذا الاسبوع</span>
+                        </label>
+                        <label class="checkbox-item">
                             <input type="checkbox" name="teachingActions" value="other" id="teachingActionsOther">
                             <span>غير ذلك</span>
                         </label>
@@ -236,7 +301,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="teachingCount">عدد الإجراءات المنفذة خلال الأسبوع في مجال التدريس</label>
+                    <label for="teachingCount">ما عدد الإجراءات المنفذه خلال الأسبوع في مجال التدريس</label>
                     <input type="number" id="teachingCount" name="teachingCount" min="0" value="0" placeholder="0">
                     <p class="field-note">يذكر مقدم خدمة التميز عدد الإجراءات المقدمة في المجال المحدد رقماً وفي حال كان المجال غير مستهدف يتم وضع (0) صفر</p>
                 </div>
@@ -277,6 +342,10 @@
                             <span>تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال نواتج التعلم</span>
                         </label>
                         <label class="checkbox-item">
+                            <input type="checkbox" name="outcomesActions" value="غير مستهدف هذا الاسبوع">
+                            <span>غير مستهدف هذا الاسبوع</span>
+                        </label>
+                        <label class="checkbox-item">
                             <input type="checkbox" name="outcomesActions" value="other" id="outcomesActionsOther">
                             <span>غير ذلك</span>
                         </label>
@@ -285,7 +354,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="outcomesCount">عدد الإجراءات المنفذة خلال الأسبوع في مجال نواتج التعلم</label>
+                    <label for="outcomesCount">ما عدد الإجراءات المنفذه خلال الأسبوع في مجال نواتج التعلم</label>
                     <input type="number" id="outcomesCount" name="outcomesCount" min="0" value="0" placeholder="0">
                     <p class="field-note">يذكر مقدم خدمة التميز عدد الإجراءات المقدمة في المجال المحدد رقماً وفي حال كان المجال غير مستهدف يتم وضع (0) صفر</p>
                 </div>
@@ -330,6 +399,10 @@
                             <span>تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال التوجيه الطلابي</span>
                         </label>
                         <label class="checkbox-item">
+                            <input type="checkbox" name="guidanceActions" value="غير مستهدف هذا الاسبوع">
+                            <span>غير مستهدف هذا الاسبوع</span>
+                        </label>
+                        <label class="checkbox-item">
                             <input type="checkbox" name="guidanceActions" value="other" id="guidanceActionsOther">
                             <span>غير ذلك</span>
                         </label>
@@ -338,7 +411,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="guidanceCount">عدد الإجراءات المنفذة خلال الأسبوع في مجال التوجيه الطلابي</label>
+                    <label for="guidanceCount">ما عدد الإجراءات المنفذه خلال الأسبوع في مجال التوجية الطلابي</label>
                     <input type="number" id="guidanceCount" name="guidanceCount" min="0" value="0" placeholder="0">
                     <p class="field-note">يذكر مقدم خدمة التميز عدد الإجراءات المقدمة في المجال المحدد رقماً وفي حال كان المجال غير مستهدف يتم وضع (0) صفر</p>
                 </div>
@@ -383,6 +456,10 @@
                             <span>تقديم التطوير المهني المستمر لمنسوبي المدرسة في مجال النشاط الطلابي</span>
                         </label>
                         <label class="checkbox-item">
+                            <input type="checkbox" name="activityActions" value="غير مستهدف هذا الاسبوع">
+                            <span>غير مستهدف هذا الاسبوع</span>
+                        </label>
+                        <label class="checkbox-item">
                             <input type="checkbox" name="activityActions" value="other" id="activityActionsOther">
                             <span>غير ذلك</span>
                         </label>
@@ -391,7 +468,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="activityCount">عدد الإجراءات المنفذة خلال الأسبوع في مجال النشاط الطلابي</label>
+                    <label for="activityCount">ما عدد الإجراءات المنفذه خلال الأسبوع في مجال النشاط الطلابي</label>
                     <input type="number" id="activityCount" name="activityCount" min="0" value="0" placeholder="0">
                     <p class="field-note">يذكر مقدم خدمة التميز عدد الإجراءات المقدمة في المجال المحدد رقماً وفي حال كان المجال غير مستهدف يتم وضع (0) صفر</p>
                 </div>
