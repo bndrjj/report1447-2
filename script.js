@@ -4,6 +4,8 @@ let savedRecords = [];
 const DB_NAME = 'SchoolSupportDB';
 const DB_VERSION = 1;
 const STORE_NAME = 'records';
+const OWNER_ACCESS_KEY = 'ownerAccess';
+const OWNER_ACCESS_CODE = 'CHANGE_ME';
 
 // ===== IndexedDB Setup =====
 let db;
@@ -41,6 +43,547 @@ const arabicDays = {
     4: 'الخميس',
     5: 'الجمعة',
     6: 'السبت'
+};
+
+function isOwner() {
+    return localStorage.getItem(OWNER_ACCESS_KEY) === 'true';
+}
+
+function applyOwnerState() {
+    const owner = isOwner();
+    document.body.classList.toggle('is-owner', owner);
+    document.body.classList.toggle('owner-reveal', !owner && window.location.hash === '#owner');
+}
+
+function requireOwnerAccess(message = 'هذه الميزة متاحة للمالك فقط.') {
+    if (!isOwner()) {
+        showMessage(message, 'warning');
+        return false;
+    }
+    return true;
+}
+
+function getAllSupervisors() {
+    const list = [];
+    Object.entries(supervisorsBySectorGender).forEach(([sector, genders]) => {
+        Object.entries(genders).forEach(([gender, names]) => {
+            names.forEach(name => {
+                list.push({ name, sector, gender });
+            });
+        });
+    });
+    return list;
+}
+
+const supervisorsBySectorGender = {
+    'الجبيل': {
+        'بنين': [
+            'إبراهيم بن سليمان العمرو',
+            'سامي بن صالح الغامدي',
+            'ناصر بن عايد الشمري',
+            'علي بن ناصر الحربي'
+        ],
+        'بنات': [
+            'ناريمان بنت عبد الوهاب الوهيبي',
+            'مها بنت رزق الروضان',
+            'واجد بنت علي البعيجي',
+            'سميرة بنت علي الغامدي',
+            'شوق بنت عبدالله الزرم',
+            'قرموشه بنت مبارك الهاجري',
+            'سناء بنت عبدالحليم الصبيحي'
+        ]
+    },
+    'الخبر': {
+        'بنات': [
+            'ابتسام بنت عبدالله العبدالقادر',
+            'ابتهال بنت ناصر الكبش',
+            'أمل بنت سليمان العمري',
+            'آمنه بنت علي تويتي',
+            'بدريه بنت عبدالعزيز الجلعود',
+            'تركية بنت محمد المالكي',
+            'جملاء بنت رشيد السليمي',
+            'خولة بنت سعد المدرع',
+            'سهام بنت عيسى البريك',
+            'شروق بنت محمود العثمان',
+            'شريفة بنت عبدالله العمر',
+            'عزه بنت صالح الزهراني',
+            'غادة بنت منصور العسكر',
+            'فريال بنت صالح الدوسري',
+            'لمياء بنت محمد الدرويش',
+            'مريم بنت حمدي الروقي',
+            'مشاعل بنت سليمان العيدي',
+            'زينة بنت عائض القحطاني',
+            'ناهد بنت محمد الفزيع',
+            'نسرين بنت عبدالله حلواني'
+        ],
+        'بنين': [
+            'تركي بن عبداللطيف السبيعي',
+            'سعد بن عبد الله الدوسري',
+            'محمد بن أحمد المهناء',
+            'فرحان بن مسعد الشعباني',
+            'عبدالله بن يحيى ضرغام',
+            'عبدالله بن جزاء العنزي',
+            'أحمد بن محمد القاسم',
+            'محمد بن مبارك الدوسري',
+            'ماجد بن محمد الجهني',
+            'ابراهيم بن محمد العسيري',
+            'علي بن عبدالله العمرى',
+            'إبراهيم بن محمد الغامدي',
+            'محمد بن مشبب الأحمري',
+            'فيصل بن أحمد الغامدي',
+            'سالم بن مطلق القحطاني',
+            'خالد بن علي الشامي',
+            'بندر بن عبداللطيف الجمعان',
+            'سليمان بن أحمد السويد',
+            'أنور بن أحمد المقهوي',
+            'سامي بن عبدالله العبدالسلام',
+            'محمد بن عبدالإله السبحي',
+            'زياد بن سعد العامر',
+            'محمد بن خليل الغامدي',
+            'محمد بن عبدالرحمن الزهراني',
+            'عبدالهادي بن محمد المطيري',
+            'أحمد بن عبدالله الخضر',
+            'وليد بن محمد بوعايشه',
+            'خالد بن يحيى الجحدلي',
+            'عبدالله بن محمد الوليدي',
+            'نايف بن عيسى الشدي',
+            'عبدالله بن محمد العسيري',
+            'محمد بن خالد الخضير',
+            'يوسف بن سعدون السعدون',
+            'محمد بن علي القحطاني',
+            'أسعد بن عمران العمران',
+            'مانع بن عبدالله القرني',
+            'فؤاد بن أحمد الزهراني',
+            'عبدالله بن عبدالعزيز البطيح',
+            'عبدالله بن محمد الشهري',
+            'ماهر بن عبدالعزيز التمار',
+            'محمد بن أحمد العبود',
+            'صالح بن محمد القرني',
+            'عيظه بن محمد الزهراني'
+        ]
+    },
+    'الخفجي': {
+        'بنين': [
+            'منصور بن مخضر المضيبري',
+            'علي بن جمعان السبيعي',
+            'محمد بن عبدالله المطيري',
+            'نايف بن عنيد الخالدي',
+            'سالم بن خلف البقعاوي',
+            'احمد بن خلف البقعاوي',
+            'إبراهيم بن حسين الأعجم',
+            'خالد بن محمد المطيري',
+            'عبدالعزيز بن عسيكر المطيري'
+        ],
+        'بنات': [
+            'مها بنت ابداح المطيري',
+            'فريدة بنت ذياب الشمري',
+            'سلوى بنت علي الظلعي',
+            'نورة بنت طرجم السبيعي',
+            'نورة بنت مبارك القحطاني',
+            'عيدة بنت سعدون الشمري',
+            'نورة بنت هديش آل فاضل',
+            'دليل بنت سيف القحطاني',
+            'سارة بنت هديش الفاضل',
+            'شرف بنت ناصر السلولي',
+            'مريم بنت سالم المري',
+            'فائزة بنت لافي المهاشر',
+            'صافية بنت سالم المري',
+            'خلود بنت جبر الجبر',
+            'امل بنت سليمان الزويمل',
+            'فاطمة بنت عوض القحطاني',
+            'نوير بنت حمود السبيعي',
+            'نورة بنت عبد العزيز المناحي',
+            'منيرة بنت حمدان الشمري'
+        ]
+    },
+    'الدمام': {
+        'بنات': [
+            'سميرة بنت حمد بن راشد بالحارث',
+            'فاطمة بنت عبده ميقاق',
+            'نجلاء بنت احمد البسام',
+            'عبير بنت خالد الصياح',
+            'صبحه بنت حامد الغامدي',
+            'عايشه بنت مصلح الشمراني',
+            'عائشة بنت ابراهيم دراج',
+            'عائشة بنت صالح الشهري',
+            'أمل بنت محمد هوساوي',
+            'فتحيه بنت سالم النفيعي',
+            'مؤمنة بنت محمد القرني',
+            'النيرة بنت حسن الحلفي',
+            'أسماء بنت سعيد الشهراني',
+            'ليلى بنت مزهر الزهراني',
+            'نوره بنت إبراهيم العبدالهادي',
+            'ابتسام بنت محمد مباركي',
+            'نوال بنت عبدالرحمن اللهيبي',
+            'عبير بنت سعيد الغامدي',
+            'فاطمة بنت عيسى المطيري',
+            'فدوى بنت منصور الدوسري',
+            'نورة بنت راشد المهاشير',
+            'حصة بنت ماجد السبيعي',
+            'باسمة بنت محمد الراشد',
+            'ولاء بنت حسن سندي',
+            'مي بنت محمد السليم',
+            'عالية بنت سعيد الشمراني',
+            'إيمان بنت يوسف الحماد',
+            'ليلى بنت أحمد الغامدي',
+            'بدرية بنت عبدالله الشهري',
+            'خلود بنت بكر بامسعود',
+            'منيره بنت متروك الفريدي',
+            'شاهه بنت خالد الخالدي',
+            'زهره بنت علي مباركي',
+            'البندري بنت محمد العتيبي',
+            'عائشة بنت احمد الشهري',
+            'مريم بنت حسن باخشوين',
+            'مها بنت محمد العيسى'
+        ],
+        'بنين': [
+            'د.أحمد بن محمد حكمي',
+            'بندر بن سعيد القحطاني',
+            'فهد بن محمد الشهري',
+            'فائز بن علي الغامدي',
+            'جهاد بن محمد آل طلحة',
+            'مبارك بن فهد المرير',
+            'ماهر بن عبدالعزيز العفيصان',
+            'سعيد بن جروان القرني',
+            'عبد المحسن بن محيميد العتيبي',
+            'ثابت بن عايض القحطاني',
+            'سعد بن مسفر الغامدي',
+            '‏عبد العزيز بن يوسف الناس',
+            'عبدالله بن مزيد العتيبي',
+            'عوض بن علي القحطاني',
+            'محمد بن مصنهت الدعجاني',
+            'أحمد بن محمد الشامي',
+            'عبدالعزيز بن راشد الطويرش',
+            'عبد الرحمن بن عبدالله العوجان',
+            'قاسم بن حمود مكتلي',
+            'حسين بن محمد الغامدي',
+            'علي بن محمد الغامدي',
+            'جمعان بن محمد الغامدي',
+            'حمود بن علي الميموني',
+            'خالد بن جمعه الشامسي',
+            'ياسر بن عبدالله العضل',
+            'منصور بن صالح الزهراني',
+            'عادل بن عودة العوهلي',
+            'علي بن محمد الفارس',
+            'أحمد بن خليفة الجميعه',
+            'عبدالله بن عيسى العنزي',
+            'محمد بن سعيد الشهري',
+            'أحمد بن محمد الغامدي',
+            'ظافر بن مشبب الأحمري',
+            'علي بن عيسى الرشيد',
+            'سعود بن عبدالعزيز العبيد',
+            'محمد بن سحمي السبيعي',
+            'إبراهيم بن حامد الغامدي',
+            'محمد بن عثمان الغامدي',
+            'محمد بن حمزة الشهري',
+            'بدر بن محمد القحطاني',
+            'حاتم بن عبدالرحيم الغامدي',
+            'علي بن حسن الذياب',
+            'محمد بن مهنا المعيبد',
+            'عبداللطيف بن إبراهيم المحيش',
+            'عبدالرحيم بن عبدالله بوبشيت',
+            'عبدالرحمن بن علي الغامدي',
+            'عبدالعزيز بن سالم الجهني',
+            'عبدالرزاق بن يوسف العبد الرزاق',
+            'رشيد بن عبدالله الزهراني',
+            'مراد بن حسين الفلاح',
+            'سعود بن عيسى الدوسري',
+            'عبدالله بن سالم الحربي',
+            'عادل بن خميس السلمة',
+            'فهد بن ظافر الشهري',
+            'ماهر بن عبدالرحمن السعيد',
+            'خالد بن غرم الله الغامدي',
+            'يعن الله بن عطية الزهراني',
+            'فواز بن عبدالرحمن النعيم',
+            'عادل بن عبدالله السليم',
+            'حسن بن خالد الزياني',
+            'هيثم بن خضير الخضير',
+            'أحمد بن عبدالرحمن العبدالعظيم',
+            'عبدالحميد بن مسفر الغامدي',
+            'عبدالعزيز بن محمد الصائغ',
+            'خلف بن محمد الغامدي',
+            'علي بن ماطر العنزي',
+            'جمعان بن سعيد الغامدي'
+        ]
+    },
+    'القطيف': {
+        'بنين': [
+            'أحمد بن إبراهيم العبيد',
+            'أحمد بن محمد شراحيلي',
+            'بندر بن سعيد المسيب',
+            'خالد بن محمد الشهري',
+            'خليفه بن سلمان المهناء',
+            'رياض بن دغش الخالدي',
+            'سعيد بن يحيى القحطاني',
+            'صلاح بن محمد آل مطر',
+            'طارق بن إبراهيم العوده',
+            'طارق بن عبدالعزيز الجامع',
+            'طارق بن يوسف العصيل',
+            'عبدالرحمن بن علي القحطاني',
+            'عبدالله بن سالم الشهري',
+            'عبدالله بن محمد بن غدرا',
+            'عصام بن علي الزهراني',
+            'علي بن سعد الماجد',
+            'علي بن سعيد آل حارس',
+            'علي بن محمد الشيتي',
+            'فهد بن محمد آل رقيب',
+            'فيصل بن إبراهيم العجيان',
+            'فيصل بن مرزوق العتيبي',
+            'ماجد بن عبدالله العمري',
+            'محمد بن حسن الخميس',
+            'محمد بن حمد الخالدي',
+            'محمد بن سلمان الناصر',
+            'محمد بن ناصر الجويسم',
+            'محمد بن هندي العمري',
+            'معتصم بن مسعود العبدالله',
+            'نادر بن عبدالله السويكت',
+            'ياسر بن سعيد القحطاني',
+            'يحي بن محمد مدخلي',
+            'محمد بن حسن المرزوق'
+        ],
+        'بنات': [
+            'هيفاء بنت عبدالعزيز الشمري',
+            'أسماء بنت صايل الشمري',
+            'اشجان بنت عبدالرحمن الدوسري',
+            'امل بنت عبدالله السبيعي',
+            'امل بنت معدى القحطاني',
+            'بدريه بنت يوسف العواد',
+            'جوهره بنت سعود الخالدي',
+            'حصة بنت عبدالرحمن الدوسري',
+            'خلود بنت عبدالله الدحيم',
+            'رحاب بنت علي العواد',
+            'رحاب بنت محمد آل سيف',
+            'روان بنت سعد العميري',
+            'زينب بنت كاظم ال رضوان',
+            'سامية بنت عبدالكريم الخطيب',
+            'سعدية بنت عبدالله العلياني',
+            'سميرة بنت سالم القحطاني',
+            'سها بنت محمد السلطان',
+            'سهام بنت حميد الكردي',
+            'طفله بنت محمد الدوسري',
+            'عائشة بنت سيف البوعينين',
+            'فاطمة بنت سعد الدخيل',
+            'فاطمة بنت سعيد الغامدي',
+            'فوزيه بنت سعد القحطاني',
+            'مريم بنت عبدالله الدوسري',
+            'مكيه بنت عبدالعزيز البنعلي',
+            'منى بنت حمد الخالدي',
+            'نادية بنت احمد الدوسري',
+            'ناهد بنت عبدالله السماعيل',
+            'نشأ بنت علي الشيوخ',
+            'نورة بنت عجاج الخالدى',
+            'هنادي بنت صالح المطوع',
+            'هويدا بنت عبدالهادي الجشي',
+            'وسمية بنت علي الزاهر',
+            'وفاء بنت عبدالله الشهري',
+            'ولاء بنت محمد الشخص'
+        ]
+    },
+    'النعيرية': {
+        'بنات': [
+            'صافيه بنت هادي المري',
+            'نوف بنت سعد القحطاني'
+        ],
+        'بنين': []
+    },
+    'بقيق': {
+        'بنين': [
+            'مرعي بن محمد البارقي',
+            'محمد بن حمد الهاجري',
+            'أحمد بن خليل النصيب',
+            'حمد بن محمد الحسين',
+            'أسامة بن نامي الأحمدي'
+        ],
+        'بنات': [
+            'هدى بنت ضيف الله العتيبي',
+            'دلال بنت مسفر الدوسري',
+            'سهام بنت مسفر الدوسري',
+            'منال بنت عبيد المطيري',
+            'نحاء بنت رزقان الرشيدي',
+            'نوره بنت سالم النجم',
+            'حصة بنت علي المري'
+        ]
+    },
+    'رأس تنورة': {
+        'بنات': [
+            'عزيزة بنت سويد الغامدي',
+            'صافيه بنت سالم المري',
+            'عائشة بنت احمد آل نورالدين',
+            'عبير بنت سالم آل حمامه'
+        ],
+        'بنين': [
+            'حمود بن سعد الاكلبي',
+            'عماد بن علي اللباد',
+            'نعيم بن إبراهيم المرهون',
+            'فيصل بن صالح آل لعجم'
+        ]
+    },
+    'القرية العليا': {
+        'بنين': [
+            'عبدالهادي بن رجاء المطيري'
+        ],
+        'بنات': [
+            'موضي بنت الدرزي المطيري'
+        ]
+    },
+    'حفر الباطن': {
+        'بنات': [
+            'نشمية بنت رجاء العنزي',
+            'عزيزه بنت علي القرني',
+            'عايشة بنت عوض المطيري',
+            'رحمه بنت سعيد الاحمري',
+            'نورة بنت أحمد الغامدي',
+            'مريم بنت سعود الشمري',
+            'بهيه بنت عبدالله العتيق',
+            'سلمى بنت عذبي الشمري',
+            'جميله بنت دخيل العنزي',
+            'قمراء بنت ثويني الشمري',
+            'البندري بنت سويلم الشمري',
+            'زينب بنت مرزوق الرشيدي',
+            'اسماء بنت محمد الشمري',
+            'فوزية بنت كرزي الشمري',
+            'نوال بنت عمار الشريف',
+            'نوره بنت زعال الشمري',
+            'منيرة بنت مبارك السهلي',
+            'بدرية بنت صالح الحميميدي',
+            'ضحية بنت عليوي العنزي',
+            'مشاعل بنت مضحي الشمري',
+            'عيده بنت عيد العنزي',
+            'ريم بنت تركي الملحم',
+            'مريم بنت سعد المطيري',
+            'مهاء بنت مزيد العفاسي',
+            'أمل بنت عبدالله المطيري',
+            'أمل بنت عايض المطيري',
+            'خلود بنت خليوي الشمري',
+            'موضي بنت ثاني الشمري',
+            'دليل بنت محمد القحطاني',
+            'مها بنت سعيد الزهراني',
+            'نوره بنت مدهوس المطيري',
+            'أميرة بنت دهيسان الحربي',
+            'حمده بنت سعد الرشيدي',
+            'شيمة بنت عبدالله المطيري',
+            'العنود بنت محمد المقبل',
+            'جواهر بنت مطر العنزي',
+            'نوف بنت سعد المطيري',
+            'شيخه بنت محسن الحربي',
+            'ريم بنت هزاع الشمري',
+            'خزنه بنت ناصر العنزي',
+            'مشاعل فلاح المطيري',
+            'نشميه بنت راشد الجميعه',
+            'ريسة بنت محمد العمري',
+            'هناء بنت منفل العنزي',
+            'شريفه بنت عائض العسيري',
+            'بدريه بنت حميدي العنزي',
+            'عبير بنت عايض بن المطيري',
+            'ليلى بنت محمد العفاسي',
+            'ساره بنت مقبل الحربي',
+            'بدور بنت مزعل الظفيري',
+            'جوزاء بنت منصور الرشيدي',
+            'امل بنت عامر العنزي',
+            'وفاء بنت مشعان الشمري',
+            'وفاء بنت صالح القصيّر',
+            'طفله بنت عبدالله العنزي',
+            'بدريه بنت صاهود الرويلي',
+            'مريفه بنت دهيش الزبني',
+            'مها بنت فيصل المطيري',
+            'عيده عريفان مطير السليمانى',
+            'فضة بنت علي المطيري',
+            'ميثاء بنت سليمان الخمسان',
+            'رنا بنت شمران الشمري',
+            'ريم بنت هادي اليامي',
+            'فاطمة بنت مصبح الظفيري',
+            'لطيفة بنت ردام الشمري',
+            'غزيه بنت زعال الشمري',
+            'العنود بنت عشق المطيري',
+            'ساره بنت ناهض السهلي'
+        ],
+        'بنين': [
+            'سعد بن مفرح حجي الحربي',
+            'عويض بن مطر وني الهزيمي',
+            'فهد بن عيد راشد العنزي',
+            'عواد بن صغير عوض العنزي',
+            'محمد بن عويض المطيري',
+            'حماد بن عوض الحربي',
+            'إبراهيم بن عبدالله الخلف',
+            'عماش بن صعب السهلي',
+            'بندر بن شاهر الشمري',
+            'صالح بن مزلوه العنزي',
+            'حمود بن العاصي الهذال',
+            'إبراهيم بن صالح السليمان',
+            'نادر بن محمد الشمري',
+            'علي بن خليف العنزي',
+            'عادل بن عوض السرور',
+            'محمد بن سعد المطيري',
+            'عبدالسلام بن عوض القحطاني',
+            'سعد بن نافع العنزي',
+            'عبدالعزيز بن عامر العامر',
+            'مبارك بن محسن الحربي',
+            'ناصر بن سعد الرشيدي',
+            'عبدالرحمن بن مقحم المطيري',
+            'سعود بن مشيل الظفيري',
+            'فهد بن خلف الجميلي',
+            'شامان بن فيحان البرازي',
+            'سليمان بن خلف الشمري',
+            'مبارك بن ظاهر الظفيري',
+            'عيد بن رمضان العنزي',
+            'منديل بن سعود الحربي',
+            'سند بن مشيل الظفيري',
+            'عايش بن محارب العنزي',
+            'بدر بن غلاب الحربي',
+            'خالد بن عايد الشمري',
+            'محمد بن سهل العنزي',
+            'محمد بن فريح العنزي',
+            'محمد بن صالح الطيار',
+            'مبارك بن متعب الظفيري',
+            'صالح بن عبدالله الاحمدي',
+            'عبيد بن شافي العنزي',
+            'عبدالله بن مفلح الشمري',
+            'نواف بن حمد الشمري',
+            'سلمان بن بطاح الظفيري',
+            'مسعود بن حماد البذالي',
+            'محمد بن خلف الشمري',
+            'فرحان بن عايش العنزي',
+            'عايد بن عوده الدهمشي',
+            'خلف بن مطلق الجميلي',
+            '‏أحمد بن عبدالله الخلف',
+            'عبدالله بن حمدان السعيدي',
+            'فايز بن صالح الدهمشي',
+            'شافي بن عايد الظفيري',
+            'حسين بن نداء العنزي',
+            'حجي بن مفرح الحربي',
+            'عبدالله بن صفوق المطيري',
+            'جدلان بن هزاع بن المريخي',
+            'وليد بن عوض السرور',
+            'حبيب بن غازي الشمري',
+            'د. عمر بن رمضان العنزي',
+            'سعيد بن عبدالرحمن المطيري',
+            'لافي بن عشبان السعيدي',
+            'حمدان بن نايف الشمري',
+            'حمدان بن مقبل الحربي',
+            'محمد بن سيد الظفيري',
+            'خالد بن هليل العنزي',
+            'سليمان بن شليويح الزبني',
+            'مطر بن رحيل الشمري',
+            'سعود بن محمد العوفي',
+            'خالد بن حمد العنزي',
+            'محمد بن طرقي العنزي',
+            'عبدالله بن محمد الحربي',
+            'مطلق بن محمد السبيعي',
+            'محمد بن عبدالله الشمري',
+            'مشعل بن حميد الهزيمي',
+            'عودة بن مذري العنزي',
+            'زبن بن مفرح الشمري',
+            'مذكر بن هديان البصيص',
+            'عزيز بن دخيل الظفيري',
+            'علي بن عالي بن المطيري',
+            'فارس بن مهل الحربي',
+            'خالد بن مزعل الشمري',
+            'ساير بن مناور الشمري',
+            'خلف بن صالح السرور',
+            'عبدالله بن عبدالرحمن المطيري',
+            'عبدالله بن سليمان العلوي'
+        ]
+    }
 };
 
 function initDB() {
@@ -159,6 +702,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         await initDB();
         setupEventListeners();
         setupConditionalFields();
+        applyOwnerState();
+        if (isOwner()) {
+            updateSupervisorStats();
+        }
         
         // Disable date input initially
         const dateInput = document.getElementById('date');
@@ -182,7 +729,9 @@ function setupEventListeners() {
     previewBtn.addEventListener('click', handlePreview);
     exportPdfBtn.addEventListener('click', handleExportPDF);
     printBtn.addEventListener('click', handlePrint);
-    exportExcelBtn.addEventListener('click', handleExportExcel);
+    if (exportExcelBtn) {
+        exportExcelBtn.addEventListener('click', handleExportExcel);
+    }
     resetBtn.addEventListener('click', handleReset);
     viewRecordsBtn.addEventListener('click', handleViewRecords);
     exportAllExcelBtn.addEventListener('click', handleExportAllExcel);
@@ -205,6 +754,28 @@ function setupEventListeners() {
     // Date selection - update day automatically
     const dateInput = document.getElementById('date');
     dateInput.addEventListener('change', handleDateChange);
+
+    // Sector/gender selection - update supervisor list
+    const sectorSelect = document.getElementById('sector');
+    const genderSelect = document.getElementById('gender');
+    sectorSelect.addEventListener('change', updateSupervisorOptions);
+    genderSelect.addEventListener('change', updateSupervisorOptions);
+
+    const ownerLoginBtn = document.getElementById('ownerLoginBtn');
+    const ownerLogoutBtn = document.getElementById('ownerLogoutBtn');
+    const refreshStatsBtn = document.getElementById('refreshStatsBtn');
+
+    if (ownerLoginBtn) {
+        ownerLoginBtn.addEventListener('click', handleOwnerLogin);
+    }
+    if (ownerLogoutBtn) {
+        ownerLogoutBtn.addEventListener('click', handleOwnerLogout);
+    }
+    if (refreshStatsBtn) {
+        refreshStatsBtn.addEventListener('click', handleRefreshStats);
+    }
+
+    window.addEventListener('hashchange', applyOwnerState);
     
     // Support areas checkboxes
     const supportAreasCheckboxes = document.querySelectorAll('input[name="supportAreas"]');
@@ -250,6 +821,8 @@ function handleWeekChange() {
             if (currentDate < range.start || currentDate > range.end) {
                 dateInput.value = '';
                 dayInput.value = '';
+            } else {
+                updateDayFromDate(currentDate, dayInput);
             }
         }
     } else {
@@ -264,6 +837,12 @@ function handleWeekChange() {
     }
 }
 
+function updateDayFromDate(dateValue, dayInput) {
+    const selectedDate = new Date(`${dateValue}T00:00:00`);
+    const dayIndex = selectedDate.getDay();
+    dayInput.value = arabicDays[dayIndex];
+}
+
 // ===== Handle Date Change =====
 function handleDateChange() {
     const dateInput = document.getElementById('date');
@@ -271,11 +850,7 @@ function handleDateChange() {
     const weekSelect = document.getElementById('week');
     
     if (dateInput.value) {
-        const selectedDate = new Date(dateInput.value + 'T00:00:00');
-        const dayIndex = selectedDate.getDay();
-        const arabicDay = arabicDays[dayIndex];
-        
-        dayInput.value = arabicDay;
+        updateDayFromDate(dateInput.value, dayInput);
         
         // Validate date is within week range
         const selectedWeek = weekSelect.value;
@@ -290,6 +865,129 @@ function handleDateChange() {
     } else {
         dayInput.value = '';
     }
+}
+
+function updateSupervisorOptions() {
+    const sectorSelect = document.getElementById('sector');
+    const genderSelect = document.getElementById('gender');
+    const supervisorSelect = document.getElementById('supervisor');
+
+    const selectedSector = sectorSelect.value;
+    const selectedGender = genderSelect.value;
+
+    supervisorSelect.innerHTML = '';
+
+    if (!selectedSector || !selectedGender) {
+        supervisorSelect.disabled = true;
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'اختر القطاع والنوع أولاً';
+        supervisorSelect.appendChild(option);
+        return;
+    }
+
+    const sectorData = supervisorsBySectorGender[selectedSector] || {};
+    const supervisors = sectorData[selectedGender] || [];
+
+    supervisorSelect.disabled = false;
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'اختر اسم المشرف/ة';
+    supervisorSelect.appendChild(placeholder);
+
+    if (supervisors.length === 0) {
+        const emptyOption = document.createElement('option');
+        emptyOption.value = 'لا يوجد';
+        emptyOption.textContent = 'لا يوجد مشرفون/مشرفات لهذا الاختيار';
+        supervisorSelect.appendChild(emptyOption);
+        supervisorSelect.value = 'لا يوجد';
+        return;
+    }
+
+    supervisors.forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        supervisorSelect.appendChild(option);
+    });
+}
+
+function handleOwnerLogin() {
+    const ownerCodeInput = document.getElementById('ownerCode');
+    if (!ownerCodeInput) {
+        return;
+    }
+
+    if (OWNER_ACCESS_CODE === 'CHANGE_ME') {
+        showMessage('يرجى تحديث رمز المالك في إعدادات النظام أولاً.', 'warning');
+        return;
+    }
+
+    if (ownerCodeInput.value.trim() === OWNER_ACCESS_CODE) {
+        localStorage.setItem(OWNER_ACCESS_KEY, 'true');
+        ownerCodeInput.value = '';
+        applyOwnerState();
+        showMessage('تم تسجيل الدخول كمالك بنجاح. ✅', 'success');
+        handleRefreshStats();
+    } else {
+        showMessage('رمز المالك غير صحيح.', 'error');
+    }
+}
+
+function handleOwnerLogout() {
+    localStorage.removeItem(OWNER_ACCESS_KEY);
+    applyOwnerState();
+    showMessage('تم تسجيل الخروج من وضع المالك.', 'success');
+}
+
+function handleRefreshStats() {
+    if (!requireOwnerAccess('هذه الإحصائية متاحة للمالك فقط.')) {
+        return;
+    }
+    updateSupervisorStats();
+}
+
+function updateSupervisorStats() {
+    const statsBody = document.getElementById('statsBody');
+    if (!statsBody) {
+        return;
+    }
+
+    getAllRecords().then(records => {
+        const filterWeek = document.getElementById('filterWeek')?.value || '';
+        const filterDay = document.getElementById('filterDay')?.value || '';
+        const filterSector = document.getElementById('filterSector')?.value || '';
+        const filterDate = document.getElementById('filterDate')?.value || '';
+
+        const filtered = records.filter(record => {
+            if (filterWeek && record.week !== filterWeek) return false;
+            if (filterDay && record.day !== filterDay) return false;
+            if (filterSector && record.sector !== filterSector) return false;
+            if (filterDate && record.date !== filterDate) return false;
+            return true;
+        });
+
+        const counts = new Map();
+        filtered.forEach(record => {
+            const key = `${record.supervisor || 'غير محدد'}|${record.sector || ''}|${record.gender || ''}`;
+            counts.set(key, (counts.get(key) || 0) + 1);
+        });
+
+        const supervisors = getAllSupervisors();
+        statsBody.innerHTML = '';
+
+        supervisors.forEach(({ name, sector, gender }) => {
+            const key = `${name}|${sector}|${gender}`;
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${name}</td>
+                <td>${sector}</td>
+                <td>${gender}</td>
+                <td>${counts.get(key) || 0}</td>
+            `;
+            statsBody.appendChild(row);
+        });
+    });
 }
 
 // ===== Format Date in Arabic =====
@@ -366,7 +1064,7 @@ function collectFormData() {
     const data = {};
     
     // Basic fields
-    const basicFields = ['week', 'date', 'day', 'taskType', 'sector', 'gender', 'stage', 
+    const basicFields = ['week', 'date', 'day', 'taskType', 'sector', 'gender', 'supervisor', 'stage', 
                          'schoolType', 'mainSchool', 'additionalSchool', 'serviceType',
                          'elearning', 'elearningReason', 'participation', 'experiences',
                          'initiatives', 'challenges', 'treatments', 'recommendations', 'suggestions',
@@ -485,7 +1183,7 @@ function generatePreviewHTML(data) {
             <div style="text-align: center; margin-bottom: 20px;">
                 <img src="https://raw.githubusercontent.com/bndrjj/report1447-2/refs/heads/main/logo2.png" 
                      alt="شعار وزارة التعليم" 
-                     style="max-height: 100px; width: auto; object-fit: contain;">
+                     style="max-height: 120px; width: auto; object-fit: contain;">
             </div>
             <h1>استمارة خدمات دعم التميز المدرسي</h1>
             <p>وزارة التعليم - إدارة التعليم بالمنطقة الشرقية</p>
@@ -503,6 +1201,7 @@ function generatePreviewHTML(data) {
             <div class="preview-field"><strong>المهمة:</strong> ${data.taskType}</div>
             <div class="preview-field"><strong>القطاع:</strong> ${data.sector}</div>
             <div class="preview-field"><strong>النوع:</strong> ${data.gender}</div>
+            <div class="preview-field"><strong>المشرف/ة:</strong> ${data.supervisor}</div>
             <div class="preview-field"><strong>المرحلة:</strong> ${data.stage}</div>
             <div class="preview-field"><strong>نوع المدرسة:</strong> ${data.schoolType}</div>
             <div class="preview-field"><strong>اسم المدرسة:</strong> ${data.mainSchool}</div>
@@ -708,9 +1407,11 @@ function handlePrint() {
                     margin-bottom: 30px;
                     padding-bottom: 20px;
                     border-bottom: 3px solid #006341;
+                    background: #ffffff;
+                    color: #2c3e50;
                 }
                 .preview-header img {
-                    max-height: 80px;
+                    max-height: 110px;
                     width: auto;
                     margin-bottom: 15px;
                     object-fit: contain;
@@ -766,6 +1467,9 @@ function handlePrint() {
 
 // ===== Handle Export Excel =====
 function handleExportExcel() {
+    if (!requireOwnerAccess('تصدير Excel متاح للمالك فقط.')) {
+        return;
+    }
     if (!validateForm()) {
         return;
     }
@@ -788,6 +1492,7 @@ function handleExportExcel() {
             ['المهمة', formData.taskType],
             ['القطاع', formData.sector],
             ['النوع', formData.gender],
+            ['المشرف/ة', formData.supervisor],
             ['المرحلة', formData.stage],
             ['نوع المدرسة', formData.schoolType],
             ['اسم المدرسة', formData.mainSchool],
@@ -879,6 +1584,7 @@ function handleReset() {
         const dateInput = document.getElementById('date');
         const dayInput = document.getElementById('day');
         const dateNote = document.getElementById('dateNote');
+        const supervisorSelect = document.getElementById('supervisor');
         
         dateInput.min = '';
         dateInput.max = '';
@@ -887,6 +1593,9 @@ function handleReset() {
         dayInput.value = '';
         dateNote.textContent = 'اختر الأسبوع الدراسي أولاً';
         dateNote.style.color = '#6c757d';
+
+        supervisorSelect.innerHTML = '<option value="">اختر القطاع والنوع أولاً</option>';
+        supervisorSelect.disabled = true;
         
         // Hide conditional sections
         document.getElementById('teachingSection').style.display = 'none';
@@ -908,6 +1617,9 @@ function handleReset() {
 
 // ===== Handle View Records =====
 async function handleViewRecords() {
+    if (!requireOwnerAccess('عرض السجلات محفوظ للمالك فقط.')) {
+        return;
+    }
     try {
         const records = await getAllRecords();
         
@@ -947,6 +1659,9 @@ async function handleViewRecords() {
 
 // ===== View Single Record =====
 window.viewRecord = async function(id) {
+    if (!requireOwnerAccess('عرض السجلات محفوظ للمالك فقط.')) {
+        return;
+    }
     try {
         const transaction = db.transaction([STORE_NAME], 'readonly');
         const objectStore = transaction.objectStore(STORE_NAME);
@@ -968,6 +1683,9 @@ window.viewRecord = async function(id) {
 
 // ===== Export Single Record as PDF =====
 window.exportRecordPDF = async function(id) {
+    if (!requireOwnerAccess('تصدير السجلات محفوظ للمالك فقط.')) {
+        return;
+    }
     try {
         const transaction = db.transaction([STORE_NAME], 'readonly');
         const objectStore = transaction.objectStore(STORE_NAME);
@@ -988,6 +1706,9 @@ window.exportRecordPDF = async function(id) {
 
 // ===== Export Single Record as Excel =====
 window.exportRecordExcel = async function(id) {
+    if (!requireOwnerAccess('تصدير السجلات محفوظ للمالك فقط.')) {
+        return;
+    }
     try {
         const transaction = db.transaction([STORE_NAME], 'readonly');
         const objectStore = transaction.objectStore(STORE_NAME);
@@ -1008,6 +1729,9 @@ window.exportRecordExcel = async function(id) {
 
 // ===== Delete Record by ID =====
 window.deleteRecordById = async function(id) {
+    if (!requireOwnerAccess('حذف السجلات محفوظ للمالك فقط.')) {
+        return;
+    }
     if (confirm('هل أنت متأكد من حذف هذا السجل؟')) {
         try {
             await deleteRecord(id);
@@ -1020,6 +1744,9 @@ window.deleteRecordById = async function(id) {
 
 // ===== Handle Export All Excel =====
 async function handleExportAllExcel() {
+    if (!requireOwnerAccess('تصدير جميع السجلات محفوظ للمالك فقط.')) {
+        return;
+    }
     try {
         const records = await getAllRecords();
         
@@ -1030,38 +1757,81 @@ async function handleExportAllExcel() {
         
         const workbook = XLSX.utils.book_new();
         
-        // Summary sheet
-        const summaryData = [
-            ['ملخص جميع السجلات'],
-            ['وزارة التعليم - إدارة التعليم بالمنطقة الشرقية'],
-            [],
-            ['التاريخ', 'الأسبوع', 'المدرسة', 'القطاع', 'المرحلة', 'النوع', 'نوع الخدمة']
+        const headers = [
+            'التاريخ',
+            'اليوم',
+            'الأسبوع',
+            'القطاع',
+            'النوع',
+            'المشرف/ة',
+            'المهمة',
+            'المرحلة',
+            'نوع المدرسة',
+            'اسم المدرسة',
+            'المدرسة الإضافية',
+            'نوع الخدمة',
+            'مجالات الدعم الرئيسة',
+            'إجراءات التدريس',
+            'عدد إجراءات التدريس',
+            'إجراءات نواتج التعلم',
+            'عدد إجراءات نواتج التعلم',
+            'إجراءات التوجيه الطلابي',
+            'عدد إجراءات التوجيه الطلابي',
+            'إجراءات النشاط الطلابي',
+            'عدد إجراءات النشاط الطلابي',
+            'تمكين المدرسة',
+            'تفعيل منصة مدرستي',
+            'سبب عدم التفعيل',
+            'مدى مشاركة المدرسة',
+            'الخبرات الإشرافية',
+            'المبادرات',
+            'التحديات',
+            'المعالجات',
+            'التوصيات',
+            'المقترحات',
+            'تاريخ الحفظ'
         ];
         
-        records.forEach(record => {
-            summaryData.push([
-                record.date,
-                record.week,
-                record.mainSchool,
-                record.sector,
-                record.stage,
-                record.gender,
-                record.serviceType
-            ]);
-        });
+        const rows = records.map(record => [
+            record.date || '',
+            record.day || '',
+            record.week || '',
+            record.sector || '',
+            record.gender || '',
+            record.supervisor || '',
+            record.taskType || '',
+            record.stage || '',
+            record.schoolType || '',
+            record.mainSchool || '',
+            record.additionalSchool || '',
+            record.serviceType || '',
+            (record.supportAreas || []).join('، '),
+            (record.teachingActions || []).join('، '),
+            record.teachingCount || 0,
+            (record.outcomesActions || []).join('، '),
+            record.outcomesCount || 0,
+            (record.guidanceActions || []).join('، '),
+            record.guidanceCount || 0,
+            (record.activityActions || []).join('، '),
+            record.activityCount || 0,
+            (record.empowerment || []).join('، '),
+            record.elearning || '',
+            record.elearningReason || '',
+            record.participation || '',
+            record.experiences || '',
+            record.initiatives || '',
+            record.challenges || '',
+            record.treatments || '',
+            record.recommendations || '',
+            record.suggestions || '',
+            record.timestamp || ''
+        ]);
         
-        const summarySheet = XLSX.utils.aoa_to_sheet(summaryData);
-        summarySheet['!cols'] = [
-            { wch: 15 },
-            { wch: 40 },
-            { wch: 30 },
-            { wch: 15 },
-            { wch: 15 },
-            { wch: 10 },
-            { wch: 15 }
-        ];
+        const sheetData = [headers, ...rows];
+        const summarySheet = XLSX.utils.aoa_to_sheet(sheetData);
+        summarySheet['!cols'] = headers.map(() => ({ wch: 20 }));
         
-        XLSX.utils.book_append_sheet(workbook, summarySheet, 'ملخص السجلات');
+        XLSX.utils.book_append_sheet(workbook, summarySheet, 'جميع السجلات');
         
         const fileName = `جميع_سجلات_دعم_التميز_${new Date().toISOString().split('T')[0]}.xlsx`;
         XLSX.writeFile(workbook, fileName);
@@ -1118,6 +1888,11 @@ function loadDraft() {
                     element.value = data[key];
                 }
             });
+            updateSupervisorOptions();
+            if (data.supervisor) {
+                const supervisorSelect = document.getElementById('supervisor');
+                supervisorSelect.value = data.supervisor;
+            }
         } catch (error) {
             console.error('خطأ في تحميل المسودة:', error);
         }
