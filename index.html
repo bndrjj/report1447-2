@@ -10,7 +10,7 @@
     <!-- Header Section -->
     <header class="form-header">
         <div class="header-logo">
-            <img src="https://raw.githubusercontent.com/bndrjj/report1447-2/refs/heads/main/logo2.png" alt="شعار وزارة التعليم">
+            <img src="logo2.png" alt="شعار وزارة التعليم">
         </div>
         <div class="header-content">
             <h1>استمارة خدمات دعم التميز المدرسي</h1>
@@ -21,6 +21,67 @@
 
     <!-- Main Form Container -->
     <main class="form-container">
+        <section class="form-section owner-panel" id="ownerPanel">
+            <div class="section-header">
+                <h2>🛡️ لوحة المالك</h2>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="ownerPassword">كلمة مرور المالك <span class="required">*</span></label>
+                    <input type="password" id="ownerPassword" name="ownerPassword" placeholder="أدخل كلمة المرور للمالك">
+                    <p class="field-note">هذه الكلمة مطلوبة للوصول إلى السجلات والتصدير الكامل.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="ownerPasswordConfirm">تأكيد كلمة مرور المالك <span class="required">*</span></label>
+                    <input type="password" id="ownerPasswordConfirm" name="ownerPasswordConfirm" placeholder="أعد إدخال كلمة المرور">
+                </div>
+
+                <div class="form-group">
+                    <label for="ownerPasswordSave">حفظ كلمة المرور</label>
+                    <button type="button" class="btn btn-primary" id="ownerPasswordSave">💾 حفظ كلمة المرور</button>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="scheduleEnabled">تفعيل جدول الإتاحة الأسبوعي <span class="required">*</span></label>
+                    <select id="scheduleEnabled" name="scheduleEnabled">
+                        <option value="yes">نعم</option>
+                        <option value="no">لا</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduleDay">اليوم المتاح أسبوعيًا <span class="required">*</span></label>
+                    <select id="scheduleDay" name="scheduleDay">
+                        <option value="0">الأحد</option>
+                        <option value="1">الاثنين</option>
+                        <option value="2">الثلاثاء</option>
+                        <option value="3">الأربعاء</option>
+                        <option value="4">الخميس</option>
+                        <option value="5">الجمعة</option>
+                        <option value="6">السبت</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduleTime">وقت بدء الإتاحة <span class="required">*</span></label>
+                    <input type="time" id="scheduleTime" name="scheduleTime" value="08:00">
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduleDuration">مدة الإتاحة (بالساعات) <span class="required">*</span></label>
+                    <input type="number" id="scheduleDuration" name="scheduleDuration" min="1" max="24" value="24">
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduleSave">تحديث الجدول</label>
+                    <button type="button" class="btn btn-primary" id="scheduleSave">🗓️ حفظ الجدول</button>
+                    <p class="field-note" id="scheduleStatus">سيتم تفعيل الإتاحة حسب الجدول المحفوظ.</p>
+                </div>
+            </div>
+        </section>
         <form id="mainForm">
             <!-- Section 1: Basic Information -->
             <section class="form-section">
@@ -29,6 +90,39 @@
                 </div>
                 
                 <div class="form-grid">
+                    <div class="form-group">
+                        <label for="sector">القطاع <span class="required">*</span></label>
+                        <select id="sector" name="sector" required>
+                            <option value="">اختر القطاع</option>
+                            <option value="القطيف">القطيف</option>
+                            <option value="الدمام">الدمام</option>
+                            <option value="الجبيل">الجبيل</option>
+                            <option value="الخبر">الخبر</option>
+                            <option value="الخفجي">الخفجي</option>
+                            <option value="رأس تنورة">رأس تنورة</option>
+                            <option value="حفر الباطن">حفر الباطن</option>
+                            <option value="القرية العليا">القرية العليا</option>
+                            <option value="النعيرية">النعيرية</option>
+                            <option value="بقيق">بقيق</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">النوع <span class="required">*</span></label>
+                        <select id="gender" name="gender" required>
+                            <option value="">اختر النوع</option>
+                            <option value="بنين">بنين</option>
+                            <option value="بنات">بنات</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="supervisor">المشرفين والمشرفات <span class="required">*</span></label>
+                        <select id="supervisor" name="supervisor" required>
+                            <option value="">اختر القطاع والنوع أولاً</option>
+                        </select>
+                    </div>
+
                     <div class="form-group">
                         <label for="week">الأسبوع الدراسي <span class="required">*</span></label>
                         <select id="week" name="week" required>
@@ -74,32 +168,6 @@
                             <option value="">اختر نوع المهمة</option>
                             <option value="تقديم خدمات دعم تميز مدرسي">تقديم خدمات دعم تميز مدرسي</option>
                             <option value="مهمة رسمية وتم تسجيلها في نظام حضوري">مهمة رسمية وتم تسجيلها في نظام حضوري</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="sector">القطاع <span class="required">*</span></label>
-                        <select id="sector" name="sector" required>
-                            <option value="">اختر القطاع</option>
-                            <option value="القطيف">القطيف</option>
-                            <option value="الدمام">الدمام</option>
-                            <option value="الجبيل">الجبيل</option>
-                            <option value="الخبر">الخبر</option>
-                            <option value="الخفجي">الخفجي</option>
-                            <option value="رأس تنورة">رأس تنورة</option>
-                            <option value="حفر الباطن">حفر الباطن</option>
-                            <option value="القرية العليا">القرية العليا</option>
-                            <option value="النعيرية">النعيرية</option>
-                            <option value="بقيق">بقيق</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="gender">النوع <span class="required">*</span></label>
-                        <select id="gender" name="gender" required>
-                            <option value="">اختر النوع</option>
-                            <option value="بنين">بنين</option>
-                            <option value="بنات">بنات</option>
                         </select>
                     </div>
 
