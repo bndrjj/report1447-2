@@ -120,6 +120,7 @@
     
     /* Typography Variables */
     --font-heading: 'Cairo', sans-serif;
+    --font-section-heading: 'Tajawal', sans-serif;
     --font-body: 'Tajawal', sans-serif;
     --font-size-base: 16px;
     --font-size-sm: 0.95rem;
@@ -315,7 +316,7 @@ strong, b {
 }
 
 .section-header h2 {
-    font-family: var(--font-heading);
+    font-family: var(--font-section-heading);
     font-size: 1.8rem;
     color: var(--primary-color);
     font-weight: 700;
