@@ -156,14 +156,12 @@
 <option value="مهمة رسمية وتم تسجيلها في نظام حضوري">مهمة رسمية وتم تسجيلها في نظام حضوري</option>
 </select>
 </div>
-<div class="form-group" id="stageGroup">
-<label for="stage">المرحلة الدراسية <span class="required">*</span></label>
-<select id="stage" name="stage" required="">
-<option value="">اختر المرحلة</option>
-<option value="رياض أطفال">رياض أطفال</option>
-<option value="ابتدائي">ابتدائي</option>
-<option value="متوسط">متوسط</option>
-<option value="ثانوي">ثانوي</option>
+<div class="form-group" id="serviceTypeGroup">
+<label for="serviceType">نوع الخدمة <span class="required">*</span></label>
+<select id="serviceType" name="serviceType" required="">
+<option value="">اختر نوع الخدمة</option>
+<option value="حضوري">حضوري</option>
+<option value="عن بُعد">عن بُعد</option>
 </select>
 </div>
 <div class="form-group" id="schoolTypeGroup">
@@ -174,6 +172,16 @@
 <option value="المدرسة الإضافية لتقديم الدعم">المدرسة الإضافية لتقديم الدعم</option>
 </select>
 </div>
+<div class="form-group" id="stageGroup">
+<label for="stage">المرحلة الدراسية <span class="required">*</span></label>
+<select id="stage" name="stage" required="">
+<option value="">اختر المرحلة</option>
+<option value="رياض أطفال">رياض أطفال</option>
+<option value="ابتدائي">ابتدائي</option>
+<option value="متوسط">متوسط</option>
+<option value="ثانوي">ثانوي</option>
+</select>
+</div>
 <div class="form-group" id="mainSchoolGroup">
 <label for="mainSchool">اسم المدرسة المكلف بتقديم الخدمة لها <span class="required">*</span></label>
 <input id="mainSchool" name="mainSchool" placeholder="أدخل اسم المدرسة" type="text"/>
@@ -181,14 +189,6 @@
 <div class="form-group" id="additionalSchoolGroup" style="display: none;">
 <label for="additionalSchool">اسم المدرسة الإضافية</label>
 <input id="additionalSchool" name="additionalSchool" placeholder="أدخل اسم المدرسة الإضافية" type="text"/>
-</div>
-<div class="form-group" id="serviceTypeGroup">
-<label for="serviceType">نوع الخدمة <span class="required">*</span></label>
-<select id="serviceType" name="serviceType" required="">
-<option value="">اختر نوع الخدمة</option>
-<option value="حضوري">حضوري</option>
-<option value="عن بُعد">عن بُعد</option>
-</select>
 </div>
 </div>
 </section>
