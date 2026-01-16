@@ -580,6 +580,16 @@ const previewModal = document.getElementById('previewModal');
 const closeModal = document.querySelector('.close');
 const recordsList = document.getElementById('recordsList');
 const recordsBody = document.getElementById('recordsBody');
+const ownerPanel = document.getElementById('ownerPanel');
+const dataManagement = document.getElementById('dataManagement');
+const statsBody = document.getElementById('statsBody');
+const statsFilterType = document.getElementById('statsFilterType');
+const statsDate = document.getElementById('statsDate');
+const statsDay = document.getElementById('statsDay');
+const statsWeek = document.getElementById('statsWeek');
+const statsSector = document.getElementById('statsSector');
+const statsRefreshBtn = document.getElementById('statsRefreshBtn');
+const statsSummary = document.getElementById('statsSummary');
 
 // ===== Initialize Application =====
 document.addEventListener('DOMContentLoaded', async () => {
@@ -589,6 +599,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         setupConditionalFields();
         updateSupervisorOptions();
         loadOwnerConfig();
+        const ownerSessionActive = isOwnerSessionActive();
+        setOwnerVisibility(ownerSessionActive);
+        if (ownerSessionActive) {
+            await updateStatsTable();
+        }
         applyOwnerAccessRules();
         
         // Disable date input initially
@@ -613,7 +628,9 @@ function setupEventListeners() {
     previewBtn.addEventListener('click', handlePreview);
     exportPdfBtn.addEventListener('click', handleExportPDF);
     printBtn.addEventListener('click', handlePrint);
-    exportExcelBtn.addEventListener('click', handleExportExcel);
+    if (exportExcelBtn) {
+        exportExcelBtn.addEventListener('click', handleExportExcel);
+    }
     resetBtn.addEventListener('click', handleReset);
     viewRecordsBtn.addEventListener('click', handleViewRecords);
     exportAllExcelBtn.addEventListener('click', handleExportAllExcel);
@@ -651,6 +668,12 @@ function setupEventListeners() {
     if (scheduleSave) {
         scheduleSave.addEventListener('click', handleScheduleSave);
     }
+
+    if (statsRefreshBtn) {
+        statsRefreshBtn.addEventListener('click', handleStatsRefresh);
+    }
+
+    document.addEventListener('keydown', handleOwnerShortcut);
     
     // Date selection - update day automatically
     const dateInput = document.getElementById('date');
@@ -717,6 +740,8 @@ function handleOwnerPasswordSave() {
     localStorage.setItem(OWNER_CONFIG_KEY, JSON.stringify(config));
     passwordInput.value = '';
     confirmInput.value = '';
+    sessionStorage.setItem(OWNER_SESSION_KEY, config.passwordHash);
+    setOwnerVisibility(true);
     showMessage('تم حفظ كلمة المرور بنجاح. ✅', 'success');
 }
 
@@ -771,6 +796,42 @@ function applyOwnerAccessRules() {
     }
 
     setFormAvailability(isAllowed);
+}
+
+function isOwnerSessionActive() {
+    const config = getOwnerConfig();
+    const session = sessionStorage.getItem(OWNER_SESSION_KEY);
+    return Boolean(config.passwordHash && session && session === config.passwordHash);
+}
+
+function setOwnerVisibility(isOwner) {
+    if (ownerPanel) {
+        ownerPanel.classList.toggle('is-hidden', !isOwner);
+    }
+    if (dataManagement) {
+        dataManagement.classList.toggle('is-hidden', !isOwner);
+    }
+    if (!isOwner && recordsList) {
+        recordsList.style.display = 'none';
+    }
+}
+
+async function activateOwnerMode() {
+    const hasAccess = await requireOwnerAccess();
+    if (hasAccess) {
+        setOwnerVisibility(true);
+        if (statsSummary) {
+            statsSummary.textContent = 'تم تفعيل وضع المالك. اختر نوع الفرز ثم اضغط تحديث.';
+        }
+        await updateStatsTable();
+    }
+}
+
+function handleOwnerShortcut(event) {
+    if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'o') {
+        event.preventDefault();
+        activateOwnerMode();
+    }
 }
 
 function isFormOpen(config) {
@@ -836,8 +897,25 @@ function setFormAvailability(isAllowed) {
 async function requireOwnerAccess() {
     const config = getOwnerConfig();
     if (!config.passwordHash) {
-        showMessage('يرجى تعيين كلمة مرور للمالك أولاً. ⚠️', 'warning');
-        return false;
+        const newPassword = prompt('لا توجد كلمة مرور للمالك. يرجى تعيين كلمة مرور جديدة:');
+        if (!newPassword) {
+            showMessage('يرجى تعيين كلمة مرور للمالك أولاً. ⚠️', 'warning');
+            return false;
+        }
+        const confirmPassword = prompt('أعد إدخال كلمة المرور للتأكيد:');
+        if (!confirmPassword) {
+            showMessage('لم يتم تأكيد كلمة المرور. ⚠️', 'warning');
+            return false;
+        }
+        if (newPassword !== confirmPassword) {
+            showMessage('كلمة المرور وتأكيدها غير متطابقين. ⚠️', 'warning');
+            return false;
+        }
+        config.passwordHash = btoa(newPassword);
+        localStorage.setItem(OWNER_CONFIG_KEY, JSON.stringify(config));
+        sessionStorage.setItem(OWNER_SESSION_KEY, config.passwordHash);
+        setOwnerVisibility(true);
+        return true;
     }
 
     const session = sessionStorage.getItem(OWNER_SESSION_KEY);
@@ -856,6 +934,7 @@ async function requireOwnerAccess() {
     }
 
     sessionStorage.setItem(OWNER_SESSION_KEY, config.passwordHash);
+    setOwnerVisibility(true);
     return true;
 }
 
@@ -1678,6 +1757,11 @@ window.exportRecordPDF = async function(id) {
 
 // ===== Export Single Record as Excel =====
 window.exportRecordExcel = async function(id) {
+    const hasAccess = await requireOwnerAccess();
+    if (!hasAccess) {
+        return;
+    }
+
     try {
         const transaction = db.transaction([STORE_NAME], 'readonly');
         const objectStore = transaction.objectStore(STORE_NAME);
@@ -1724,41 +1808,47 @@ async function handleExportAllExcel() {
         }
         
         const workbook = XLSX.utils.book_new();
-        
-        // Summary sheet
-        const summaryData = [
-            ['ملخص جميع السجلات'],
-            ['وزارة التعليم - إدارة التعليم بالمنطقة الشرقية'],
-            [],
-            ['التاريخ', 'الأسبوع', 'المدرسة', 'القطاع', 'المرحلة', 'النوع', 'المشرف/ة', 'نوع الخدمة']
+
+        const exportColumns = [
+            { label: 'الأسبوع الدراسي', value: record => record.week || '' },
+            { label: 'التاريخ', value: record => record.date || '' },
+            { label: 'اليوم', value: record => record.day || '' },
+            { label: 'المهمة حسب خطة المشرف', value: record => record.taskType || '' },
+            { label: 'القطاع', value: record => record.sector || '' },
+            { label: 'النوع', value: record => record.gender || '' },
+            { label: 'المشرف/ة', value: record => record.supervisor || '' },
+            { label: 'المرحلة الدراسية', value: record => record.stage || '' },
+            { label: 'نوع المدرسة', value: record => record.schoolType || '' },
+            { label: 'اسم المدرسة', value: record => record.mainSchool || '' },
+            { label: 'المدرسة الإضافية', value: record => record.additionalSchool || '' },
+            { label: 'نوع الخدمة', value: record => record.serviceType || '' },
+            { label: 'مجالات الدعم', value: record => (record.supportAreas || []).join('، ') },
+            { label: 'إجراءات التدريس', value: record => (record.teachingActions || []).join('، ') },
+            { label: 'عدد إجراءات التدريس', value: record => record.teachingCount || '' },
+            { label: 'إجراءات نواتج التعلم', value: record => (record.outcomesActions || []).join('، ') },
+            { label: 'عدد إجراءات نواتج التعلم', value: record => record.outcomesCount || '' },
+            { label: 'إجراءات التوجيه الطلابي', value: record => (record.guidanceActions || []).join('، ') },
+            { label: 'عدد إجراءات التوجيه الطلابي', value: record => record.guidanceCount || '' },
+            { label: 'إجراءات النشاط الطلابي', value: record => (record.activityActions || []).join('، ') },
+            { label: 'عدد إجراءات النشاط الطلابي', value: record => record.activityCount || '' },
+            { label: 'تمكين المدرسة', value: record => (record.empowerment || []).join('، ') },
+            { label: 'تفعيل منصة مدرستي', value: record => record.elearning || '' },
+            { label: 'سبب عدم التفعيل', value: record => record.elearningReason || '' },
+            { label: 'مدى مشاركة المدرسة', value: record => record.participation || '' },
+            { label: 'الخبرات الإشرافية', value: record => record.experiences || '' },
+            { label: 'المبادرات', value: record => record.initiatives || '' },
+            { label: 'التحديات', value: record => record.challenges || '' },
+            { label: 'المعالجات', value: record => record.treatments || '' },
+            { label: 'التوصيات', value: record => record.recommendations || '' },
+            { label: 'المقترحات', value: record => record.suggestions || '' }
         ];
-        
-        records.forEach(record => {
-            summaryData.push([
-                record.date,
-                record.week,
-                record.mainSchool,
-                record.sector,
-                record.stage,
-                record.gender,
-                record.supervisor,
-                record.serviceType
-            ]);
-        });
-        
-        const summarySheet = XLSX.utils.aoa_to_sheet(summaryData);
-        summarySheet['!cols'] = [
-            { wch: 15 },
-            { wch: 40 },
-            { wch: 30 },
-            { wch: 15 },
-            { wch: 15 },
-            { wch: 10 },
-            { wch: 25 },
-            { wch: 15 }
-        ];
-        
-        XLSX.utils.book_append_sheet(workbook, summarySheet, 'ملخص السجلات');
+
+        const headerRow = exportColumns.map(column => column.label);
+        const dataRows = records.map(record => exportColumns.map(column => column.value(record)));
+        const worksheet = XLSX.utils.aoa_to_sheet([headerRow, ...dataRows]);
+        worksheet['!cols'] = headerRow.map(() => ({ wch: 22 }));
+
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'السجلات');
         
         const fileName = `جميع_سجلات_دعم_التميز_${new Date().toISOString().split('T')[0]}.xlsx`;
         XLSX.writeFile(workbook, fileName);
@@ -1768,6 +1858,95 @@ async function handleExportAllExcel() {
     } catch (error) {
         console.error('خطأ في تصدير جميع السجلات:', error);
         showMessage('حدث خطأ في تصدير السجلات! ❌', 'error');
+    }
+}
+
+async function handleStatsRefresh() {
+    const hasAccess = await requireOwnerAccess();
+    if (!hasAccess) {
+        return;
+    }
+    await updateStatsTable();
+}
+
+function getSupervisorNamesForSector(sector) {
+    const names = new Set();
+    const sectors = sector ? [sector] : Object.keys(supervisorsBySectorGender);
+
+    sectors.forEach(sectorKey => {
+        const sectorGroup = supervisorsBySectorGender[sectorKey];
+        if (!sectorGroup) {
+            return;
+        }
+        Object.values(sectorGroup).forEach(list => {
+            list.forEach(name => names.add(name));
+        });
+    });
+
+    return Array.from(names).sort();
+}
+
+function getStatsFilterValues() {
+    return {
+        type: statsFilterType ? statsFilterType.value : 'all',
+        date: statsDate ? statsDate.value : '',
+        day: statsDay ? statsDay.value : '',
+        week: statsWeek ? statsWeek.value : '',
+        sector: statsSector ? statsSector.value : ''
+    };
+}
+
+function filterRecordsByStats(records, filter) {
+    switch (filter.type) {
+        case 'date':
+            return filter.date ? records.filter(record => record.date === filter.date) : [];
+        case 'day':
+            return filter.day ? records.filter(record => record.day === filter.day) : [];
+        case 'week':
+            return filter.week ? records.filter(record => record.week === filter.week) : [];
+        case 'sector':
+            return filter.sector ? records.filter(record => record.sector === filter.sector) : [];
+        default:
+            return records;
+    }
+}
+
+async function updateStatsTable() {
+    if (!statsBody) {
+        return;
+    }
+
+    const records = await getAllRecords();
+    const filter = getStatsFilterValues();
+    const filteredRecords = filterRecordsByStats(records, filter);
+    const supervisorNames = getSupervisorNamesForSector(filter.type === 'sector' ? filter.sector : '');
+    const counts = new Map();
+
+    filteredRecords.forEach(record => {
+        if (!record.supervisor) {
+            return;
+        }
+        counts.set(record.supervisor, (counts.get(record.supervisor) || 0) + 1);
+    });
+
+    const allNames = new Set([...supervisorNames, ...counts.keys()]);
+    const sortedNames = Array.from(allNames).sort();
+    const notFilledCount = sortedNames.filter(name => (counts.get(name) || 0) === 0).length;
+
+    statsBody.innerHTML = '';
+    sortedNames.forEach(name => {
+        const count = counts.get(name) || 0;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${name}</td>
+            <td>${count}</td>
+            <td>${count > 0 ? 'تمت التعبئة' : 'لم يُعبئ'}</td>
+        `;
+        statsBody.appendChild(row);
+    });
+
+    if (statsSummary) {
+        statsSummary.textContent = `إجمالي السجلات المطابقة: ${filteredRecords.length} | عدد المشرفين الذين لم يعبئوا: ${notFilledCount}`;
     }
 }
 
