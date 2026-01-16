@@ -471,6 +471,92 @@ const supervisorsBySectorGender = {
     }
 };
 
+const assignmentSchoolsBySectorGender = {
+    'الدمام': {
+        'بنين': ['مدرسة الدمام بنين اساسية ١', 'مدرسة الدمام بنين اساسية ٢'],
+        'بنات': ['مدرسة الدمام بنات اساسية ١', 'مدرسة الدمام بنات اساسية ٢']
+    },
+    'الخبر': {
+        'بنين': ['مدرسة الخبر بنين اساسية ١', 'مدرسة الخبر بنين اساسية ٢'],
+        'بنات': ['مدرسة الخبر بنات اساسية ١', 'مدرسة الخبر بنات اساسية ٢']
+    },
+    'القطيف': {
+        'بنين': ['مدرسة القطيف بنين اساسية ١', 'مدرسة القطيف بنين اساسية ٢'],
+        'بنات': ['مدرسة القطيف بنات اساسية ١', 'مدرسة القطيف بنات اساسية ٢']
+    },
+    'راس تنورة': {
+        'بنين': ['مدرسة راس تنورة بنين اساسية ١', 'مدرسة راس تنورة بنين اساسية ٢'],
+        'بنات': ['مدرسة راس تنورة بنات اساسية ١', 'مدرسة راس تنورة بنات اساسية ٢']
+    },
+    'الجبيل': {
+        'بنين': ['مدرسة الجبيل بنين اساسية ١', 'مدرسة الجبيل بنين اساسية ٢'],
+        'بنات': ['مدرسة الجبيل بنات اساسية ١', 'مدرسة الجبيل بنات اساسية ٢']
+    },
+    'الخفجي': {
+        'بنين': ['مدرسة الخفجي بنين اساسية ١', 'مدرسة الخفجي بنين اساسية ٢'],
+        'بنات': ['مدرسة الخفجي بنات اساسية ١', 'مدرسة الخفجي بنات اساسية ٢']
+    },
+    'حفر الباطن': {
+        'بنين': ['مدرسة حفر الباطن بنين اساسية ١', 'مدرسة حفر الباطن بنين اساسية ٢'],
+        'بنات': ['مدرسة حفر الباطن بنات اساسية ١', 'مدرسة حفر الباطن بنات اساسية ٢']
+    },
+    'النعيرية': {
+        'بنين': ['مدرسة النعيرية بنين اساسية ١', 'مدرسة النعيرية بنين اساسية ٢'],
+        'بنات': ['مدرسة النعيرية بنات اساسية ١', 'مدرسة النعيرية بنات اساسية ٢']
+    },
+    'القرية العليا': {
+        'بنين': ['مدرسة القرية العليا بنين اساسية ١', 'مدرسة القرية العليا بنين اساسية ٢'],
+        'بنات': ['مدرسة القرية العليا بنات اساسية ١', 'مدرسة القرية العليا بنات اساسية ٢']
+    },
+    'بقيق': {
+        'بنين': ['مدرسة بقيق بنين اساسية ١', 'مدرسة بقيق بنين اساسية ٢'],
+        'بنات': ['مدرسة بقيق بنات اساسية ١', 'مدرسة بقيق بنات اساسية ٢']
+    }
+};
+
+const additionalSchoolsBySectorGender = {
+    'الدمام': {
+        'بنين': ['مدرسة الدمام بنين اضافية ١', 'مدرسة الدمام بنين اضافية ٢'],
+        'بنات': ['مدرسة الدمام بنات اضافية ١', 'مدرسة الدمام بنات اضافية ٢']
+    },
+    'الخبر': {
+        'بنين': ['مدرسة الخبر بنين اضافية ١', 'مدرسة الخبر بنين اضافية ٢'],
+        'بنات': ['مدرسة الخبر بنات اضافية ١', 'مدرسة الخبر بنات اضافية ٢']
+    },
+    'القطيف': {
+        'بنين': ['مدرسة القطيف بنين اضافية ١', 'مدرسة القطيف بنين اضافية ٢'],
+        'بنات': ['مدرسة القطيف بنات اضافية ١', 'مدرسة القطيف بنات اضافية ٢']
+    },
+    'راس تنورة': {
+        'بنين': ['مدرسة راس تنورة بنين اضافية ١', 'مدرسة راس تنورة بنين اضافية ٢'],
+        'بنات': ['مدرسة راس تنورة بنات اضافية ١', 'مدرسة راس تنورة بنات اضافية ٢']
+    },
+    'الجبيل': {
+        'بنين': ['مدرسة الجبيل بنين اضافية ١', 'مدرسة الجبيل بنين اضافية ٢'],
+        'بنات': ['مدرسة الجبيل بنات اضافية ١', 'مدرسة الجبيل بنات اضافية ٢']
+    },
+    'الخفجي': {
+        'بنين': ['مدرسة الخفجي بنين اضافية ١', 'مدرسة الخفجي بنين اضافية ٢'],
+        'بنات': ['مدرسة الخفجي بنات اضافية ١', 'مدرسة الخفجي بنات اضافية ٢']
+    },
+    'حفر الباطن': {
+        'بنين': ['مدرسة حفر الباطن بنين اضافية ١', 'مدرسة حفر الباطن بنين اضافية ٢'],
+        'بنات': ['مدرسة حفر الباطن بنات اضافية ١', 'مدرسة حفر الباطن بنات اضافية ٢']
+    },
+    'النعيرية': {
+        'بنين': ['مدرسة النعيرية بنين اضافية ١', 'مدرسة النعيرية بنين اضافية ٢'],
+        'بنات': ['مدرسة النعيرية بنات اضافية ١', 'مدرسة النعيرية بنات اضافية ٢']
+    },
+    'القرية العليا': {
+        'بنين': ['مدرسة القرية العليا بنين اضافية ١', 'مدرسة القرية العليا بنين اضافية ٢'],
+        'بنات': ['مدرسة القرية العليا بنات اضافية ١', 'مدرسة القرية العليا بنات اضافية ٢']
+    },
+    'بقيق': {
+        'بنين': ['مدرسة بقيق بنين اضافية ١', 'مدرسة بقيق بنين اضافية ٢'],
+        'بنات': ['مدرسة بقيق بنات اضافية ١', 'مدرسة بقيق بنات اضافية ٢']
+    }
+};
+
 function initDB() {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -598,6 +684,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         setupEventListeners();
         setupConditionalFields();
         updateSupervisorOptions();
+        updateSchoolOptions();
         loadOwnerConfig();
         const ownerSessionActive = isOwnerSessionActive();
         setOwnerVisibility(ownerSessionActive);
@@ -656,6 +743,13 @@ function setupEventListeners() {
     if (sectorSelect && genderSelect) {
         sectorSelect.addEventListener('change', updateSupervisorOptions);
         genderSelect.addEventListener('change', updateSupervisorOptions);
+        sectorSelect.addEventListener('change', updateSchoolOptions);
+        genderSelect.addEventListener('change', updateSchoolOptions);
+    }
+
+    const schoolTypeSelect = document.getElementById('schoolType');
+    if (schoolTypeSelect) {
+        schoolTypeSelect.addEventListener('change', updateSchoolOptions);
     }
 
     const ownerPasswordSave = document.getElementById('ownerPasswordSave');
@@ -1019,17 +1113,10 @@ function formatDateArabic(dateString) {
 function setupConditionalFields() {
     // School type conditional fields
     const schoolTypeSelect = document.getElementById('schoolType');
-    const mainSchoolGroup = document.getElementById('mainSchoolGroup');
-    const additionalSchoolGroup = document.getElementById('additionalSchoolGroup');
     
-    schoolTypeSelect.addEventListener('change', () => {
-        if (schoolTypeSelect.value === 'المدرسة الإضافية لتقديم الدعم') {
-            additionalSchoolGroup.style.display = 'flex';
-        } else {
-            additionalSchoolGroup.style.display = 'none';
-            document.getElementById('additionalSchool').value = '';
-        }
-    });
+    if (schoolTypeSelect) {
+        schoolTypeSelect.addEventListener('change', updateSchoolOptions);
+    }
     
     // E-learning conditional field
     const elearningSelect = document.getElementById('elearning');
@@ -1100,6 +1187,100 @@ function updateSupervisorOptions() {
         option.textContent = name;
         supervisorSelect.appendChild(option);
     });
+}
+
+function setSelectOptions(select, options, placeholder) {
+    if (!select) {
+        return;
+    }
+
+    const currentValue = select.value;
+    select.innerHTML = '';
+
+    const placeholderOption = document.createElement('option');
+    placeholderOption.value = '';
+    placeholderOption.textContent = placeholder;
+    select.appendChild(placeholderOption);
+
+    options.forEach(optionValue => {
+        const option = document.createElement('option');
+        option.value = optionValue;
+        option.textContent = optionValue;
+        select.appendChild(option);
+    });
+
+    if (options.includes(currentValue)) {
+        select.value = currentValue;
+    }
+}
+
+function updateSchoolOptions() {
+    const sectorSelect = document.getElementById('sector');
+    const genderSelect = document.getElementById('gender');
+    const schoolTypeSelect = document.getElementById('schoolType');
+    const mainSchoolSelect = document.getElementById('mainSchool');
+    const additionalSchoolSelect = document.getElementById('additionalSchool');
+    const mainSchoolGroup = document.getElementById('mainSchoolGroup');
+    const additionalSchoolGroup = document.getElementById('additionalSchoolGroup');
+    const taskTypeSelect = document.getElementById('taskType');
+
+    if (!sectorSelect || !genderSelect || !schoolTypeSelect || !mainSchoolSelect || !additionalSchoolSelect) {
+        return;
+    }
+
+    const sector = sectorSelect.value;
+    const gender = genderSelect.value;
+    const schoolType = schoolTypeSelect.value;
+    const isAdditionalSchool = schoolType === 'المدرسة الإضافية لتقديم الدعم';
+    const isOfficialTask = taskTypeSelect?.value === 'مهمة رسمية وتم تسجيلها في نظام حضوري';
+
+    const assignmentSchools = sector && gender ? (assignmentSchoolsBySectorGender[sector]?.[gender] || []) : [];
+    const additionalSchools = sector && gender ? (additionalSchoolsBySectorGender[sector]?.[gender] || []) : [];
+
+    const mainPlaceholder = sector && gender ? 'اختر المدرسة' : 'اختر القطاع والنوع أولاً';
+    const additionalPlaceholder = sector && gender ? 'اختر المدرسة الإضافية' : 'اختر القطاع والنوع أولاً';
+
+    setSelectOptions(mainSchoolSelect, assignmentSchools, mainPlaceholder);
+    setSelectOptions(additionalSchoolSelect, additionalSchools, additionalPlaceholder);
+
+    mainSchoolSelect.disabled = assignmentSchools.length === 0;
+    additionalSchoolSelect.disabled = additionalSchools.length === 0;
+
+    if (isOfficialTask) {
+        if (mainSchoolGroup) {
+            mainSchoolGroup.style.display = 'none';
+        }
+        if (additionalSchoolGroup) {
+            additionalSchoolGroup.style.display = 'none';
+        }
+        mainSchoolSelect.value = '';
+        additionalSchoolSelect.value = '';
+        mainSchoolSelect.removeAttribute('required');
+        additionalSchoolSelect.removeAttribute('required');
+        return;
+    }
+
+    if (isAdditionalSchool) {
+        if (mainSchoolGroup) {
+            mainSchoolGroup.style.display = 'none';
+        }
+        if (additionalSchoolGroup) {
+            additionalSchoolGroup.style.display = 'flex';
+        }
+        mainSchoolSelect.value = '';
+        mainSchoolSelect.removeAttribute('required');
+        additionalSchoolSelect.setAttribute('required', '');
+    } else {
+        if (mainSchoolGroup) {
+            mainSchoolGroup.style.display = 'flex';
+        }
+        if (additionalSchoolGroup) {
+            additionalSchoolGroup.style.display = 'none';
+        }
+        additionalSchoolSelect.value = '';
+        additionalSchoolSelect.removeAttribute('required');
+        mainSchoolSelect.setAttribute('required', '');
+    }
 }
 
 // ===== Setup Other Checkboxes =====
@@ -1224,6 +1405,8 @@ function handleTaskTypeChange() {
         clearOfficialTaskFields();
         handleSupportAreasChange();
     }
+
+    updateSchoolOptions();
 }
 
 function handleOfficialTaskTypeChange() {
