@@ -156,7 +156,7 @@
 <option value="مهمة رسمية وتم تسجيلها في نظام حضوري">مهمة رسمية وتم تسجيلها في نظام حضوري</option>
 </select>
 </div>
-<div class="form-group">
+<div class="form-group" id="stageGroup">
 <label for="stage">المرحلة الدراسية <span class="required">*</span></label>
 <select id="stage" name="stage" required="">
 <option value="">اختر المرحلة</option>
@@ -166,7 +166,7 @@
 <option value="ثانوي">ثانوي</option>
 </select>
 </div>
-<div class="form-group">
+<div class="form-group" id="schoolTypeGroup">
 <label for="schoolType">المدرسة التي سيقدم لها الخدمة <span class="required">*</span></label>
 <select id="schoolType" name="schoolType" required="">
 <option value="">اختر نوع المدرسة</option>
@@ -182,7 +182,7 @@
 <label for="additionalSchool">اسم المدرسة الإضافية</label>
 <input id="additionalSchool" name="additionalSchool" placeholder="أدخل اسم المدرسة الإضافية" type="text"/>
 </div>
-<div class="form-group">
+<div class="form-group" id="serviceTypeGroup">
 <label for="serviceType">نوع الخدمة <span class="required">*</span></label>
 <select id="serviceType" name="serviceType" required="">
 <option value="">اختر نوع الخدمة</option>
@@ -192,8 +192,43 @@
 </div>
 </div>
 </section>
+<section class="form-section" id="officialTaskSection" style="display: none;">
+<div class="section-header">
+<h2>🗂️ مهمة عمل أو الاستئذان</h2>
+</div>
+<div class="form-grid">
+<div class="form-group">
+<label for="officialTaskNotified">هل تم إشعار مسؤول القطاع بالمهمة؟ <span class="required">*</span></label>
+<select id="officialTaskNotified" name="officialTaskNotified" required="">
+<option value="">اختر الإجابة</option>
+<option value="نعم">نعم</option>
+<option value="لا">لا</option>
+</select>
+</div>
+<div class="form-group">
+<label for="officialTaskType">نوع المهمة <span class="required">*</span></label>
+<select id="officialTaskType" name="officialTaskType" required="">
+<option value="">اختر نوع المهمة</option>
+<option value="استئذان">استئذان</option>
+<option value="تدريب">تدريب</option>
+<option value="اجازة مرضية">اجازة مرضية</option>
+<option value="اجازة اضطرارية">اجازة اضطرارية</option>
+<option value="اجازة اخرى">اجازة اخرى</option>
+<option value="غير ذلك">غير ذلك</option>
+</select>
+</div>
+<div class="form-group" id="officialTaskTypeOtherGroup" style="display: none;">
+<label for="officialTaskTypeOther">توضيح نوع المهمة (غير ذلك)</label>
+<input class="other-input" id="officialTaskTypeOther" name="officialTaskTypeOther" placeholder="اكتب النوع..." type="text"/>
+</div>
+<div class="form-group">
+<label for="officialTaskNote">ملاحظة يريد المشرف/المشرفة توضيحها بشأن مهمة العمل أو الاستئذان</label>
+<textarea id="officialTaskNote" name="officialTaskNote" placeholder="اكتب الملاحظة هنا..." rows="3"></textarea>
+</div>
+</div>
+</section>
 <!-- Section 2: Support Areas -->
-<section class="form-section">
+<section class="form-section" id="supportAreasSection">
 <div class="section-header">
 <h2>📊 مجالات الدعم الرئيسة</h2>
 </div>
@@ -441,7 +476,7 @@
 </div>
 </section>
 <!-- Section 7: School Empowerment -->
-<section class="form-section">
+<section class="form-section" id="empowermentSection">
 <div class="section-header">
 <h2>💡 تمكين المدرسة</h2>
 </div>
@@ -508,7 +543,7 @@
 </div>
 </section>
 <!-- Section 8: Additional Information -->
-<section class="form-section">
+<section class="form-section" id="additionalInfoSection">
 <div class="section-header">
 <h2>📝 معلومات إضافية</h2>
 </div>

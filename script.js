@@ -1043,6 +1043,20 @@ function setupConditionalFields() {
             document.getElementById('elearningReason').value = '';
         }
     });
+
+    const taskTypeSelect = document.getElementById('taskType');
+    const officialTaskTypeSelect = document.getElementById('officialTaskType');
+
+    if (taskTypeSelect) {
+        taskTypeSelect.addEventListener('change', handleTaskTypeChange);
+    }
+
+    if (officialTaskTypeSelect) {
+        officialTaskTypeSelect.addEventListener('change', handleOfficialTaskTypeChange);
+    }
+
+    handleTaskTypeChange();
+    handleOfficialTaskTypeChange();
 }
 
 function updateSupervisorOptions() {
@@ -1121,6 +1135,189 @@ function handleSupportAreasChange(e) {
     activitySection.style.display = checkedValues.includes('النشاط الطلابي') ? 'block' : 'none';
 }
 
+function handleTaskTypeChange() {
+    const taskTypeSelect = document.getElementById('taskType');
+    const isOfficialTask = taskTypeSelect?.value === 'مهمة رسمية وتم تسجيلها في نظام حضوري';
+
+    const stageGroup = document.getElementById('stageGroup');
+    const schoolTypeGroup = document.getElementById('schoolTypeGroup');
+    const mainSchoolGroup = document.getElementById('mainSchoolGroup');
+    const additionalSchoolGroup = document.getElementById('additionalSchoolGroup');
+    const serviceTypeGroup = document.getElementById('serviceTypeGroup');
+    const supportAreasSection = document.getElementById('supportAreasSection');
+    const teachingSection = document.getElementById('teachingSection');
+    const outcomesSection = document.getElementById('outcomesSection');
+    const guidanceSection = document.getElementById('guidanceSection');
+    const activitySection = document.getElementById('activitySection');
+    const empowermentSection = document.getElementById('empowermentSection');
+    const additionalInfoSection = document.getElementById('additionalInfoSection');
+    const officialTaskSection = document.getElementById('officialTaskSection');
+    const elearningReasonGroup = document.getElementById('elearningReasonGroup');
+
+    const fieldsToToggle = [
+        { id: 'stage', required: !isOfficialTask },
+        { id: 'schoolType', required: !isOfficialTask },
+        { id: 'mainSchool', required: !isOfficialTask },
+        { id: 'serviceType', required: !isOfficialTask },
+        { id: 'elearning', required: !isOfficialTask },
+        { id: 'participation', required: !isOfficialTask },
+        { id: 'officialTaskNotified', required: isOfficialTask },
+        { id: 'officialTaskType', required: isOfficialTask }
+    ];
+
+    fieldsToToggle.forEach(({ id, required }) => {
+        const element = document.getElementById(id);
+        if (!element) return;
+        if (required) {
+            element.setAttribute('required', '');
+        } else {
+            element.removeAttribute('required');
+        }
+    });
+
+    if (officialTaskSection) {
+        officialTaskSection.style.display = isOfficialTask ? 'block' : 'none';
+    }
+
+    const toggleGroups = [
+        { element: stageGroup, show: !isOfficialTask },
+        { element: schoolTypeGroup, show: !isOfficialTask },
+        { element: mainSchoolGroup, show: !isOfficialTask },
+        { element: serviceTypeGroup, show: !isOfficialTask }
+    ];
+
+    toggleGroups.forEach(({ element, show }) => {
+        if (element) {
+            element.style.display = show ? 'flex' : 'none';
+        }
+    });
+
+    if (supportAreasSection) {
+        supportAreasSection.style.display = isOfficialTask ? 'none' : 'block';
+    }
+
+    if (empowermentSection) {
+        empowermentSection.style.display = isOfficialTask ? 'none' : 'block';
+    }
+
+    if (additionalInfoSection) {
+        additionalInfoSection.style.display = isOfficialTask ? 'none' : 'block';
+    }
+
+    if (isOfficialTask) {
+        [teachingSection, outcomesSection, guidanceSection, activitySection].forEach(section => {
+            if (section) {
+                section.style.display = 'none';
+            }
+        });
+
+        if (additionalSchoolGroup) {
+            additionalSchoolGroup.style.display = 'none';
+        }
+
+        if (elearningReasonGroup) {
+            elearningReasonGroup.style.display = 'none';
+        }
+
+        clearOfficiallyHiddenFields();
+    } else {
+        clearOfficialTaskFields();
+        handleSupportAreasChange();
+    }
+}
+
+function handleOfficialTaskTypeChange() {
+    const officialTaskTypeSelect = document.getElementById('officialTaskType');
+    const officialTaskTypeOtherGroup = document.getElementById('officialTaskTypeOtherGroup');
+    const officialTaskTypeOther = document.getElementById('officialTaskTypeOther');
+
+    if (!officialTaskTypeSelect || !officialTaskTypeOtherGroup || !officialTaskTypeOther) {
+        return;
+    }
+
+    if (officialTaskTypeSelect.value === 'غير ذلك') {
+        officialTaskTypeOtherGroup.style.display = 'flex';
+    } else {
+        officialTaskTypeOtherGroup.style.display = 'none';
+        officialTaskTypeOther.value = '';
+    }
+}
+
+function clearOfficiallyHiddenFields() {
+    const fieldsToClear = [
+        'stage',
+        'schoolType',
+        'mainSchool',
+        'additionalSchool',
+        'serviceType',
+        'elearning',
+        'elearningReason',
+        'participation',
+        'experiences',
+        'initiatives',
+        'challenges',
+        'treatments',
+        'recommendations',
+        'suggestions',
+        'teachingCount',
+        'outcomesCount',
+        'guidanceCount',
+        'activityCount'
+    ];
+
+    fieldsToClear.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.value = '';
+        }
+    });
+
+    const checkboxGroups = [
+        'supportAreas',
+        'teachingActions',
+        'outcomesActions',
+        'guidanceActions',
+        'activityActions',
+        'empowerment'
+    ];
+
+    checkboxGroups.forEach(name => {
+        const checkboxes = document.querySelectorAll(`input[name="${name}"]`);
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+    });
+
+    document.querySelectorAll('.other-input').forEach(input => {
+        if (input.id === 'officialTaskTypeOther') {
+            return;
+        }
+        input.style.display = 'none';
+        input.value = '';
+    });
+}
+
+function clearOfficialTaskFields() {
+    const fieldsToClear = [
+        'officialTaskNotified',
+        'officialTaskType',
+        'officialTaskTypeOther',
+        'officialTaskNote'
+    ];
+
+    fieldsToClear.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.value = '';
+        }
+    });
+
+    const officialTaskTypeOtherGroup = document.getElementById('officialTaskTypeOtherGroup');
+    if (officialTaskTypeOtherGroup) {
+        officialTaskTypeOtherGroup.style.display = 'none';
+    }
+}
+
 // ===== Collect Form Data =====
 function collectFormData() {
     const data = {};
@@ -1128,6 +1325,7 @@ function collectFormData() {
     // Basic fields
     const basicFields = ['week', 'date', 'day', 'taskType', 'sector', 'gender', 'supervisor', 'stage', 
                          'schoolType', 'mainSchool', 'additionalSchool', 'serviceType',
+                         'officialTaskNotified', 'officialTaskType', 'officialTaskTypeOther', 'officialTaskNote',
                          'elearning', 'elearningReason', 'participation', 'experiences',
                          'initiatives', 'challenges', 'treatments', 'recommendations', 'suggestions',
                          'teachingCount', 'outcomesCount', 'guidanceCount', 'activityCount'];
@@ -1188,18 +1386,22 @@ function validateForm() {
         }
     });
     
-    // Check if at least one support area is selected
-    const supportAreas = document.querySelectorAll('input[name="supportAreas"]:checked');
-    if (supportAreas.length === 0) {
-        isValid = false;
-        showMessage('يجب اختيار مجال دعم واحد على الأقل! ⚠️', 'warning');
-    }
-    
-    // Check if at least one empowerment option is selected
-    const empowerment = document.querySelectorAll('input[name="empowerment"]:checked');
-    if (empowerment.length === 0) {
-        isValid = false;
-        showMessage('يجب اختيار خيار واحد على الأقل من تمكين المدرسة! ⚠️', 'warning');
+    const isOfficialTask = document.getElementById('taskType')?.value === 'مهمة رسمية وتم تسجيلها في نظام حضوري';
+
+    if (!isOfficialTask) {
+        // Check if at least one support area is selected
+        const supportAreas = document.querySelectorAll('input[name="supportAreas"]:checked');
+        if (supportAreas.length === 0) {
+            isValid = false;
+            showMessage('يجب اختيار مجال دعم واحد على الأقل! ⚠️', 'warning');
+        }
+        
+        // Check if at least one empowerment option is selected
+        const empowerment = document.querySelectorAll('input[name="empowerment"]:checked');
+        if (empowerment.length === 0) {
+            isValid = false;
+            showMessage('يجب اختيار خيار واحد على الأقل من تمكين المدرسة! ⚠️', 'warning');
+        }
     }
     
     if (!isValid && firstInvalidField) {
@@ -1240,6 +1442,7 @@ function handlePreview() {
 
 // ===== Generate Preview HTML =====
 function generatePreviewHTML(data) {
+    const isOfficialTask = data.taskType === 'مهمة رسمية وتم تسجيلها في نظام حضوري';
     let html = `
         <div class="preview-header">
             <div style="text-align: center; margin-bottom: 20px;">
@@ -1264,16 +1467,28 @@ function generatePreviewHTML(data) {
             <div class="preview-field"><strong>القطاع:</strong> ${data.sector}</div>
             <div class="preview-field"><strong>النوع:</strong> ${data.gender}</div>
             <div class="preview-field"><strong>المشرف/ة:</strong> ${data.supervisor || ''}</div>
-            <div class="preview-field"><strong>المرحلة:</strong> ${data.stage}</div>
+            ${isOfficialTask ? '' : `<div class="preview-field"><strong>المرحلة:</strong> ${data.stage}</div>
             <div class="preview-field"><strong>نوع المدرسة:</strong> ${data.schoolType}</div>
             <div class="preview-field"><strong>اسم المدرسة:</strong> ${data.mainSchool}</div>
             ${data.additionalSchool ? `<div class="preview-field"><strong>المدرسة الإضافية:</strong> ${data.additionalSchool}</div>` : ''}
-            <div class="preview-field"><strong>نوع الخدمة:</strong> ${data.serviceType}</div>
+            <div class="preview-field"><strong>نوع الخدمة:</strong> ${data.serviceType}</div>`}
         </div>
     `;
+
+    if (isOfficialTask) {
+        html += `
+            <div class="preview-section">
+                <h3>🗂️ مهمة عمل أو الاستئذان</h3>
+                <div class="preview-field"><strong>إشعار مسؤول القطاع:</strong> ${data.officialTaskNotified || ''}</div>
+                <div class="preview-field"><strong>نوع المهمة:</strong> ${data.officialTaskType || ''}</div>
+                ${data.officialTaskTypeOther ? `<div class="preview-field"><strong>توضيح نوع المهمة:</strong> ${data.officialTaskTypeOther}</div>` : ''}
+                ${data.officialTaskNote ? `<div class="preview-field"><strong>ملاحظة:</strong> ${data.officialTaskNote}</div>` : ''}
+            </div>
+        `;
+    }
     
     // Support Areas Section
-    if (data.supportAreas.length > 0) {
+    if (!isOfficialTask && data.supportAreas.length > 0) {
         html += `
             <div class="preview-section">
                 <h3>📊 مجالات الدعم الرئيسة</h3>
@@ -1285,7 +1500,7 @@ function generatePreviewHTML(data) {
     }
     
     // Teaching Field Section
-    if (data.teachingActions && data.teachingActions.length > 0) {
+    if (!isOfficialTask && data.teachingActions && data.teachingActions.length > 0) {
         html += `
             <div class="preview-section">
                 <h3>📚 مجال التدريس</h3>
@@ -1299,7 +1514,7 @@ function generatePreviewHTML(data) {
     }
     
     // Learning Outcomes Field Section
-    if (data.outcomesActions && data.outcomesActions.length > 0) {
+    if (!isOfficialTask && data.outcomesActions && data.outcomesActions.length > 0) {
         html += `
             <div class="preview-section">
                 <h3>🎯 مجال نواتج التعلم</h3>
@@ -1313,7 +1528,7 @@ function generatePreviewHTML(data) {
     }
     
     // Student Guidance Field Section
-    if (data.guidanceActions && data.guidanceActions.length > 0) {
+    if (!isOfficialTask && data.guidanceActions && data.guidanceActions.length > 0) {
         html += `
             <div class="preview-section">
                 <h3>🧭 مجال التوجيه الطلابي</h3>
@@ -1327,7 +1542,7 @@ function generatePreviewHTML(data) {
     }
     
     // Student Activities Field Section
-    if (data.activityActions && data.activityActions.length > 0) {
+    if (!isOfficialTask && data.activityActions && data.activityActions.length > 0) {
         html += `
             <div class="preview-section">
                 <h3>🎨 مجال النشاط الطلابي</h3>
@@ -1340,32 +1555,34 @@ function generatePreviewHTML(data) {
         `;
     }
     
-    // School Empowerment Section
-    html += `
-        <div class="preview-section">
-            <h3>💡 تمكين المدرسة</h3>
-            <div class="preview-field"><strong>مساهمة الإجراءات في التمكين:</strong></div>
-            <ul>
-                ${data.empowerment.map(item => `<li>${item}</li>`).join('')}
-            </ul>
-            <div class="preview-field"><strong>تفعيل منصة مدرستي:</strong> ${data.elearning}</div>
-            ${data.elearningReason ? `<div class="preview-field"><strong>سبب عدم التفعيل:</strong> ${data.elearningReason}</div>` : ''}
-            <div class="preview-field"><strong>مدى مشاركة المدرسة:</strong> ${data.participation}</div>
-        </div>
-    `;
-    
-    // Additional Information Section
-    html += `
-        <div class="preview-section">
-            <h3>📝 معلومات إضافية</h3>
-            ${data.experiences ? `<div class="preview-field"><strong>الخبرات الإشرافية:</strong> ${data.experiences}</div>` : ''}
-            ${data.initiatives ? `<div class="preview-field"><strong>المبادرات:</strong> ${data.initiatives}</div>` : ''}
-            ${data.challenges ? `<div class="preview-field"><strong>التحديات:</strong> ${data.challenges}</div>` : ''}
-            ${data.treatments ? `<div class="preview-field"><strong>المعالجات:</strong> ${data.treatments}</div>` : ''}
-            ${data.recommendations ? `<div class="preview-field"><strong>التوصيات:</strong> ${data.recommendations}</div>` : ''}
-            ${data.suggestions ? `<div class="preview-field"><strong>المقترحات:</strong> ${data.suggestions}</div>` : ''}
-        </div>
-    `;
+    if (!isOfficialTask) {
+        // School Empowerment Section
+        html += `
+            <div class="preview-section">
+                <h3>💡 تمكين المدرسة</h3>
+                <div class="preview-field"><strong>مساهمة الإجراءات في التمكين:</strong></div>
+                <ul>
+                    ${data.empowerment.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+                <div class="preview-field"><strong>تفعيل منصة مدرستي:</strong> ${data.elearning}</div>
+                ${data.elearningReason ? `<div class="preview-field"><strong>سبب عدم التفعيل:</strong> ${data.elearningReason}</div>` : ''}
+                <div class="preview-field"><strong>مدى مشاركة المدرسة:</strong> ${data.participation}</div>
+            </div>
+        `;
+        
+        // Additional Information Section
+        html += `
+            <div class="preview-section">
+                <h3>📝 معلومات إضافية</h3>
+                ${data.experiences ? `<div class="preview-field"><strong>الخبرات الإشرافية:</strong> ${data.experiences}</div>` : ''}
+                ${data.initiatives ? `<div class="preview-field"><strong>المبادرات:</strong> ${data.initiatives}</div>` : ''}
+                ${data.challenges ? `<div class="preview-field"><strong>التحديات:</strong> ${data.challenges}</div>` : ''}
+                ${data.treatments ? `<div class="preview-field"><strong>المعالجات:</strong> ${data.treatments}</div>` : ''}
+                ${data.recommendations ? `<div class="preview-field"><strong>التوصيات:</strong> ${data.recommendations}</div>` : ''}
+                ${data.suggestions ? `<div class="preview-field"><strong>المقترحات:</strong> ${data.suggestions}</div>` : ''}
+            </div>
+        `;
+    }
     
     // Footer Section
     html += `
@@ -1429,7 +1646,7 @@ async function handleExportPDF() {
             heightLeft -= pageHeight;
         }
         
-        const fileName = `استمارة_دعم_التميز_${data.date}_${data.mainSchool}.pdf`;
+        const fileName = `استمارة_دعم_التميز_${formData.date}_${formData.mainSchool || 'بدون_مدرسة'}.pdf`;
         pdf.save(fileName);
         
         document.body.removeChild(tempDiv);
@@ -1537,6 +1754,8 @@ function handleExportExcel() {
         const workbook = XLSX.utils.book_new();
         
         // Prepare data for Excel
+        const isOfficialTask = formData.taskType === 'مهمة رسمية وتم تسجيلها في نظام حضوري';
+
         const excelData = [
             ['استمارة خدمات دعم التميز المدرسي'],
             ['وزارة التعليم - إدارة التعليم بالمنطقة الشرقية'],
@@ -1550,17 +1769,28 @@ function handleExportExcel() {
             ['القطاع', formData.sector],
             ['النوع', formData.gender],
             ['المشرف/ة', formData.supervisor],
-            ['المرحلة', formData.stage],
-            ['نوع المدرسة', formData.schoolType],
-            ['اسم المدرسة', formData.mainSchool],
-            ['نوع الخدمة', formData.serviceType],
+            ...(isOfficialTask ? [] : [
+                ['المرحلة', formData.stage],
+                ['نوع المدرسة', formData.schoolType],
+                ['اسم المدرسة', formData.mainSchool],
+                ['نوع الخدمة', formData.serviceType]
+            ]),
             [],
-            ['مجالات الدعم الرئيسة'],
-            ...formData.supportAreas.map(area => ['', area]),
-            []
+            ...(isOfficialTask ? [
+                ['مهمة عمل أو الاستئذان'],
+                ['إشعار مسؤول القطاع', formData.officialTaskNotified],
+                ['نوع المهمة', formData.officialTaskType],
+                ...(formData.officialTaskTypeOther ? [['توضيح نوع المهمة', formData.officialTaskTypeOther]] : []),
+                ...(formData.officialTaskNote ? [['ملاحظة', formData.officialTaskNote]] : []),
+                []
+            ] : [
+                ['مجالات الدعم الرئيسة'],
+                ...formData.supportAreas.map(area => ['', area]),
+                []
+            ])
         ];
         
-        if (formData.teachingActions && formData.teachingActions.length > 0) {
+        if (!isOfficialTask && formData.teachingActions && formData.teachingActions.length > 0) {
             excelData.push(['مجال التدريس']);
             excelData.push(['عدد الإجراءات', formData.teachingCount || 0]);
             formData.teachingActions.forEach(action => {
@@ -1569,7 +1799,7 @@ function handleExportExcel() {
             excelData.push([]);
         }
         
-        if (formData.outcomesActions && formData.outcomesActions.length > 0) {
+        if (!isOfficialTask && formData.outcomesActions && formData.outcomesActions.length > 0) {
             excelData.push(['مجال نواتج التعلم']);
             excelData.push(['عدد الإجراءات', formData.outcomesCount || 0]);
             formData.outcomesActions.forEach(action => {
@@ -1578,7 +1808,7 @@ function handleExportExcel() {
             excelData.push([]);
         }
         
-        if (formData.guidanceActions && formData.guidanceActions.length > 0) {
+        if (!isOfficialTask && formData.guidanceActions && formData.guidanceActions.length > 0) {
             excelData.push(['مجال التوجيه الطلابي']);
             excelData.push(['عدد الإجراءات', formData.guidanceCount || 0]);
             formData.guidanceActions.forEach(action => {
@@ -1587,7 +1817,7 @@ function handleExportExcel() {
             excelData.push([]);
         }
         
-        if (formData.activityActions && formData.activityActions.length > 0) {
+        if (!isOfficialTask && formData.activityActions && formData.activityActions.length > 0) {
             excelData.push(['مجال النشاط الطلابي']);
             excelData.push(['عدد الإجراءات', formData.activityCount || 0]);
             formData.activityActions.forEach(action => {
@@ -1596,20 +1826,22 @@ function handleExportExcel() {
             excelData.push([]);
         }
         
-        excelData.push(['تمكين المدرسة']);
-        formData.empowerment.forEach(item => {
-            excelData.push(['', item]);
-        });
-        excelData.push(['تفعيل منصة مدرستي', formData.elearning]);
-        excelData.push(['مدى مشاركة المدرسة', formData.participation]);
-        excelData.push([]);
-        
-        if (formData.experiences) excelData.push(['الخبرات الإشرافية', formData.experiences]);
-        if (formData.initiatives) excelData.push(['المبادرات', formData.initiatives]);
-        if (formData.challenges) excelData.push(['التحديات', formData.challenges]);
-        if (formData.treatments) excelData.push(['المعالجات', formData.treatments]);
-        if (formData.recommendations) excelData.push(['التوصيات', formData.recommendations]);
-        if (formData.suggestions) excelData.push(['المقترحات', formData.suggestions]);
+        if (!isOfficialTask) {
+            excelData.push(['تمكين المدرسة']);
+            formData.empowerment.forEach(item => {
+                excelData.push(['', item]);
+            });
+            excelData.push(['تفعيل منصة مدرستي', formData.elearning]);
+            excelData.push(['مدى مشاركة المدرسة', formData.participation]);
+            excelData.push([]);
+            
+            if (formData.experiences) excelData.push(['الخبرات الإشرافية', formData.experiences]);
+            if (formData.initiatives) excelData.push(['المبادرات', formData.initiatives]);
+            if (formData.challenges) excelData.push(['التحديات', formData.challenges]);
+            if (formData.treatments) excelData.push(['المعالجات', formData.treatments]);
+            if (formData.recommendations) excelData.push(['التوصيات', formData.recommendations]);
+            if (formData.suggestions) excelData.push(['المقترحات', formData.suggestions]);
+        }
         
         const worksheet = XLSX.utils.aoa_to_sheet(excelData);
         
@@ -1621,7 +1853,7 @@ function handleExportExcel() {
         
         XLSX.utils.book_append_sheet(workbook, worksheet, 'استمارة دعم التميز');
         
-        const fileName = `استمارة_دعم_التميز_${formData.date}_${formData.mainSchool}.xlsx`;
+        const fileName = `استمارة_دعم_التميز_${formData.date}_${formData.mainSchool || 'بدون_مدرسة'}.xlsx`;
         XLSX.writeFile(workbook, fileName);
         
         showMessage('تم تصدير Excel بنجاح! ✅', 'success');
@@ -1657,6 +1889,8 @@ function handleReset() {
         document.getElementById('activitySection').style.display = 'none';
         document.getElementById('additionalSchoolGroup').style.display = 'none';
         document.getElementById('elearningReasonGroup').style.display = 'none';
+        document.getElementById('officialTaskSection').style.display = 'none';
+        document.getElementById('officialTaskTypeOtherGroup').style.display = 'none';
         
         // Hide other text inputs
         document.querySelectorAll('.other-input').forEach(input => {
@@ -1665,6 +1899,7 @@ function handleReset() {
         });
 
         updateSupervisorOptions();
+        handleTaskTypeChange();
         
         showMessage('تم مسح النموذج بنجاح! ✅', 'success');
     }
@@ -1822,6 +2057,10 @@ async function handleExportAllExcel() {
             { label: 'اسم المدرسة', value: record => record.mainSchool || '' },
             { label: 'المدرسة الإضافية', value: record => record.additionalSchool || '' },
             { label: 'نوع الخدمة', value: record => record.serviceType || '' },
+            { label: 'إشعار مسؤول القطاع', value: record => record.officialTaskNotified || '' },
+            { label: 'نوع مهمة العمل أو الاستئذان', value: record => record.officialTaskType || '' },
+            { label: 'توضيح نوع المهمة', value: record => record.officialTaskTypeOther || '' },
+            { label: 'ملاحظة مهمة العمل', value: record => record.officialTaskNote || '' },
             { label: 'مجالات الدعم', value: record => (record.supportAreas || []).join('، ') },
             { label: 'إجراءات التدريس', value: record => (record.teachingActions || []).join('، ') },
             { label: 'عدد إجراءات التدريس', value: record => record.teachingCount || '' },
