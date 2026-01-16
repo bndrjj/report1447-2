@@ -255,7 +255,7 @@ strong, b {
 }
 
 .form-header h1 {
-    font-family: var(--font-heading);
+    font-family: var(--font-body);
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 10px;
@@ -743,7 +743,7 @@ select {
 }
 
 #previewContent .preview-header h1 {
-    font-family: var(--font-heading);
+    font-family: var(--font-body);
     font-weight: 700;
     font-size: 2rem;
     margin-bottom: 10px;
